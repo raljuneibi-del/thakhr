@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>THAKHR — An AI-Powered Claims Management Transformation | SDT529 Keynote</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Reem+Kufi:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* light theme — ivory paper, ink text, copper/brass accents */
+  --paper:#F7F2E9;            /* base page */
+  --paper2:#FBF7EF;           /* raised card */
+  --paper3:#EFE7D7;           /* inset / tint */
+  --ink:#211A12;              /* primary text (warm near-black) */
+  --ink-soft:#4A3F32;         /* secondary text */
+  --mist:#6B5D4C;             /* muted text */
+  --mist2:#877A66;            /* faint caption */
+  --line:rgba(70,52,30,.14);  /* hairlines */
+  --line2:rgba(70,52,30,.26);
+  --ivory:var(--ink);         /* legacy alias → now dark text on light */
+  --copper:#B06A2E;           /* deep copper accent */
+  --brass:#9A6A22;            /* darker brass for text-on-light legibility */
+  --brass-ink:#7C5417;        /* strongest gold for headings */
+  --brass-soft:rgba(176,106,46,.12);
+  --jade:#3F7A62; --slate:#5E6E72; --alert:#B0533A;
+  --grad-1:#B98A3C; --grad-2:#B06A2E;  /* gradient stops for hero num / rail */
+  --d:'Instrument Serif',Georgia,'Times New Roman',serif;
+  --u:'Inter Tight',Inter,system-ui,-apple-system,'Segoe UI',sans-serif;
+  --m:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace;
+  --a:'Reem Kufi','Noto Kufi Arabic',var(--u);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:var(--paper);color:var(--ink);font-family:var(--u);
+  overflow:hidden;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+}
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:9;
+  background:radial-gradient(120% 80% at 50% -8%,rgba(176,106,46,.07),transparent 62%);
+}
+/* ---------- stage ---------- */
+#deck{position:fixed;inset:0;display:grid;place-items:center}
+#stage{
+  position:relative;width:1280px;height:720px;transform-origin:center center;
+  background:var(--paper);overflow:hidden;
+}
+.slide{
+  position:absolute;inset:0;padding:62px 84px 84px;
+  display:flex;flex-direction:column;justify-content:center;
+  opacity:0;visibility:hidden;pointer-events:none;
+  transition:opacity .5s cubic-bezier(.4,0,.2,1),transform .6s cubic-bezier(.4,0,.2,1);
+  transform:scale(.985);
+}
+.slide.on{opacity:1;visibility:visible;pointer-events:auto;transform:none}
+.slide.pad-0{padding:0}
+
+/* ---------- chrome ---------- */
+#chrome{position:absolute;inset:0;pointer-events:none;z-index:6}
+.meta{
+  position:absolute;font-family:var(--m);font-size:9.5px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--mist2);
+}
+#m-act{top:30px;left:84px}
+#m-act b{color:var(--brass);font-weight:500}
+#m-pres{top:30px;right:84px;text-align:right}
+#m-pres b{color:var(--mist);font-weight:500}
+#m-num{bottom:34px;right:84px}
+#m-num b{color:var(--ivory);font-weight:500}
+/* the claim rail — signature element */
+#rail{position:absolute;left:84px;right:84px;bottom:46px;height:1px;background:var(--line)}
+#rail-fill{position:absolute;left:0;top:0;height:1px;background:linear-gradient(90deg,var(--grad-2),var(--grad-1));transition:width .55s cubic-bezier(.4,0,.2,1)}
+#rail-head{position:absolute;top:-2.5px;width:6px;height:6px;border-radius:50%;background:var(--brass);box-shadow:0 0 0 3px rgba(176,106,46,.18),0 0 10px rgba(176,106,46,.45);transition:left .55s cubic-bezier(.4,0,.2,1)}
+.tick{position:absolute;top:-3px;width:1px;height:7px;background:var(--line2)}
+.tick.act{height:11px;top:-5px;background:rgba(70,52,30,.42)}
+
+/* ---------- type ---------- */
+.eyebrow{font-family:var(--m);font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--copper);margin-bottom:20px;display:flex;align-items:center;gap:12px}
+.eyebrow::after{content:'';flex:1;height:1px;background:var(--line);max-width:120px}
+.eyebrow.plain::after{display:none}
+h1{font-family:var(--d);font-weight:400;font-size:74px;line-height:1.03;letter-spacing:-.015em}
+h2{font-family:var(--d);font-weight:400;font-size:52px;line-height:1.08;letter-spacing:-.01em}
+h3{font-family:var(--u);font-weight:600;font-size:17px;letter-spacing:-.01em}
+.lead{font-size:18.5px;line-height:1.62;color:var(--mist);max-width:74ch;font-weight:300}
+.lead b,.lead strong{color:var(--ivory);font-weight:500}
+.sm{font-size:14px;line-height:1.6;color:var(--mist);font-weight:300}
+.xs{font-size:12.5px;line-height:1.55;color:var(--mist2);font-weight:300}
+.mono{font-family:var(--m)}
+.em{color:var(--brass-ink)}
+.ital{font-style:italic}
+.ar{font-family:var(--a);direction:rtl}
+.cap{font-family:var(--m);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--mist2)}
+.src{position:absolute;left:84px;bottom:62px;font-family:var(--m);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(147,162,168,.45)}
+
+/* ---------- layout helpers ---------- */
+.row{display:flex;gap:56px;align-items:center}
+.col{display:flex;flex-direction:column}
+.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+.mt{margin-top:26px}.mt-s{margin-top:14px}.mt-l{margin-top:38px}
+.center{text-align:center;align-items:center}
+.split{display:grid;grid-template-columns:1fr 1.15fr;gap:60px;align-items:center}
+.split-r{display:grid;grid-template-columns:1.15fr 1fr;gap:60px;align-items:center}
+
+/* ---------- fragments ---------- */
+.f{opacity:0;transform:translateY(14px);transition:opacity .5s cubic-bezier(.4,0,.2,1),transform .5s cubic-bezier(.4,0,.2,1)}
+.f.show{opacity:1;transform:none}
+.f.fade{transform:none}
+.f.dim{opacity:.24}
+.f.dim.show{opacity:1}
+
+/* ---------- cards ---------- */
+.card{
+  background:linear-gradient(180deg,var(--paper2),var(--paper));box-shadow:0 1px 2px rgba(70,52,30,.04);
+  border:1px solid var(--line);border-radius:3px;padding:22px 22px 20px;
+  position:relative;transition:border-color .35s,transform .35s,background .35s;
+}
+.card:hover{border-color:var(--line2)}
+.card .n{font-family:var(--m);font-size:10px;color:var(--copper);letter-spacing:.2em;margin-bottom:14px;display:block}
+.card h3{margin-bottom:9px}
+.card p{font-size:13.4px;line-height:1.58;color:var(--mist);font-weight:300}
+.card.accent{border-color:rgba(192,131,71,.42);background:linear-gradient(180deg,rgba(176,106,46,.10),var(--paper2))}
+.card.jade{border-color:rgba(111,168,143,.35)}
+.card.tall{padding:26px 24px}
+.ico{width:34px;height:34px;margin-bottom:16px;display:block;stroke:var(--brass);fill:none;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round}
+.ico.j{stroke:var(--jade)}
+.ico.s{stroke:var(--slate)}
+
+/* ---------- stat ---------- */
+.stat{text-align:left}
+.stat .v{font-family:var(--d);font-size:52px;line-height:1;color:var(--ivory);letter-spacing:-.02em}
+.stat .v small{font-size:20px;color:var(--mist);font-family:var(--u);font-weight:300;margin-left:4px}
+.stat .k{font-family:var(--m);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--mist2);margin-top:10px}
+.stat.big .v{font-size:96px}
+.hero-num{font-family:var(--d);font-size:210px;line-height:.86;letter-spacing:-.04em;
+  background:linear-gradient(150deg,var(--grad-1) 8%,var(--grad-2) 62%,#8A4E1F 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* ---------- chips / tags ---------- */
+.chip{display:inline-flex;align-items:center;gap:7px;font-family:var(--m);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;
+  padding:5px 11px;border:1px solid var(--line2);border-radius:100px;color:var(--mist)}
+.chip.on{border-color:var(--copper);color:var(--brass-ink);background:var(--brass-soft)}
+.chip.jade{border-color:rgba(111,168,143,.5);color:var(--jade)}
+.chip.red{border-color:rgba(201,105,77,.5);color:var(--alert)}
+.dot{width:5px;height:5px;border-radius:50%;background:currentColor}
+
+/* ---------- flow diagram ---------- */
+.flow{display:flex;align-items:stretch;gap:0;width:100%}
+.node{flex:1;background:var(--paper2);border:1px solid var(--line);border-radius:3px;padding:15px 13px;text-align:center;position:relative;transition:.4s}
+.node .t{font-size:12.6px;font-weight:500;line-height:1.35}
+.node .s{font-family:var(--m);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--mist2);margin-top:7px}
+.node.hot{border-color:var(--copper);background:linear-gradient(180deg,rgba(176,106,46,.10),var(--paper2))}
+.node.bad{border-color:rgba(201,105,77,.45)}
+.conn{width:34px;display:flex;align-items:center;justify-content:center;color:var(--mist2);flex:0 0 34px}
+.conn svg{width:20px;height:10px;stroke:currentColor;fill:none;stroke-width:1.2}
+
+/* ---------- table ---------- */
+table{width:100%;border-collapse:collapse;font-size:13.4px}
+th{font-family:var(--m);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--mist2);text-align:left;padding:0 14px 12px;font-weight:400;border-bottom:1px solid var(--line2)}
+td{padding:13px 14px;border-bottom:1px solid var(--line);color:var(--mist);font-weight:300;vertical-align:top}
+td b,td strong{color:var(--ivory);font-weight:500}
+tr:last-child td{border-bottom:none}
+tr.hot td{background:rgba(176,106,46,.08)}
+.num-c{font-family:var(--m);font-size:13px;color:var(--ivory)}
+.wsjf{font-family:var(--m);font-size:15px;color:var(--brass)}
+
+/* ---------- before / after ---------- */
+.ba{display:grid;grid-template-columns:1fr auto 1fr;gap:0;align-items:stretch;border:1px solid var(--line);border-radius:3px;overflow:hidden}
+.ba .side{padding:20px 24px}
+.ba .before{background:rgba(110,126,130,.10)}
+.ba .after{background:linear-gradient(180deg,rgba(176,106,46,.10),transparent)}
+.ba .mid{width:1px;background:var(--line)}
+.ba-row{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:0;align-items:center;border-bottom:1px solid var(--line)}
+.ba-row:last-child{border-bottom:none}
+.ba-row>div{padding:14px 18px}
+.ba-row .lbl{font-size:13.2px;color:var(--mist);font-weight:300}
+.ba-row .b4{font-family:var(--m);font-size:14px;color:var(--slate);border-left:1px solid var(--line)}
+.ba-row .af{font-family:var(--m);font-size:14px;color:var(--brass);border-left:1px solid var(--line);background:rgba(176,106,46,.06)}
+.ba-head{display:grid;grid-template-columns:1.4fr 1fr 1fr;border-bottom:1px solid var(--line2)}
+.ba-head>div{padding:0 18px 11px;font-family:var(--m);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--mist2)}
+
+/* ---------- matrix ---------- */
+.mx{display:grid;grid-template-columns:auto 1fr 1fr;grid-template-rows:auto 1fr 1fr;gap:0}
+.mx .qh{font-family:var(--m);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--mist2);padding:0 0 12px;text-align:center}
+.mx .rh{font-family:var(--m);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--mist2);writing-mode:vertical-rl;transform:rotate(180deg);display:grid;place-items:center;padding-right:14px}
+.q{border:1px solid var(--line);padding:20px 22px;min-height:132px;cursor:pointer;transition:.35s;position:relative}
+.q:hover,.q.sel{border-color:var(--copper);background:rgba(176,106,46,.09)}
+.q .qt{font-family:var(--m);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);margin-bottom:11px}
+.q .qi{font-size:13.4px;line-height:1.6;color:var(--mist);font-weight:300}
+.q.avoid .qt{color:var(--alert)}
+.q.avoid:hover,.q.avoid.sel{border-color:rgba(201,105,77,.55);background:rgba(176,83,58,.08)}
+
+/* ---------- moscow ---------- */
+.mos{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.mcol{border-top:2px solid var(--line2);padding-top:14px}
+.mcol.must{border-top-color:var(--brass)}
+.mcol.should{border-top-color:var(--copper)}
+.mcol.could{border-top-color:var(--slate)}
+.mcol.wont{border-top-color:rgba(201,105,77,.55)}
+.mcol .mh{font-family:var(--m);font-size:10px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:14px;color:var(--mist)}
+.mcol.must .mh{color:var(--brass)}
+.mcol.wont .mh{color:var(--alert)}
+.story{background:var(--paper2);border:1px solid var(--line);border-radius:3px;padding:13px 14px;margin-bottom:10px;font-size:12.4px;line-height:1.5;color:var(--mist);font-weight:300;transition:.3s}
+.story b{color:var(--ivory);font-weight:500}
+.story:hover{border-color:var(--line2)}
+
+/* ---------- timeline ---------- */
+.tl{position:relative;padding-top:34px}
+.tl-line{position:absolute;left:0;right:0;top:52px;height:1px;background:var(--line)}
+.tl-line i{position:absolute;left:0;top:0;height:1px;background:linear-gradient(90deg,var(--grad-2),var(--grad-1));width:0;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
+.tl-row{display:grid;grid-template-columns:repeat(5,1fr);gap:18px;position:relative}
+.tl-i{position:relative;padding-top:38px;cursor:pointer}
+.tl-i::before{content:'';position:absolute;top:15px;left:0;width:9px;height:9px;border-radius:50%;background:var(--paper);border:1px solid var(--line2);transition:.35s}
+.tl-i.on::before{background:var(--copper);border-color:var(--copper);box-shadow:0 0 0 4px rgba(176,106,46,.14)}
+.tl-i .sp{font-family:var(--m);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--copper);margin-bottom:9px}
+.tl-i .gl{font-size:13.4px;font-weight:500;line-height:1.4;margin-bottom:9px}
+.tl-i .inc{font-size:12.2px;line-height:1.52;color:var(--mist2);font-weight:300}
+.tl-i.on .inc{color:var(--mist)}
+
+/* ---------- charts ---------- */
+.chart-wrap{background:var(--paper2);border:1px solid var(--line);border-radius:3px;padding:22px 24px 16px}
+.axis{stroke:var(--line2);stroke-width:1}
+.grid-l{stroke:rgba(70,52,30,.09);stroke-width:1}
+.al{font-family:var(--m);font-size:9px;fill:var(--mist2);letter-spacing:.1em}
+.spark{fill:none;stroke:var(--grad-2);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:1400;stroke-dashoffset:1400;transition:stroke-dashoffset 2s cubic-bezier(.4,0,.2,1)}
+.spark.draw{stroke-dashoffset:0}
+.area{fill:url(#ag);opacity:0;transition:opacity 1.2s .8s}
+.area.draw{opacity:1}
+.figframe{border:1px solid var(--line);border-radius:3px;overflow:hidden;background:#fff}
+.figframe img{display:block;width:100%}
+
+/* ---------- bars ---------- */
+.bar-row{display:grid;grid-template-columns:120px 1fr 56px;align-items:center;gap:14px;margin-bottom:13px}
+.bar-row .bl{font-size:13px;color:var(--mist);font-weight:300}
+.bar-t{height:7px;background:rgba(70,52,30,.08);border-radius:100px;overflow:hidden}
+.bar-t i{display:block;height:100%;width:0;border-radius:100px;background:linear-gradient(90deg,var(--grad-2),var(--grad-1));transition:width 1.1s cubic-bezier(.4,0,.2,1)}
+.bar-row .bv{font-family:var(--m);font-size:12.5px;color:var(--brass);text-align:right}
+.bar-row.low i{background:linear-gradient(90deg,#3E5157,var(--slate))}
+.bar-row.low .bv{color:var(--slate)}
+
+/* ---------- act divider ---------- */
+.act{display:grid;place-items:center;text-align:center}
+.act .an{font-family:var(--m);font-size:11px;letter-spacing:.42em;color:var(--copper);margin-bottom:26px}
+.act h1{font-size:88px}
+.act .sub{margin-top:22px;font-size:16px;color:var(--mist);font-weight:300;letter-spacing:.01em;max-width:56ch}
+.act .arc{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:900px;height:900px;pointer-events:none}
+.act .arc circle{fill:none;stroke:rgba(176,106,46,.16);stroke-width:1}
+
+/* ---------- cover ---------- */
+#cover{background:radial-gradient(60% 60% at 50% 42%,rgba(176,106,46,.09),transparent 70%),var(--paper)}
+.vault{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);width:620px;height:620px;pointer-events:none;opacity:.85}
+.vault circle{fill:none;stroke:rgba(176,106,46,.22);stroke-width:1;transform-origin:center}
+.vault .r1{stroke:rgba(176,106,46,.40)}
+.vault .seg{stroke:rgba(176,106,46,.6);stroke-width:1.2;stroke-linecap:round}
+
+/* ---------- quote / beat ---------- */
+.beat{max-width:24ch}
+.beat h2{font-size:64px}
+.pull{font-family:var(--d);font-size:40px;line-height:1.24;color:var(--ivory);max-width:26ch}
+.pull .em{font-style:italic}
+
+/* ---------- ask (audience) ---------- */
+.ask{border:1px solid rgba(176,106,46,.32);background:rgba(176,106,46,.06);border-radius:3px;padding:18px 22px;display:flex;gap:16px;align-items:flex-start;max-width:640px}
+.ask .qm{font-family:var(--d);font-size:34px;color:var(--brass);line-height:.9;margin-top:2px}
+.ask .qt{font-size:15px;line-height:1.55;color:var(--ivory);font-weight:300}
+.ask .qs{font-family:var(--m);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--copper);margin-bottom:7px}
+
+/* ---------- notes panel ---------- */
+#notes{
+  position:fixed;right:0;top:0;bottom:0;width:430px;background:var(--paper2);border-left:1px solid var(--line2);box-shadow:-14px 0 40px rgba(70,52,30,.10);
+  transform:translateX(100%);transition:transform .38s cubic-bezier(.4,0,.2,1);z-index:40;
+  display:flex;flex-direction:column;font-family:var(--u)
+}
+#notes.on{transform:none}
+#notes header{padding:20px 24px 14px;border-bottom:1px solid var(--line)}
+#notes header .t{font-family:var(--m);font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--copper)}
+#notes header .s{font-size:17px;margin-top:8px;font-weight:500;line-height:1.3}
+#notes .body{overflow-y:auto;padding:20px 24px 40px;flex:1}
+#notes h4{font-family:var(--m);font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--brass);margin:20px 0 9px}
+#notes h4:first-child{margin-top:0}
+#notes p{font-size:13.4px;line-height:1.62;color:var(--mist);font-weight:300;margin-bottom:9px}
+#notes .say{color:var(--ink);border-left:2px solid var(--copper);padding-left:13px}
+#notes .qa{border-top:1px solid var(--line);padding-top:12px;margin-top:12px}
+#notes .qa .q{font-size:13px;color:var(--ivory);font-weight:500;margin-bottom:6px;border:none;padding:0;min-height:0;cursor:default}
+#notes .qa .q:hover{background:none}
+#notes .qa .a{font-size:12.8px;line-height:1.6;color:var(--mist);font-weight:300}
+#notes .pill{display:inline-block;font-family:var(--m);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;padding:4px 9px;border:1px solid var(--line2);border-radius:100px;color:var(--mist);margin-right:6px}
+#notes::-webkit-scrollbar,#notes .body::-webkit-scrollbar{width:3px}
+#notes .body::-webkit-scrollbar-thumb{background:var(--line2)}
+
+/* ---------- overview ---------- */
+#ov{position:fixed;inset:0;background:rgba(247,242,233,.975);z-index:50;display:none;overflow-y:auto;padding:44px}
+#ov.on{display:block}
+#ov .gr{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;max-width:1500px;margin:0 auto}
+#ov .th{aspect-ratio:16/9;border:1px solid var(--line);border-radius:2px;padding:10px;cursor:pointer;
+  background:var(--paper2);display:flex;flex-direction:column;justify-content:space-between;transition:.25s}
+#ov .th:hover{border-color:var(--copper);background:var(--paper3)}
+#ov .th .tn{font-family:var(--m);font-size:9px;color:var(--copper);letter-spacing:.16em}
+#ov .th .tt{font-size:11.5px;line-height:1.35;color:var(--mist);font-weight:400}
+#ov .th.cur{border-color:var(--copper);background:rgba(176,106,46,.12)}
+#ov h5{font-family:var(--m);font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--mist2);text-align:center;margin-bottom:26px}
+
+/* ---------- timer / help ---------- */
+#timer{position:fixed;left:18px;top:16px;z-index:41;font-family:var(--m);font-size:12px;letter-spacing:.12em;
+  color:var(--brass-ink);background:rgba(251,247,239,.9);border:1px solid var(--line2);padding:7px 12px;border-radius:2px;display:none}
+#timer.on{display:block}
+#help{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:41;font-family:var(--m);font-size:9.5px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--mist2);background:rgba(251,247,239,.85);border:1px solid var(--line);
+  padding:7px 14px;border-radius:100px;opacity:0;transition:opacity .4s;pointer-events:none}
+#help.on{opacity:1}
+#help b{color:var(--brass-ink);font-weight:500}
+
+@media (prefers-reduced-motion:reduce){
+  *{transition-duration:.01ms !important;animation-duration:.01ms !important}
+  .f{opacity:1;transform:none}
+}
+@media print{body{overflow:visible}#stage{transform:none !important}}
+</style>
+</head>
+<body>
+<div id="deck"><div id="stage">
+<div id="chrome">
+  <div class="meta" id="m-act"></div>
+  <div class="meta" id="m-pres"></div>
+  <div class="meta" id="m-num"></div>
+  <div id="rail"><div id="rail-fill"></div><div id="rail-head"></div></div>
+</div>
+<!-- ══════════ 1 · COVER ══════════ -->
+<section class="slide pad-0 act" id="s1" data-act="Prologue" data-pres="Alaa Haider" data-title="Cover — THAKHR">
+  <svg class="vault" viewBox="0 0 620 620">
+    <circle class="r1" cx="310" cy="310" r="252"/><circle cx="310" cy="310" r="212"/><circle cx="310" cy="310" r="168"/><circle cx="310" cy="310" r="124"/>
+    <g class="seg" stroke-linecap="round"><path d="M310 42 v34"/><path d="M310 544 v34"/><path d="M42 310 h34"/><path d="M544 310 h34"/><path d="M120 120 l24 24"/><path d="M476 476 l24 24"/><path d="M500 120 l-24 24"/><path d="M144 476 l-24 24"/></g>
+  </svg>
+  <div style="position:relative;z-index:2">
+    <div class="ar" style="font-size:78px;color:var(--brass);line-height:1;letter-spacing:.02em">ذَخْـر</div>
+    <h1 style="letter-spacing:.16em;margin-top:14px;font-family:var(--u);font-weight:200;font-size:56px">THAKHR</h1>
+    <div style="width:56px;height:1px;background:var(--copper);margin:30px auto"></div>
+    <div class="lead center" style="max-width:44ch;font-size:20px;color:var(--ivory);line-height:1.45">An AI-Powered Claims Management Transformation<br><span style="color:var(--mist)">delivered through a hybrid Agile approach</span></div>
+    <div class="mt-l" style="display:flex;gap:26px;justify-content:center;flex-wrap:wrap">
+      <span class="chip"><i class="dot" style="background:var(--copper)"></i>Alaa Haider</span>
+      <span class="chip"><i class="dot" style="background:var(--copper)"></i>Reem Aljneibi</span>
+      <span class="chip"><i class="dot" style="background:var(--copper)"></i>Amal Alwahedi</span>
+      <span class="chip"><i class="dot" style="background:var(--copper)"></i>Hessa Eissa</span>
+    </div>
+    <div class="cap mt" style="letter-spacing:.24em">SDT529 · Agile Project Management · Summer 25–26 · College of Business</div>
+    <div class="cap" style="margin-top:9px;color:var(--mist)">Submitted to Dr. Omer Aftab Qureshi</div>
+  </div>
+</section>
+
+<!-- ══════════ 2 · HOOK + ORG ══════════ -->
+<section class="slide" id="s2" data-act="Act I · Diagnosis" data-pres="Alaa Haider" data-title="The problem — 50.4 hours">
+  <div class="split">
+    <div>
+      <div class="eyebrow">The name is the brief</div>
+      <div class="ar" style="font-size:64px;color:var(--brass);line-height:1">ذَخْـر</div>
+      <p class="lead mt"><b>Thakhr</b> — something precious, stored and protected for the day it is needed. That is what health cover should be. It stops being that when a claim sits in a queue for two weeks.</p>
+      <div class="row mt-l f" data-f="1" style="gap:34px">
+        <div class="stat"><div class="v" data-count="90701">0</div><div class="k">Claims / year</div></div>
+        <div class="stat"><div class="v" data-count="4.2" data-dec="1">0<small>/5</small></div><div class="k">Satisfaction</div></div>
+      </div>
+    </div>
+    <div class="center">
+      <div class="f" data-f="2">
+        <div class="cap" style="letter-spacing:.3em;margin-bottom:8px">Average settlement, per claim</div>
+        <div class="hero-num" data-count="50.4" data-dec="1" style="font-size:170px">0</div>
+        <div class="cap" style="letter-spacing:.28em;margin-top:10px">Hours · above 110 in peak manual months</div>
+      </div>
+      <p class="lead center mt-l f" data-f="3" style="max-width:46ch">Not because anyone is careless — because a human still has to read <b>every single claim.</b> A healthy company running an unhealthy process.</p>
+    </div>
+  </div>
+  <div class="src">Thakhr Health Insurance (2026) · a mid-to-large UAE insurer · outpatient · inpatient · pharmacy · dental</div>
+</section>
+
+<!-- ══════════ 3 · JOURNEY + BLIND SPOT ══════════ -->
+<section class="slide" id="s3" data-act="Act I · Diagnosis" data-pres="Alaa Haider" data-title="The current journey — and the blind spot">
+  <div class="eyebrow">Figure 2.1 · the current (as-is) claims process</div>
+  <h2 style="font-size:38px">A chain of semi-manual steps wrapped around a digital core.</h2>
+  <div class="flow mt f fade" data-f="1">
+    <div class="node"><div class="t">Member visits</div><div class="s">In person</div></div>
+    <div class="conn"><svg viewBox="0 0 20 10"><path d="M0 5h16m-4-4 4 4-4 4"/></svg></div>
+    <div class="node bad"><div class="t">Eligibility check</div><div class="s">Portal · helpline</div></div>
+    <div class="conn"><svg viewBox="0 0 20 10"><path d="M0 5h16m-4-4 4 4-4 4"/></svg></div>
+    <div class="node" style="border-color:rgba(111,168,143,.4)"><div class="t">Clinical encounter</div><div class="s">Digital · HIS</div></div>
+    <div class="conn"><svg viewBox="0 0 20 10"><path d="M0 5h16m-4-4 4 4-4 4"/></svg></div>
+    <div class="node bad"><div class="t">Claim assembled</div><div class="s">Scans · uploads · email</div></div>
+    <div class="conn"><svg viewBox="0 0 20 10"><path d="M0 5h16m-4-4 4 4-4 4"/></svg></div>
+    <div class="node bad"><div class="t">Manual adjudication</div><div class="s">Policy check by hand</div></div>
+  </div>
+  <div class="g3 mt-l" style="gap:16px">
+    <div class="card f" data-f="2" style="border-color:rgba(201,105,77,.42);padding:16px 20px"><div class="cap" style="color:var(--alert)">The delay</div><p class="mt-s">Unclear claims enter the <b>clarification loop</b> — returned, re-submitted, re-queued. Each round trip adds days.</p></div>
+    <div class="card f" data-f="3" style="padding:16px 20px"><div class="cap">Three root inefficiencies</div><p class="mt-s"><b>Manual handling · data fragmentation · analytical blindness.</b> Rich data, almost no prediction (Kraus et al., 2021).</p></div>
+    <div class="card f" data-f="4" style="border-color:rgba(84,105,111,.5);padding:16px 20px"><div class="cap" style="color:var(--slate)">The member</div><p class="mt-s">Not in this diagram at all. She learns of a rejection <b>at the pharmacy counter</b>, then calls to ask why. No status. No reason.</p></div>
+  </div>
+  <p class="lead mt f" data-f="5" style="font-size:16px;color:var(--brass)">Every design decision that follows starts from that counter. Reem will show you what we built.</p>
+</section>
+
+<!-- ══════════ 4 · INEFFICIENCY → OPPORTUNITY ══════════ -->
+<section class="slide" id="s4" data-act="Act II · The Answer" data-pres="Reem Aljneibi" data-title="From inefficiency to opportunity">
+  <div class="eyebrow">Read the same three problems from the other side</div>
+  <h2>Every inefficiency is a disruption opportunity.</h2>
+  <div class="mt-l col" style="gap:14px">
+    <div class="row f" data-f="1" style="gap:0;align-items:stretch">
+      <div class="card" style="flex:1;border-color:rgba(84,105,111,.4);padding:16px 20px"><div class="cap" style="color:var(--slate)">Inefficiency</div><h3 class="mt-s">Manual claim handling</h3></div>
+      <div class="conn" style="flex:0 0 60px"><svg viewBox="0 0 20 10" style="width:28px"><path d="M0 5h16m-4-4 4 4-4 4"/></svg></div>
+      <div class="card accent" style="flex:1.7;padding:16px 20px"><div class="cap" style="color:var(--copper)">Opportunity</div><p class="mt-s">Exactly what modern AI does well — read semi-structured documents, apply rules, flag variance <span class="em">(Davenport &amp; Kalakota, 2019; Secinaro et al., 2021).</span></p></div>
+    </div>
+    <div class="row f" data-f="2" style="gap:0;align-items:stretch">
+      <div class="card" style="flex:1;border-color:rgba(84,105,111,.4);padding:16px 20px"><div class="cap" style="color:var(--slate)">Inefficiency</div><h3 class="mt-s">Data fragmentation</h3></div>
+      <div class="conn" style="flex:0 0 60px"><svg viewBox="0 0 20 10" style="width:28px"><path d="M0 5h16m-4-4 4 4-4 4"/></svg></div>
+      <div class="card accent" style="flex:1.7;padding:16px 20px"><div class="cap" style="color:var(--copper)">Opportunity</div><p class="mt-s">One member-and-insurance layer binding the existing systems — <b>each party sees only what its role permits.</b></p></div>
+    </div>
+    <div class="row f" data-f="3" style="gap:0;align-items:stretch">
+      <div class="card" style="flex:1;border-color:rgba(84,105,111,.4);padding:16px 20px"><div class="cap" style="color:var(--slate)">Inefficiency</div><h3 class="mt-s">Analytical blindness</h3></div>
+      <div class="conn" style="flex:0 0 60px"><svg viewBox="0 0 20 10" style="width:28px"><path d="M0 5h16m-4-4 4 4-4 4"/></svg></div>
+      <div class="card accent" style="flex:1.7;padding:16px 20px"><div class="cap" style="color:var(--copper)">Opportunity</div><p class="mt-s">Predictive modelling across the population — catch diabetic, cardiac and hypertension risk <b>early,</b> and act preventively.</p></div>
+    </div>
+  </div>
+  <p class="lead mt-l f" data-f="4">Our design position: the transformation is <b class="em">preservative, not destructive.</b> We add an intelligent layer on top of what the UAE already built — not a replacement.</p>
+</section>
+
+<!-- ══════════ 5 · AI CHOICE + THREE PARTS ══════════ -->
+<section class="slide" id="s5" data-act="Act II · The Answer" data-pres="Reem Aljneibi" data-title="Why AI — and the three-part solution">
+  <div class="split-r">
+    <div>
+      <div class="eyebrow">Justification for technology selection</div>
+      <h2 style="font-size:36px">We chose AI — and we can show what we chose against.</h2>
+      <div class="col mt" style="gap:9px">
+        <div class="story f" data-f="1"><b>Blockchain</b> — immutable record, but reads and decides nothing. Integration weight we don't need yet.</div>
+        <div class="story f" data-f="2"><b>IoT &amp; wearables</b> — a real future upgrade to Health Radar, not needed to prove the idea.</div>
+        <div class="story f" data-f="3"><b>Cloud</b> — everything runs on it, so it's infrastructure, not the disruption.</div>
+        <div class="story f" data-f="4" style="border-color:var(--copper)"><b style="color:var(--brass)">AI agent + predictive analytics</b> — a claim is language, context and judgement. Exactly where medical AI has matured (Rajpurkar et al., 2022; Topol, 2019).</div>
+      </div>
+    </div>
+    <div>
+      <div class="cap f" data-f="5" style="margin-bottom:14px">One platform · three parts that need each other</div>
+      <div class="col" style="gap:12px">
+        <div class="card accent f" data-f="5" style="padding:17px 20px"><div class="row" style="gap:14px;align-items:center"><svg class="ico" style="margin:0;width:26px;flex:0 0 26px" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg><div><h3>Dakhtar · the engine</h3><p class="mt-s" style="font-size:12.6px">The agent that works the claim.</p></div></div></div>
+        <div class="card jade f" data-f="6" style="padding:17px 20px"><div class="row" style="gap:14px;align-items:center"><svg class="ico j" style="margin:0;width:26px;flex:0 0 26px" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.3"/></svg><div><h3>Health Radar · the foresight</h3><p class="mt-s" style="font-size:12.6px">Predictive population risk scoring.</p></div></div></div>
+        <div class="card f" data-f="7" style="padding:17px 20px"><div class="row" style="gap:14px;align-items:center"><svg class="ico" style="margin:0;width:26px;flex:0 0 26px" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2.5"/><path d="M9 6h6M9 10h6"/></svg><div><h3>Member portal · the promise</h3><p class="mt-s" style="font-size:12.6px">See it, follow it, understand every decision.</p></div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 6 · DAKHTAR + HUMAN IN LOOP ══════════ -->
+<section class="slide" id="s6" data-act="Act II · The Answer" data-pres="Reem Aljneibi" data-title="Dakhtar — and the decision we refused to automate">
+  <div class="eyebrow">The word "agent" is deliberate — it settles claims, it doesn't chat</div>
+  <div class="flow mt-s f fade" data-f="1">
+    <div class="node hot" style="padding:18px 14px"><div class="cap" style="color:var(--copper)">Phase 01</div><div class="t mt-s">Receives</div><div class="s">Codes, amounts, scanned attachments</div></div>
+    <div class="conn"><svg viewBox="0 0 20 10"><path d="M0 5h16m-4-4 4 4-4 4"/></svg></div>
+    <div class="node hot" style="padding:18px 14px"><div class="cap" style="color:var(--copper)">Phase 02</div><div class="t mt-s">Interprets</div><div class="s">Against policy, benefits, exclusions</div></div>
+    <div class="conn"><svg viewBox="0 0 20 10"><path d="M0 5h16m-4-4 4 4-4 4"/></svg></div>
+    <div class="node hot" style="padding:18px 14px"><div class="cap" style="color:var(--copper)">Phase 03</div><div class="t mt-s">Verifies</div><div class="s">Full history · anomalies · duplicates</div></div>
+    <div class="conn"><svg viewBox="0 0 20 10"><path d="M0 5h16m-4-4 4 4-4 4"/></svg></div>
+    <div class="node hot" style="padding:18px 14px"><div class="cap" style="color:var(--copper)">Phase 04</div><div class="t mt-s">Decides</div><div class="s">Approves or escalates — with a written reason</div></div>
+  </div>
+  <h2 class="mt-l" style="font-size:32px">The one decision we refused to fully automate.</h2>
+  <div class="g2 mt" style="gap:18px">
+    <div class="card f" data-f="2" style="border-color:rgba(111,168,143,.42);padding:17px 22px"><div class="row" style="gap:14px;align-items:center"><span class="chip jade"><i class="dot"></i>Clear &amp; low-risk</span><p style="flex:1;font-size:13.4px">Settled automatically, in minutes. The routine majority — the member watches it clear in the portal.</p></div></div>
+    <div class="card f accent" data-f="3" style="padding:17px 22px"><div class="row" style="gap:14px;align-items:center"><span class="chip on"><i class="dot"></i>Grey / high value</span><p style="flex:1;font-size:13.4px">Escalated to a human — who opens an <b>assessment, not an empty file.</b> Faster too.</p></div></div>
+  </div>
+  <p class="lead mt f" data-f="4" style="font-size:16px"><b>Human-in-the-loop from day one</b> — the direct answer to the ethical constraint, and what makes the agent acceptable to a regulator (Jiang et al., 2017; Reddy et al., 2019).</p>
+</section>
+
+<!-- ══════════ 7 · ARCHITECTURE + GOVERNANCE ══════════ -->
+<section class="slide" id="s7" data-act="Act II · The Answer" data-pres="Reem Aljneibi" data-title="Architecture and governance by design">
+  <div class="eyebrow">Figure 3.1 · one intelligent backbone, governed by design</div>
+  <div class="mt-s" style="display:grid;grid-template-columns:1fr 30px 1.4fr 30px 1fr;align-items:center;gap:0">
+    <div class="col f" data-f="1" style="gap:9px"><div class="cap" style="margin-bottom:2px">Submit</div><div class="node" style="padding:11px"><div class="t">Hospitals</div></div><div class="node" style="padding:11px"><div class="t">Clinics</div></div><div class="node" style="padding:11px"><div class="t">Pharmacies</div></div></div>
+    <div class="conn"><svg viewBox="0 0 20 10"><path d="M0 5h16m-4-4 4 4-4 4"/></svg></div>
+    <div class="f" data-f="2"><div class="card accent" style="padding:18px 20px"><div class="cap" style="color:var(--copper);margin-bottom:12px">THAKHR backbone</div><div class="col" style="gap:8px"><div class="node hot" style="padding:10px"><div class="t">Electronic intake · OCR</div></div><div class="node hot" style="padding:10px"><div class="t">Dakhtar adjudication</div></div><div class="node" style="padding:10px;border-color:rgba(111,168,143,.42)"><div class="t">Health Radar scoring</div></div><div class="node" style="padding:10px"><div class="t">Consent · RBAC · audit trail</div></div></div></div></div>
+    <div class="conn"><svg viewBox="0 0 20 10"><path d="M0 5h16m-4-4 4 4-4 4"/></svg></div>
+    <div class="col f" data-f="3" style="gap:9px"><div class="cap" style="margin-bottom:2px">See</div><div class="node hot" style="padding:11px"><div class="t">Member portal</div><div class="s">Status · reasons</div></div><div class="node" style="padding:11px"><div class="t">Adjuster queue</div></div><div class="node" style="padding:11px"><div class="t">Regulator audit view</div></div></div>
+  </div>
+  <div class="row mt-l f" data-f="4" style="gap:12px;flex-wrap:wrap">
+    <span class="chip on"><i class="dot"></i>Governance is in the architecture, not tacked on</span>
+    <span class="chip"><i class="dot"></i>Federal Law No. 2 of 2019</span>
+    <span class="chip"><i class="dot"></i>Federal Decree-Law No. 45 of 2021</span>
+    <span class="chip"><i class="dot"></i>Data stored in the UAE</span>
+  </div>
+  <p class="lead mt f" data-f="5" style="font-size:16px;color:var(--brass)">Regulatory requirements aren't competing backlog items — they're the licence to operate, and that changes how the backlog gets ordered. Amal will show how.</p>
+</section>
+
+<!-- ══════════ 8 · STAKEHOLDERS + 3 TECHNIQUES ══════════ -->
+<section class="slide" id="s8" data-act="Act III · Priorities" data-pres="Amal Alwahedi" data-title="Stakeholders and three prioritisation techniques">
+  <div class="eyebrow">Stakeholder analysis &amp; prioritisation</div>
+  <h2 style="font-size:34px">Eight groups want eight things. Three techniques turn that into one ordered list.</h2>
+  <div class="row mt" style="gap:12px;flex-wrap:wrap">
+    <span class="chip f" data-f="1">Sponsors · return</span><span class="chip f" data-f="1">Adjusters · changed work</span><span class="chip f" data-f="1">Hospitals · fast settlement</span>
+    <span class="chip on f" data-f="1"><i class="dot"></i>Government · auditability &amp; consent = entry conditions</span><span class="chip f" data-f="1">Members · status &amp; reasons</span><span class="chip f" data-f="1">Employers · no complaints</span>
+  </div>
+  <div class="g3 mt-l" style="gap:16px">
+    <div class="card tall f" data-f="2"><span class="n">Technique 01</span><h3>MoSCoW</h3><p>Forces a real choice about the minimum usable release (Cobb, 2023). <b>Must:</b> intake, member visibility, auto-adjudication. <b>Won't (this release):</b> personalised prevention — the part that protects scope.</p></div>
+    <div class="card tall f accent" data-f="3"><span class="n">Technique 02</span><h3>WSJF</h3><p>Cost of delay ÷ job size (Leffingwell, 2018). Intake scores <b>9.0.</b> Fraud alerts score 8.3 — but sequenced after Dakhtar, because <b>fraud models can't learn without intake history.</b> Dependencies bend the economics.</p></div>
+    <div class="card tall f" data-f="4"><span class="n">Technique 03</span><h3>Value vs Effort</h3><p>A cross-check. Quick wins: intake &amp; visibility. Strategic bets: Dakhtar &amp; fraud. Where it disagreed with WSJF, <b>we returned to stakeholders</b> — not the bigger number.</p></div>
+  </div>
+</section>
+
+<!-- ══════════ 9 · CONVERGENCE ══════════ -->
+<section class="slide center" id="s9" data-act="Act III · Priorities" data-pres="Amal Alwahedi" data-title="Three lenses, one first release">
+  <div class="eyebrow plain center" style="justify-content:center">Why we used three techniques and not one</div>
+  <h2 style="font-size:48px;text-align:center;max-width:22ch;margin:0 auto">Three methods pointed at the same first release.</h2>
+  <div class="row mt-l f" data-f="1" style="justify-content:center;gap:16px;margin-top:38px">
+    <span class="chip on" style="padding:9px 16px;font-size:10.5px">MoSCoW · Must Have</span>
+    <span class="chip on" style="padding:9px 16px;font-size:10.5px">WSJF · 9.0 &amp; 6.3</span>
+    <span class="chip on" style="padding:9px 16px;font-size:10.5px">Value/Effort · Quick wins</span>
+  </div>
+  <div class="mt-l f" data-f="2" style="margin-top:34px"><div class="pull center" style="margin:0 auto;font-size:33px;max-width:30ch">Electronic claims intake.<br>Member status visibility.</div></div>
+  <p class="lead center mt-l f" data-f="3" style="max-width:64ch;margin:34px auto 0">When three independent lenses agree, the sequence is <b>robust</b> — not the artefact of whichever method we happened to like. That ordering produced a full backlog of fifteen prioritised stories.</p>
+</section>
+
+<!-- ══════════ 10 · BACKLOG + CRITIQUE ══════════ -->
+<section class="slide" id="s10" data-act="Act IV · The Rhythm" data-pres="Amal Alwahedi" data-title="The Product Backlog — and an honest critique">
+  <div class="split-r">
+    <div>
+      <div class="eyebrow">Artifact 01 · the Product Backlog</div>
+      <h2 style="font-size:34px">Fifteen stories, in the order Section 4 produced.</h2>
+      <p class="lead mt f" data-f="1" style="font-size:16px">The single source of truth for the product (Schwaber &amp; Sutherland, 2020), each written as <b>role · want · benefit</b> (Cohn, 2004). Governance stories — regulator audit, data-protection consent — sit high, not last. Refined every Sprint and monthly with hospital and regulator reps.</p>
+      <div class="row mt f" data-f="2" style="gap:10px;flex-wrap:wrap">
+        <span class="chip on">01 · Electronic intake</span><span class="chip on">02 · Member visibility</span><span class="chip on">03 · Auto-adjudication</span><span class="chip">04 · Regulator audit trail</span><span class="chip red">15 · Prevention — won't have</span>
+      </div>
+    </div>
+    <div>
+      <div class="cap f" data-f="3" style="margin-bottom:14px">An honest critique — three properties, each can fail</div>
+      <div class="col" style="gap:11px">
+        <div class="card f" data-f="3" style="padding:16px 20px"><h3>Single</h3><p class="mt-s">True only while it's the only list. The real risk: stakeholders keeping private spreadsheets on the side.</p></div>
+        <div class="card f" data-f="4" style="padding:16px 20px"><h3>Prioritised</h3><p class="mt-s">Never better than its estimates — and our WSJF scoring is subjective and uncalibrated.</p></div>
+        <div class="card f" data-f="5" style="padding:16px 20px"><h3>Dynamic</h3><p class="mt-s">Becomes instability if reordered too often. Responsiveness and thrash look identical from outside.</p></div>
+      </div>
+      <p class="xs mt f" data-f="6" style="color:var(--brass)">The artifact doesn't solve these — it makes them visible. A more modest claim than the literature makes, and the one we can defend.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 11 · SCRUM LOOP + SPRINT 1 + ROADMAP ══════════ -->
+<section class="slide" id="s11" data-act="Act IV · The Rhythm" data-pres="Amal Alwahedi" data-title="The Scrum loop, Sprint 1, and the roadmap">
+  <div class="eyebrow">Three artifacts, one loop, repeating every two weeks</div>
+  <div class="flow mt-s f fade" data-f="1">
+    <div class="node hot"><div class="t">Product Backlog</div><div class="s">What should be built</div></div>
+    <div class="conn"><svg viewBox="0 0 20 10"><path d="M0 5h16m-4-4 4 4-4 4"/></svg></div>
+    <div class="node hot"><div class="t">Sprint Backlog</div><div class="s">What this Sprint</div></div>
+    <div class="conn"><svg viewBox="0 0 20 10"><path d="M0 5h16m-4-4 4 4-4 4"/></svg></div>
+    <div class="node hot"><div class="t">Increment</div><div class="s">What's delivered · done, not promised</div></div>
+    <div class="conn"><svg viewBox="0 0 20 10"><path d="M0 5h16m-4-4 4 4-4 4"/></svg></div>
+    <div class="node"><div class="t">Backlog re-ordered</div><div class="s">…round again</div></div>
+  </div>
+  <div class="card accent mt-l f" data-f="2" style="padding:15px 22px"><div class="row" style="gap:16px;align-items:center"><div class="cap" style="color:var(--copper);flex:0 0 auto">Sprint 1 Goal</div><div class="pull" style="font-size:22px;max-width:none">Let hospitals send claims electronically, and let members know where their claim is.</div></div></div>
+  <div class="tl mt-l">
+    <div class="tl-line"><i></i></div>
+    <div class="tl-row">
+      <div class="tl-i f" data-f="3"><div class="sp">Sprint 1</div><div class="gl">Intake &amp; visibility</div><div class="inc">Working e-claims channel + live status.</div></div>
+      <div class="tl-i f" data-f="4"><div class="sp">Sprint 2</div><div class="gl">Consolidated history</div><div class="inc">Unified view + audit trail, regulator-ready.</div></div>
+      <div class="tl-i f" data-f="5"><div class="sp">Sprint 3–4</div><div class="gl">Automate the majority</div><div class="inc">Dakhtar pilot: pharmacy &amp; outpatient.</div></div>
+      <div class="tl-i f" data-f="6"><div class="sp">Sprint 5</div><div class="gl">Engagement loop</div><div class="inc">Pre-approvals, Arabic &amp; English.</div></div>
+      <div class="tl-i f" data-f="7"><div class="sp">Sprint 6</div><div class="gl">Prevention</div><div class="inc">Health Radar, first version.</div></div>
+    </div>
+  </div>
+  <p class="lead mt f" data-f="8" style="font-size:15.5px">Health Radar — the most exciting idea in the room — comes <b>last,</b> because it can't learn until intake has built a history. Discipline over excitement.</p>
+</section>
+
+<!-- ══════════ 12 · TEAM + HYBRID ══════════ -->
+<section class="slide" id="s12" data-act="Act V · People" data-pres="Hessa Eissa" data-title="The team and the hybrid delivery model">
+  <div class="eyebrow">Figure 6.1 · a nine-person Scrum Team + the key delivery decision</div>
+  <div class="row mt-s" style="gap:14px;align-items:stretch">
+    <div class="card f" data-f="1" style="flex:1;padding:16px 20px"><span class="n">1 ×</span><h3>Product Owner</h3><p class="mt-s" style="font-size:12.6px">Operations Director — orders the backlog by <b>member outcomes,</b> not tech interest.</p></div>
+    <div class="card f" data-f="2" style="flex:1;padding:16px 20px"><span class="n">1 ×</span><h3>Scrum Master</h3><p class="mt-s" style="font-size:12.6px">Servant leader. In an insurer, impediments are approval lines, not code.</p></div>
+    <div class="card f" data-f="3" style="flex:1.4;padding:16px 20px"><span class="n">7 ×</span><h3>Developers</h3><p class="mt-s" style="font-size:12.6px">3 engineers, data scientist, AI specialist, UX — and an <b>embedded claims expert</b> who turns rules into requirements.</p></div>
+  </div>
+  <h2 class="mt-l" style="font-size:30px">Pure Scrum can't release freely here. So — a hybrid.</h2>
+  <div class="flow mt f fade" data-f="4" style="align-items:stretch">
+    <div class="node" style="flex:1;padding:16px 14px;border-color:rgba(84,105,111,.5)"><div class="cap" style="color:var(--slate)">Predictive</div><div class="t mt-s">Fixed frame up front</div><div class="s">Approvals · governance · integration standards</div></div>
+    <div class="conn"><svg viewBox="0 0 20 10"><path d="M0 5h16m-4-4 4 4-4 4"/></svg></div>
+    <div class="node hot" style="flex:1.3;padding:16px 14px"><div class="cap" style="color:var(--copper)">Empirical</div><div class="t mt-s">Pure Scrum inside it</div><div class="s">Two-week Sprints · build, learn, re-order</div></div>
+    <div class="conn"><svg viewBox="0 0 20 10"><path d="M0 5h16m-4-4 4 4-4 4"/></svg></div>
+    <div class="node" style="flex:1;padding:16px 14px;border-color:rgba(227,176,114,.45)"><div class="cap" style="color:var(--brass)">Compliance gate</div><div class="t mt-s">Every release passes</div><div class="s">Audit · consent · model docs</div></div>
+  </div>
+  <p class="lead mt f" data-f="5" style="font-size:15.5px">This is <b>Water-Scrum-Fall</b> (West, 2011) — the balance of agility and discipline (Boehm &amp; Turner, 2004). <b class="em">Agility within the constraints, not against them.</b></p>
+</section>
+
+<!-- ══════════ 13 · TRUST + CONFLICT ══════════ -->
+<section class="slide" id="s13" data-act="Act V · People" data-pres="Hessa Eissa" data-title="Trust, safety and conflict">
+  <div class="split">
+    <div>
+      <div class="eyebrow">Fostering trust and learning</div>
+      <h2 style="font-size:34px">On a project that automates decisions, psychological safety is not a soft topic.</h2>
+      <p class="lead mt f" data-f="1">Trust is built by practice, not declaration — the Daily Scrum does most of the work, because visible blockers can't fester (Denning, 2018; Layton et al., 2020).</p>
+      <div class="card f mt accent" data-f="2" style="padding:16px 20px"><div class="cap" style="color:var(--copper)">The change we won't dress up</div><p class="mt-s">Adjusters will fear automation. Leadership must say it honestly: Dakhtar removes <b>routine work, not jobs</b> — backed by retraining toward investigation.</p></div>
+    </div>
+    <div>
+      <div class="cap f" data-f="3" style="margin-bottom:12px">Conflict · a four-step framework</div>
+      <div class="col" style="gap:9px">
+        <div class="story f" data-f="3"><b>01</b> Define the problem — separate it from the people.</div>
+        <div class="story f" data-f="4"><b>02</b> Hear everyone — active listening before deciding.</div>
+        <div class="story f" data-f="5"><b>03</b> Find common ground — usually a shared wish to ship this Sprint.</div>
+        <div class="story f" data-f="6"><b>04</b> Solve it together — win–win, Scrum Master mediating.</div>
+      </div>
+      <div class="card f mt accent" data-f="7" style="padding:15px 20px"><p><b>When facilitation runs out:</b> the Product Owner decides priority, the developers decide implementation. Self-organisation completes it — the people doing the work own the plan.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 14 · THE CURVE ══════════ -->
+<section class="slide" id="s14" data-act="Act VI · The Proof" data-pres="Hessa Eissa" data-title="The proof — the processing-hours curve">
+  <div class="row" style="justify-content:space-between;align-items:flex-end">
+    <div><div class="eyebrow">Appendix A · Figure A.2 · everything is a claim until measured</div><h2 style="font-size:36px">Are claims getting faster?</h2></div>
+    <div class="row" style="gap:30px"><div class="stat"><div class="v" style="font-size:34px;color:var(--slate)">110<small>+</small></div><div class="k">Manual months</div></div><div class="stat"><div class="v" style="font-size:34px">8<small>hrs</small></div><div class="k">December steady state</div></div></div>
+  </div>
+  <div class="chart-wrap mt f fade" data-f="1">
+    <svg viewBox="0 0 1070 230" style="width:100%;height:230px">
+      <defs><linearGradient id="ag" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#B98A3C" stop-opacity=".28"/><stop offset="1" stop-color="#B98A3C" stop-opacity="0"/></linearGradient></defs>
+      <g class="grid-l"><line x1="52" y1="22" x2="1040" y2="22"/><line x1="52" y1="70" x2="1040" y2="70"/><line x1="52" y1="118" x2="1040" y2="118"/><line x1="52" y1="166" x2="1040" y2="166"/></g>
+      <line class="axis" x1="52" y1="210" x2="1040" y2="210"/>
+      <text class="al" x="14" y="26">120</text><text class="al" x="20" y="74">90</text><text class="al" x="20" y="122">60</text><text class="al" x="20" y="170">30</text><text class="al" x="26" y="214">0</text>
+      <line x1="232.7" y1="12" x2="232.7" y2="210" stroke="#B06A2E" stroke-width="1.2" stroke-dasharray="3 4" opacity=".9"/>
+      <text class="al" x="240" y="22" fill="#B06A2E">DAKHTAR PILOT LAUNCH</text>
+      <path class="area" d="M60 22.7 L146.4 27.5 L232.7 62.4 L319.1 94.2 L405.5 121.2 L491.8 141.8 L578.2 157.7 L664.5 170.4 L750.9 180 L837.3 187.9 L923.6 192.7 L1010 195.9 L1010 210 L60 210 Z"/>
+      <path class="spark" d="M60 22.7 L146.4 27.5 L232.7 62.4 L319.1 94.2 L405.5 121.2 L491.8 141.8 L578.2 157.7 L664.5 170.4 L750.9 180 L837.3 187.9 L923.6 192.7 L1010 195.9"/>
+      <circle cx="1010" cy="195.9" r="4" fill="#B06A2E"/>
+      <g class="al" text-anchor="middle"><text x="60" y="226">JAN</text><text x="146" y="226">FEB</text><text x="233" y="226">MAR</text><text x="319" y="226">APR</text><text x="405" y="226">MAY</text><text x="492" y="226">JUN</text><text x="578" y="226">JUL</text><text x="665" y="226">AUG</text><text x="751" y="226">SEP</text><text x="837" y="226">OCT</text><text x="924" y="226">NOV</text><text x="1010" y="226">DEC</text></g>
+    </svg>
+    <div class="cap mt-s">Average processing hours per month · from the company's 90,701-claim dataset</div>
+  </div>
+  <p class="lead mt f" data-f="2">The line falls from above 110 hours to single digits — and <b>the drop begins exactly where Dakhtar launches.</b> The bend in the curve is the intervention. That is the whole project, in one chart.</p>
+</section>
+
+<!-- ══════════ 15 · FINDINGS + HONEST READING ══════════ -->
+<section class="slide" id="s15" data-act="Act VII · Conclusions" data-pres="Hessa Eissa" data-title="Findings, the honest reading, and limitations">
+  <div class="eyebrow">Conclusions · what this project found</div>
+  <div class="g3 mt-s" style="gap:16px">
+    <div class="card tall f" data-f="1"><span class="n">Finding 01</span><h3>The problem is concentrated</h3><p>At the manual provider–insurer interface — the source of the 50.4-hour turnaround.</p></div>
+    <div class="card tall f" data-f="2"><span class="n">Finding 02</span><h3>AI is the right technology</h3><p>Adjudication is language and judgement work AI can now do <b>under oversight.</b></p></div>
+    <div class="card tall f accent" data-f="3"><span class="n">Finding 03 · least intuitive</span><h3>Delivery matters as much as tech</h3><p>Not pure Agile — a <b>hybrid</b> with compliance gates (Rigby et al., 2016).</p></div>
+  </div>
+  <div class="row mt-l" style="gap:20px;align-items:stretch">
+    <div class="card f" data-f="4" style="flex:1.3;padding:16px 20px">
+      <div class="cap" style="color:var(--copper)">The honest reading of the KPI cards</div>
+      <p class="mt-s" style="font-size:13.4px">Yearly averages look like a miss — 50.4 hrs vs 24, 2.1% fraud vs 2.5% — <b>because they include the manual months.</b> December is the real steady state: ≈8 hrs, 79% auto-approval, fraud above target. The gap isn't a weakness — <b class="em">it is the measurement of the change itself.</b></p>
+    </div>
+    <div class="card f" data-f="5" style="flex:1;padding:16px 20px;border-color:rgba(201,105,77,.4)">
+      <div class="cap" style="color:var(--alert)">Limitations — stated plainly</div>
+      <p class="mt-s" style="font-size:13.4px">The dataset is a <b>working model</b> · it assumes cooperation we couldn't test · model bias &amp; accountability deserve deeper treatment. We'd rather name them than have you find them.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 16 · CLOSE + Q&A ══════════ -->
+<section class="slide pad-0 act" id="s16" data-act="Act VII · Close" data-pres="All four presenters" data-title="Close — back to the name">
+  <svg class="vault" viewBox="0 0 620 620" style="opacity:.5"><circle class="r1" cx="310" cy="310" r="252"/><circle cx="310" cy="310" r="212"/><circle cx="310" cy="310" r="168"/><circle cx="310" cy="310" r="124"/></svg>
+  <div style="position:relative;z-index:2">
+    <div class="ar" style="font-size:58px;color:var(--brass);line-height:1">ذَخْـر</div>
+    <div class="pull center" style="margin:22px auto 0;font-size:34px;max-width:26ch">We made the cover <span class="em">arrive on the day it is needed.</span></div>
+    <div class="row f mt-l" data-f="1" style="justify-content:center;gap:12px;margin-top:30px">
+      <span class="chip on">50.4 hrs → 8 hrs</span>
+      <span class="chip on">Sample → every claim</span>
+      <span class="chip on">No visibility → live status, with reasons</span>
+    </div>
+    <h1 class="f" data-f="2" style="font-size:60px;margin-top:36px">Questions.</h1>
+    <div class="f mt" data-f="2" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <span class="chip"><i class="dot" style="background:var(--copper)"></i>Alaa · 1004194</span>
+      <span class="chip"><i class="dot" style="background:var(--copper)"></i>Reem · 1006453</span>
+      <span class="chip"><i class="dot" style="background:var(--copper)"></i>Amal · 1106916</span>
+      <span class="chip"><i class="dot" style="background:var(--copper)"></i>Hessa · 1106917</span>
+    </div>
+  </div>
+</section>
+<!-- overview grid -->
+<div id="ov"><h5>All slides · click to jump · press O or Esc to close</h5><div class="gr" id="ov-grid"></div></div>
+<div id="notes">
+  <header><div class="t" id="nt-tag"></div><div class="s" id="nt-title"></div></header>
+  <div class="body" id="nt-body"></div>
+</div>
+<div id="timer"><span id="tm">00:00</span></div>
+<div id="help" class="on">← → <b>move</b> &nbsp;·&nbsp; N <b>notes</b> &nbsp;·&nbsp; O <b>overview</b> &nbsp;·&nbsp; F <b>full screen</b> &nbsp;·&nbsp; T <b>timer</b></div>
+
+<script>
+const NOTES={
+1:{time:"0:40",presenter:"Alaa Haider",say:"Good morning. The word behind me is <b>Thakhr</b> — and in the next fifteen minutes you'll see why the name is the whole argument. I'm Alaa, and with Reem, Amal and Hessa I'll walk you through how we redesigned claims management at a UAE health insurer using AI, delivered through a hybrid Agile approach.",trans:"Let me start with the problem — and a number.",qa:[["Why open with the Arabic name?","It encodes our design thesis — cover should behave like something protected and available when needed. It's the lens for every decision that follows."]]},
+2:{time:"1:05",presenter:"Alaa Haider",say:"Thakhr means something precious, stored and protected for the day it's needed — which is exactly what health cover should be, and exactly what it stops being when a claim sits in a queue for two weeks. Thakhr is a mid-to-large UAE insurer: 90,701 claims a year, satisfaction 4.2 out of 5. And the number that matters — average settlement is <b>50.4 hours</b>, above 110 in the peak manual months. Not carelessness — a human still reads every claim. A healthy company running an unhealthy process.",trans:"Here's what that process looks like from the inside.",qa:[["4.2/5 isn't bad — why change?","It's fragile. Satisfaction holds until a claim is delayed or rejected with no explanation — and that's exactly what erodes it."],["Is this a real company?","A modelled organisation representative of a UAE insurer; the figures are a working dataset, which we're explicit about in the limitations."]]},
+3:{time:"1:05",presenter:"Alaa Haider",say:"This is the current, as-is journey — Figure 2.1. A chain of semi-manual steps around a digital clinical core: visit, eligibility check by portal or phone, a digital encounter, then a claim assembled from scans and emailed in, adjudicated by hand. Clear cases pass; unclear ones enter the clarification loop, and that loop causes most of the delay. Underneath sit three inefficiencies — manual handling, data fragmentation, analytical blindness. And notice: the member isn't in this diagram. She finds out about a rejection at the pharmacy counter, then calls to ask why. No status, no reason. Every decision we made starts from that counter.",trans:"Reem will show you what we built. Over to you.",qa:[["Which step is the real bottleneck?","The clarification loop — each round trip to the provider adds days, triggered by ambiguity a human must resolve by hand."],["Why is fragmentation the main problem?","It multiplies the others — forces duplicate entry, raises errors, hides fraud, because no single party sees the whole process."]]},
+4:{time:"1:05",presenter:"Reem Aljneibi",say:"Thank you Alaa. Read the same three problems from the other side and each becomes an opportunity. Manual handling is exactly what modern AI does well — read documents, apply rules, flag variance. Fragmentation is solved by one shared layer with role-based access. Weak analysis becomes prediction across the population, catching diabetic or cardiac risk early. And our design position matters: the transformation is <b>preservative, not destructive</b> — we add an intelligent layer on top of what the UAE built, not a replacement.",trans:"So why AI, and what exactly did we build?",qa:[["What does 'preservative' protect against?","Integration and regulatory risk. Rebuilding national infrastructure would be slower and riskier — the additive layer ships faster and governs more easily."]]},
+5:{time:"1:10",presenter:"Reem Aljneibi",say:"We chose AI, and the rigour is in what we chose against. Blockchain gives an immutable record but reads and decides nothing. IoT and wearables are a future Health Radar upgrade. Cloud is infrastructure, not disruption. We selected an AI agent with predictive analytics, because a claim isn't a fixed form — it's language, context and judgement, exactly where medical AI has matured. That gives us one platform with three parts that need each other: <b>Dakhtar</b> the engine that works the claim, <b>Health Radar</b> the foresight scoring population risk, and the <b>member portal</b> the promise — see it, follow it, understand every decision.",trans:"Let me open the engine — Dakhtar.",qa:[["Why not blockchain for auditability?","We get auditability from a governed audit trail without blockchain's integration weight. It records claims but can't adjudicate them — it solves a problem we don't have."],["Why bundle three parts?","They're phased in dependency order, but conceptually inseparable — the portal is empty without the agent, and the agent can't learn prevention without the history intake creates."]]},
+6:{time:"1:10",presenter:"Reem Aljneibi",say:"The word 'agent' is deliberate — Dakhtar settles claims, it doesn't chat about them. Four phases: it receives the claim including scanned attachments, interprets diagnosis and procedure against policy, verifies against full history for anomalies, and decides — writing a plain-language reason the member reads in the portal. And here's the one decision we refused to fully automate: clear low-risk claims settle automatically in minutes, but grey or high-value ones escalate to a human who opens an <b>assessment, not an empty file</b>. Human-in-the-loop from day one — the answer to the ethical constraint, and what makes it acceptable to a regulator.",trans:"Here's how it all sits together, and how it's governed.",qa:[["Who's accountable for an automated approval?","The insurer, always. The audit trail records the basis of every decision, and high-value or ambiguous cases carry human sign-off — accountability is never delegated to the model alone."],["How does it handle a messy scanned claim?","OCR at intake plus the interpretation phase; low confidence or ambiguity is exactly what routes it to a human. The design expects imperfect inputs."]]},
+7:{time:"1:00",presenter:"Reem Aljneibi",say:"The architecture, Figure 3.1. Providers submit into one intelligent backbone — electronic intake with OCR, Dakhtar, Health Radar, and a governance layer of consent, role-based access and audit trail. Out the other side everyone sees what their role permits: members get status and reasons, adjusters a queue, regulators an audit view. And because we process health data, governance is <b>in the architecture, not tacked on</b> — running under Federal Law No. 2 of 2019 and Decree-Law No. 45 of 2021, data stored in the UAE. The key insight: regulatory requirements aren't competing backlog items — they're the licence to operate, and that changes how the backlog is ordered. Amal will show how.",trans:"Amal — who decides what comes first?",qa:[["Does this replace hospital systems?","No — it reads and writes through governed APIs. Existing systems stay unchanged; Thakhr is the additive layer, the preservative principle in practice."],["Does governance slow you down?","It constrains the release path — the compliance gate Hessa covers. But building it Sprint by Sprint means it never becomes a last-minute blocker."]]},
+8:{time:"1:15",presenter:"Amal Alwahedi",say:"Thank you Reem. Eight stakeholder groups want eight different things — sponsors want return, adjusters have their work changed, hospitals want fast settlement, government treats auditability and consent as entry conditions, members want status, employers want no complaints. Order the backlog for one and you fail the rest. So three techniques. MoSCoW forces the minimum usable release — Must: intake, visibility, adjudication; Won't-this-release: prevention, the part that protects scope. WSJF adds economics — intake scores 9.0; fraud alerts score 8.3 but we sequenced them after Dakhtar, because <b>fraud models can't learn without intake history</b>. And Value-vs-Effort cross-checks it; where it disagreed with WSJF, we returned to the stakeholders, not the bigger number.",trans:"And here's the payoff of using three.",qa:[["Isn't overriding WSJF ignoring your method?","No — WSJF explicitly defers to dependencies. Building fraud alerts with no history to train on scores high and delivers nothing. The number flags the tension; judgement resolves it, transparently."],["Isn't 'Won't Have' just cutting features?","It's sequencing — 'this release', not 'never'. Naming it explicitly is what stops scope creep."]]},
+9:{time:"0:55",presenter:"Amal Alwahedi",say:"And this is the point of using three. All three — MoSCoW's Must-Haves, WSJF's top scores, the matrix's quick wins — landed on the same first release: electronic claims intake and member status visibility. Convergence is the whole argument. When three independent lenses agree, the sequence is robust, not an artefact of whichever method we preferred. That ordering produced the full backlog of fifteen prioritised stories.",trans:"Which brings us to the Scrum artifacts.",qa:[["Why three techniques not one?","Each has a blind spot — MoSCoW ignores effort, WSJF hides dependencies, the matrix is coarse. Together they triangulate, and their agreement is what makes the sequence trustworthy."]]},
+10:{time:"1:05",presenter:"Amal Alwahedi",say:"The Product Backlog — the single source of truth, each item written as role, want, benefit. Fifteen stories in the Section 4 order, with governance stories sitting high, not last. But here's the slide most presentations skip — an honest critique. A backlog is an artifact because of three properties, and each can fail: Single, true only while it's the only list, with the real risk of private side-spreadsheets; Prioritised, never better than its estimates, and ours are subjective; Dynamic, which becomes thrash if reordered too often. Our position: the artifact doesn't solve these — it makes them visible. That's a more modest claim than the literature makes, and the one we can defend.",trans:"So how does a Sprint actually run?",qa:[["Why undercut your own artifact?","Critical evaluation is the mark of understanding it. Naming the failure modes is how a team manages them — pretending they don't exist is how backlogs rot."]]},
+11:{time:"1:10",presenter:"Amal Alwahedi",say:"Three artifacts, one loop, every two weeks: Product Backlog — what should be built; Sprint Backlog — what this Sprint; Increment — what's actually delivered, done not promised; then the backlog re-orders. Sprint 1's goal is one sentence on purpose: let hospitals send claims electronically, and let members know where their claim is. And the roadmap builds in dependency order — intake, then consolidated history, then the Dakhtar pilot, then the engagement loop, then Health Radar. Notice Health Radar, the most exciting idea, comes last — it can't learn until intake has built a history. Discipline over excitement.",trans:"Hessa — the people who run this loop.",qa:[["Why two-week Sprints?","Long enough for a meaningful increment, short enough to inspect and adapt often — and it fits the compliance-gate cadence without letting risk pile up."],["Why does the exciting feature come last?","Health Radar needs training history only months of intake produce. Building it first means building it on nothing."]]},
+12:{time:"1:10",presenter:"Hessa Eissa",say:"Thank you Amal. A nine-person Scrum Team, self-organising, no 'responsibility manager'. The Product Owner is the Operations Director — deliberately in operations not IT, so the backlog follows member outcomes. The Scrum Master is a servant leader; in an insurer the impediments are approval lines, not code. And seven developers including an <b>embedded claims expert</b> who turns adjudication rules into requirements. Now the key delivery decision: pure Scrum assumes you can release whenever ready, and in UAE health insurance you can't. So a hybrid — predictive up front for approvals and governance, pure Scrum in the middle, a compliance gate on every release. This is Water-Scrum-Fall — agility within the constraints, not against them.",trans:"Inside that structure, the team runs on trust.",qa:[["Why is the Product Owner from operations?","Because the backlog should be ordered by what changes outcomes for members and providers — and operations owns those outcomes, not IT."],["Isn't hybrid just diluted Agile?","No — Agile where it works, predictive where the regulator needs certainty. Pure Scrum would fail the compliance gate; pure waterfall would kill discovery."]]},
+13:{time:"0:55",presenter:"Hessa Eissa",say:"On a project that automates decisions, psychological safety isn't soft. Trust is built by practice — the Daily Scrum does most of the work, because visible blockers can't fester. Why it matters here: model bias and cases where the agent was wrong are the findings people least want to raise, and a team that punishes bad news buries exactly what needs discussing. And the change we won't dress up — adjusters will fear automation, so leadership says it honestly: Dakhtar removes routine work, not jobs, backed by retraining. For conflict, a four-step framework — define, hear everyone, find common ground, solve together — and when facilitation runs out, the line is clear: Product Owner decides priority, developers decide implementation.",trans:"Now — the proof that any of this works.",qa:[["How do you actually protect psychological safety?","The Retrospective plus leadership modelling it — surfacing their own mistakes first, and attaching no blame to raising 'the agent got this wrong.'"]]},
+14:{time:"1:05",presenter:"Hessa Eissa",say:"Everything you've heard is a claim until measured — so we built a Power BI dashboard from the company's 90,701-claim dataset. This is the single most important chart: average processing hours by month. It falls from above 110 in the manual months to single digits by December, and the drop begins exactly where Dakhtar launches — that dashed line in March. Before the agent, flat and high. After, it bends and keeps falling as the models mature. If you take one image from today, take this: the bend in the curve is the intervention.",trans:"So what did we actually find?",qa:[["How do you know the drop is Dakhtar?","The inflection aligns precisely with the March pilot, and the months before are flat. The dashboard's slicers let anyone isolate a month or claim type to check the effect isn't coming from elsewhere."],["Is this real operational data?","A modelled dataset representative of the organisation — explicit in our limitations. It shows how the platform would be measured, not results from a live deployment."]]},
+15:{time:"1:00",presenter:"Hessa Eissa",say:"Three findings. One — the problem is concentrated at the manual provider-insurer interface. Two — AI is the right technology, because adjudication is language and judgement work AI can do under oversight. And three, the least intuitive — the delivery approach matters as much as the technology: in a regulated industry the answer is a hybrid with compliance gates, not pure Agile. One honest reading: the yearly KPI averages look like a miss only because they include the manual months — December's steady state meets every target, and that gap is the measurement of the change itself. And three limitations, stated plainly: the dataset is a model, it assumes cooperation we couldn't test, and the ethical questions deserve more room. We'd rather name them than have you find them.",trans:"Let me hand to all of us to close.",qa:[["Which finding is most important?","The third — everyone expects the AI to be the story, but the same AI delivered as pure Agile would fail the regulator. How you deliver decides whether the technology ever ships."],["Doesn't admitting the data is modelled weaken your case?","It strengthens the credibility of everything else — we're precise about what's demonstrated versus projected, which is what honest work looks like."]]},
+16:{time:"0:50",presenter:"All four presenters",say:"So — back to the name. Thakhr. Something precious, stored and protected, for the day it is needed. We didn't make the cover more precious — we made it arrive on the day it's needed. 50.4 hours down to 8. Fraud screening from a sample to every claim. And a member who went from knowing nothing to watching her claim move in real time, with a reason behind every decision. That's the transformation — and it's why we chose the name we did. Thank you. We're happy to take your questions.",trans:"",qa:[["If this is so clearly better, why hasn't it been done?","The four constraints in Section 2 — integration difficulty, data-governance strictness, change resistance, and the accountability question. Our contribution isn't the idea; it's a delivery model that respects all four while shipping value every Sprint."],["How is this different from any insurer 'adding AI'?","The agent is human-in-the-loop by design, not full automation — which makes it regulator-acceptable — and it's delivered through a hybrid model with compliance gates, so it reaches production instead of stalling in pilot."],["What would you do differently with more time?","Deeper treatment of model bias and accountability, and validating the cooperation assumptions with real regulator and hospital input — the three limitations we named."]]}
+};
+
+const slides=[...document.querySelectorAll('.slide')];
+const N=slides.length;
+let i=0, frag=[];
+const railFill=document.getElementById('rail-fill'), railHead=document.getElementById('rail-head');
+const stage=document.getElementById('stage');
+
+(function(){const rail=document.getElementById('rail');let last='';slides.forEach((s,idx)=>{const t=document.createElement('div');const a=s.dataset.act!==last;last=s.dataset.act;t.className='tick'+(a?' act':'');t.style.left=(idx/(N-1)*100)+'%';rail.appendChild(t);});})();
+
+function fit(){const s=Math.min(innerWidth/1280,innerHeight/720);stage.style.transform='scale('+s+')';}
+addEventListener('resize',fit);fit();
+function fragsOf(s){return [...s.querySelectorAll('.f')].sort((a,b)=>(+a.dataset.f||0)-(+b.dataset.f||0));}
+
+function render(){
+  slides.forEach((s,x)=>s.classList.toggle('on',x===i));
+  const s=slides[i];frag=fragsOf(s);
+  s._groups=[...new Set(frag.map(f=>+f.dataset.f||0))].sort((a,b)=>a-b);s._shown=0;
+  frag.forEach(f=>f.classList.remove('show'));
+  document.getElementById('m-act').innerHTML='<b>'+s.dataset.act+'</b>';
+  document.getElementById('m-pres').innerHTML='Presenter · <b>'+s.dataset.pres+'</b>';
+  document.getElementById('m-num').innerHTML='<b>'+String(i+1).padStart(2,'0')+'</b> / '+N;
+  const p=i/(N-1)*100;railFill.style.width=p+'%';railHead.style.left=p+'%';
+  triggerAnims(s);updateNotes();updateOv();advanceFrag();
+}
+function advanceFrag(){const s=slides[i];if(!s._groups||s._shown>=s._groups.length)return false;const g=s._groups[s._shown];frag.filter(f=>(+f.dataset.f||0)===g).forEach(f=>f.classList.add('show'));s._shown++;return true;}
+function next(){const s=slides[i];if(s._shown<s._groups.length){advanceFrag();return;}if(i<N-1){i++;render();}}
+function prev(){if(i>0){i--;render();const s=slides[i];while(s._shown<s._groups.length)advanceFrag();}}
+
+function triggerAnims(s){
+  s.querySelectorAll('[data-count]').forEach(el=>{const target=+el.dataset.count,dec=+el.dataset.dec||0;let start=null,dur=1200;const se=el.querySelector('small');const suf=se?se.outerHTML:'';function step(ts){if(!start)start=ts;const t=Math.min((ts-start)/dur,1);const e=1-Math.pow(1-t,3);const v=target*e;el.innerHTML=(dec?v.toFixed(dec):Math.round(v).toLocaleString())+suf;if(t<1)requestAnimationFrame(step);else el.innerHTML=(dec?target.toFixed(dec):target.toLocaleString())+suf;}el.innerHTML='0'+suf;requestAnimationFrame(step);});
+  s.querySelectorAll('.spark').forEach(p=>setTimeout(()=>p.classList.add('draw'),260));
+  s.querySelectorAll('.area').forEach(p=>setTimeout(()=>p.classList.add('draw'),260));
+  s.querySelectorAll('.tl-line i').forEach(el=>setTimeout(()=>el.style.width='100%',300));
+}
+function updateNotes(){
+  const n=NOTES[i+1]||{};const s=slides[i];
+  document.getElementById('nt-tag').textContent=s.dataset.act+' · '+(n.time||'');
+  document.getElementById('nt-title').textContent=s.dataset.title||'';
+  let h='<span class="pill">'+s.dataset.pres+'</span><span class="pill">'+(n.time||'')+'</span>';
+  h+='<h4>Script</h4><p class="say">'+(n.say||'')+'</p>';
+  if(n.trans){h+='<h4>Handover / transition</h4><p>'+n.trans+'</p>';}
+  if(n.qa&&n.qa.length){h+='<h4>Examiner Q&amp;A</h4>';n.qa.forEach(q=>{h+='<div class="qa"><div class="q">Q · '+q[0]+'</div><div class="a">'+q[1]+'</div></div>';});}
+  document.getElementById('nt-body').innerHTML=h;
+}
+const ovGrid=document.getElementById('ov-grid');
+slides.forEach((s,x)=>{const d=document.createElement('div');d.className='th';d.innerHTML='<div class="tn">'+String(x+1).padStart(2,'0')+' · '+s.dataset.act+'</div><div class="tt">'+(s.dataset.title||'')+'</div>';d.onclick=()=>{i=x;render();closeOv();};ovGrid.appendChild(d);});
+function updateOv(){[...ovGrid.children].forEach((c,x)=>c.classList.toggle('cur',x===i));}
+function openOv(){document.getElementById('ov').classList.add('on');updateOv();}
+function closeOv(){document.getElementById('ov').classList.remove('on');}
+let tOn=false,tStart=0,tInt=null;
+function toggleTimer(){tOn=!tOn;const el=document.getElementById('timer');el.classList.toggle('on',tOn);if(tOn){tStart=Date.now();tInt=setInterval(()=>{const s=Math.floor((Date.now()-tStart)/1000);document.getElementById('tm').textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');},500);}else clearInterval(tInt);}
+addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();next();}
+  else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();prev();}
+  else if(e.key==='n'||e.key==='N')document.getElementById('notes').classList.toggle('on');
+  else if(e.key==='o'||e.key==='O'){const ov=document.getElementById('ov');ov.classList.contains('on')?closeOv():openOv();}
+  else if(e.key==='Escape')closeOv();
+  else if(e.key==='t'||e.key==='T')toggleTimer();
+  else if(e.key==='f'||e.key==='F'){if(!document.fullscreenElement)document.documentElement.requestFullscreen();else document.exitFullscreen();}
+  else if(e.key==='Home'){i=0;render();}else if(e.key==='End'){i=N-1;render();}
+});
+let tx=0;addEventListener('touchstart',e=>tx=e.touches[0].clientX,{passive:true});
+addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>44)dx<0?next():prev();},{passive:true});
+setTimeout(()=>document.getElementById('help').classList.remove('on'),5200);
+render();
+</script>
+</body>
+</html>
