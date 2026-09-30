@@ -120,6 +120,7 @@ export function Viewer(host: HTMLElement): ViewerAPI {
     R.setSize(w, h, false); CAM.aspect = w / h; CAM.updateProjectionMatrix();
     // fit the model to narrow viewports (the camera frames by height, so widen the distance when the frame is tall)
     const len = MOD?.userData.len || 7; orb.home = len * (CAM.aspect < 1.2 ? 3.2 : 2.35);
+    if (!orb.user) orb.tr = orb.home; // keep framing until the viewer is touched
   }
 
   function prep(root: Object3D) {
@@ -214,7 +215,7 @@ export function Viewer(host: HTMLElement): ViewerAPI {
       prep(MOD); S.add(MOD);
       const len = MOD.userData.len || 7; ring?.scale.setScalar(len * .78); orb.min = len * .8; orb.max = len * 3.5;
       size();
-      if (first) { orb.tr = orb.r = orb.home; }
+      if (first) { orb.tr = orb.r = orb.home; orb.user = 0; }
       if (S.fog) { (S.fog as any).near = len * 2.2; (S.fog as any).far = len * 5.2; }
       applyExplode(MOD); applyVis(MOD); applyExplode(GHOST);
     },

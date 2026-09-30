@@ -188,7 +188,8 @@ html[dir="rtl"] .z-bay .flip { transform: scaleX(-1); }
   .z-bay .st-ex { width: 100%; }
   .z-bay .st-ex input { flex: 1; width: auto; }
   .z-bay .dim { grid-template-columns: minmax(0, 7.5rem) minmax(0, 1fr) 3.2ch 4.2ch; gap: var(--s-2); font-size: var(--t-xs); }
-  .z-bay .bp { inset: 18% 4% 22%; width: 92%; height: 60%; }
+  .z-bay .bp { inset: 16% 4% 32%; width: 92%; height: 52%; }
+  .z-bay .fallback span { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { .z-bay .v3.ld::after { animation: none; } }
 .z-bay .testRes .dim { grid-template-columns: minmax(0, 9.5rem) minmax(0, 1fr) 6.5ch 3.5ch; }
