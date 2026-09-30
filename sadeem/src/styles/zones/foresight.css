@@ -1,0 +1,103 @@
+/* SADEEM Hangar · The Foresight Telescope (night). An observatory instrument: one eyepiece, one time dial, a quiet side log. */
+.z-foresight .zh h1 { max-width: 26ch; }
+.z-foresight .fsGrid {
+  display: grid; gap: var(--s-8); align-items: start;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+}
+.z-foresight .fsMain { display: grid; gap: var(--s-5); min-width: 0; }
+
+/* eyepiece */
+.z-foresight .fsScope {
+  position: relative; border: 1px solid var(--line); border-radius: var(--r);
+  background: radial-gradient(ellipse at 50% 50%, var(--night-2) 0%, var(--night) 70%);
+}
+.z-foresight .fsScope::before, .z-foresight .fsScope::after {
+  content: ""; position: absolute; width: 18px; height: 18px; border: 1px solid var(--star); opacity: .55; pointer-events: none;
+}
+.z-foresight .fsScope::before { top: 10px; inset-inline-start: 10px; border-inline-end: 0; border-bottom: 0; }
+.z-foresight .fsScope::after { bottom: 10px; inset-inline-end: 10px; border-inline-start: 0; border-top: 0; }
+.z-foresight #fsCv { display: block; width: 100%; height: clamp(440px, calc(100vh - var(--dock-h) - 190px), 760px); border-radius: var(--r); }
+.z-foresight #fsCv:focus-visible { outline: 1px solid var(--star); outline-offset: -1px; }
+.z-foresight .fsEpoch { position: absolute; top: var(--s-8); inset-inline-start: var(--s-8); display: grid; gap: 4px; pointer-events: none; }
+.z-foresight .fsEpoch b { font-family: var(--f-display); font-size: var(--t-2xl); font-weight: 600; color: var(--ink); line-height: 1; font-variant-numeric: tabular-nums; }
+
+/* time dial */
+.z-foresight .fsControls { display: flex; align-items: center; gap: var(--s-5); }
+.z-foresight #fsPlay { min-width: 132px; }
+.z-foresight #fsPlay .gl { font-size: 10px; letter-spacing: -.1em; }
+.z-foresight .fsSlider { flex: 1; min-width: 0; display: grid; gap: 6px; }
+.z-foresight .fsSlider input[type="range"] {
+  -webkit-appearance: none; appearance: none; height: 18px; background: transparent; margin: 0; cursor: pointer;
+}
+.z-foresight .fsSlider input[type="range"]::-webkit-slider-runnable-track {
+  height: 2px; background: linear-gradient(to right, var(--star) var(--p, 0%), var(--line) var(--p, 0%));
+}
+html[dir="rtl"] .z-foresight .fsSlider input[type="range"]::-webkit-slider-runnable-track { background: linear-gradient(to left, var(--star) var(--p, 0%), var(--line) var(--p, 0%)); }
+.z-foresight .fsSlider input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 14px; height: 14px; margin-top: -6px; border-radius: 50%; background: var(--night); border: 2px solid var(--star);
+}
+.z-foresight .fsSlider input[type="range"]::-moz-range-track { height: 2px; background: var(--line); }
+.z-foresight .fsSlider input[type="range"]::-moz-range-progress { height: 2px; background: var(--star); }
+.z-foresight .fsSlider input[type="range"]::-moz-range-thumb { width: 12px; height: 12px; border-radius: 50%; background: var(--night); border: 2px solid var(--star); }
+.z-foresight .fsTicks { display: flex; justify-content: space-between; font-size: var(--t-2xs); color: var(--mute); }
+html[lang="en"] .z-foresight .fsTicks { font-family: var(--f-mono); letter-spacing: .06em; }
+.z-foresight .fsYear { min-width: 84px; text-align: end; font-family: var(--f-mono); font-size: var(--t-sm); color: var(--ink); font-variant-numeric: tabular-nums; }
+html[lang="ar"] .z-foresight .fsYear { font-family: var(--f-body); }
+
+/* side log */
+.z-foresight .fsSide { display: grid; gap: var(--s-8); align-content: start; min-width: 0; position: sticky; top: calc(var(--dock-h) + var(--s-5)); }
+.z-foresight .fsRead { display: grid; gap: 0; border-block: 1px solid var(--line); }
+.z-foresight .fsStat { display: grid; grid-template-columns: 64px minmax(0, 1fr); align-items: center; gap: var(--s-4); padding: var(--s-4) 0; }
+.z-foresight .fsStat + .fsStat { border-top: 1px solid var(--line-2); }
+.z-foresight .fsStat b { font-family: var(--f-display); font-size: 40px; font-weight: 600; line-height: 1; color: var(--star); font-variant-numeric: tabular-nums; }
+.z-foresight .fsStat span { font-size: var(--t-sm); color: var(--ink-2); line-height: 1.45; }
+.z-foresight .fsStat.bad b { color: var(--crit); }
+.z-foresight .fsStat.good b { color: var(--good); }
+.z-foresight .fsStat.scn b { color: var(--ink); }
+
+.z-foresight .fsBlock { display: grid; gap: var(--s-3); }
+.z-foresight .fsH { font-size: var(--t-sm); font-weight: 600; color: var(--ink); line-height: 1.5; }
+.z-foresight .fsWhatif { display: grid; gap: var(--s-3); justify-items: start; }
+.z-foresight .fsNeeds { list-style: none; display: grid; width: 100%; }
+.z-foresight .fsNeeds li {
+  display: grid; grid-template-columns: 44px minmax(0, 1fr); align-items: baseline; gap: var(--s-3);
+  padding: 12px 0; border-bottom: 1px solid var(--line-2);
+}
+.z-foresight .fsNeeds li:last-child { border-bottom: 0; }
+.z-foresight .fsNeeds .mono { font-size: var(--t-2xs); color: var(--mute); }
+.z-foresight .fsNeeds .nm { line-height: 1.45; }
+.z-foresight .fsNeeds li.void .mono { color: var(--crit); }
+.z-foresight .fsNeeds li.void .btn { border-color: var(--crit); color: var(--ink); }
+.z-foresight .fsNeeds li.void .btn:hover { background: var(--crit-t); }
+.z-foresight .fsNeeds .nb { display: grid; gap: 8px; justify-items: start; min-width: 0; }
+.z-foresight .fsNeeds .nm { font-size: var(--t-sm); color: var(--ink); }
+.z-foresight .fsNeeds li.ok .nm { color: var(--ink-2); }
+.z-foresight .fsNeeds .cov { display: inline-flex; align-items: center; gap: 6px; font-size: var(--t-2xs); color: var(--mute); }
+.z-foresight .fsNeeds .cov::before { content: ""; width: 10px; height: 2px; background: var(--good); }
+
+.z-foresight .fsLegend { list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px var(--s-4); font-size: var(--t-xs); color: var(--ink-2); }
+.z-foresight .fsLegend li { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.z-foresight .fsLegend i { width: 9px; height: 9px; border-radius: 50%; flex: none; background: var(--c, var(--star)); box-shadow: 0 0 8px var(--c, var(--star)); }
+.z-foresight .fsLegend i.ct { background: var(--crit); box-shadow: none; width: 6px; height: 6px; margin-inline: 1.5px; }
+.z-foresight .fsLegend i.gh { background: transparent; box-shadow: none; border: 1.4px dashed var(--star); }
+.z-foresight .fsLegend i.arc { width: 14px; height: 3px; border-radius: 0; box-shadow: none; }
+.z-foresight .fsLegend i.arc.good { background: var(--good); }
+.z-foresight .fsLegend i.arc.crit { background: var(--crit); }
+
+@media (max-width: 1100px) {
+  .z-foresight .fsGrid { grid-template-columns: minmax(0, 1fr); }
+  .z-foresight .fsSide { position: static; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .z-foresight .fsSide > .proposed { grid-column: 1 / -1; }
+  .z-foresight .fsRead { grid-column: 1 / -1; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+  .z-foresight .fsStat + .fsStat { border-top: 0; }
+}
+@media (max-width: 720px) {
+  .z-foresight .fsSide { grid-template-columns: minmax(0, 1fr); gap: var(--s-6); }
+  .z-foresight #fsCv { height: auto; aspect-ratio: 1; }
+  .z-foresight .fsEpoch { top: var(--s-3); inset-inline-start: var(--s-4); }
+  .z-foresight .fsEpoch b { font-size: var(--t-lg); }
+  .z-foresight .fsControls { flex-wrap: wrap; gap: var(--s-3); }
+  .z-foresight .fsSlider { flex-basis: 100%; order: 3; }
+  .z-foresight .fsStat b { font-size: 32px; }
+  .z-foresight .fsStat { grid-template-columns: 52px minmax(0, 1fr); }
+}

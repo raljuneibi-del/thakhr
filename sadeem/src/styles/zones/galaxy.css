@@ -1,0 +1,117 @@
+/* SADEEM Hangar · The National Constellation (night). A full-bleed sky; the chrome is a quiet observatory log around it. */
+.z-galaxy { padding-bottom: 0; }
+.z-galaxy .galaxyWrap {
+  position: relative; height: calc(100vh - var(--dock-h)); height: calc(100svh - var(--dock-h)); min-height: 600px; overflow: hidden;
+  background: radial-gradient(ellipse 70% 60% at 50% 55%, var(--night-2) 0%, var(--night) 70%);
+}
+.z-galaxy #galCv { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; outline: none; }
+.z-galaxy #galCv:focus-visible { box-shadow: inset 0 0 0 1px var(--star); }
+
+/* header: top, reading side */
+.z-galaxy .galHead {
+  position: absolute; z-index: 3; top: 0; inset-inline-start: 0; width: min(500px, 100%);
+  padding: clamp(28px, 4vw, 48px) var(--gutter) 0; display: grid; gap: var(--s-3); pointer-events: none;
+}
+.z-galaxy .galHead h1 { font-family: var(--f-display); font-size: var(--t-2xl); font-weight: 600; line-height: 1.2; color: var(--ink); }
+html[lang="ar"] .z-galaxy .galHead h1 { line-height: 1.4; }
+.z-galaxy .galHead p { font-size: var(--t-sm); line-height: 1.75; color: var(--ink-2); max-width: 46ch; }
+
+/* star index (keyboard + screen-reader path to every star) */
+.z-galaxy .galIndex { pointer-events: auto; margin-top: var(--s-2); justify-self: start; max-width: 100%; }
+.z-galaxy .galIndex summary {
+  list-style: none; display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 14px; cursor: pointer;
+  border: 1px solid var(--line); border-radius: var(--r); font-size: var(--t-xs); color: var(--ink-2);
+  background: color-mix(in srgb, var(--night) 70%, transparent); backdrop-filter: blur(6px); transition: border-color .2s, color .2s;
+}
+.z-galaxy .galIndex summary::-webkit-details-marker { display: none; }
+.z-galaxy .galIndex summary:hover { border-color: var(--steel); color: var(--ink); }
+.z-galaxy .galIndex summary .n { font-family: var(--f-mono); font-size: var(--t-2xs); color: var(--mute); }
+html[lang="ar"] .z-galaxy .galIndex summary .n { font-family: var(--f-body); }
+.z-galaxy .galIndex[open] summary { border-color: var(--star); color: var(--ink); }
+.z-galaxy .galIndex ul {
+  list-style: none; margin-top: var(--s-2); width: min(420px, calc(100vw - 2 * var(--gutter))); max-height: min(46vh, 420px); overflow-y: auto;
+  border: 1px solid var(--line); border-radius: var(--r); background: color-mix(in srgb, var(--night) 92%, transparent); backdrop-filter: blur(10px);
+  box-shadow: var(--shadow); padding: 4px;
+}
+.z-galaxy .galIndex li button {
+  display: grid; grid-template-columns: 10px 64px minmax(0, 1fr); align-items: center; gap: 10px; width: 100%; padding: 8px 10px;
+  text-align: start; font-size: var(--t-xs); color: var(--ink-2); border-radius: 2px;
+}
+.z-galaxy .galIndex li button:hover { background: var(--sadeem-t); color: var(--ink); }
+.z-galaxy .galIndex li button i { width: 7px; height: 7px; border-radius: 50%; background: var(--c); box-shadow: 0 0 6px var(--c); }
+.z-galaxy .galIndex li button.ct i { box-shadow: none; }
+.z-galaxy .galIndex li button.ct .nm { color: var(--mute); font-style: italic; }
+.z-galaxy .galIndex li .mono { font-size: var(--t-2xs); color: var(--mute); }
+.z-galaxy .galIndex li .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* card: top, far side */
+.z-galaxy .galCard {
+  position: absolute; z-index: 5; top: clamp(28px, 4vw, 48px); inset-inline-end: var(--gutter); width: min(340px, calc(100% - 2 * var(--gutter)));
+  display: grid; gap: var(--s-3); padding: var(--s-5) var(--s-5) var(--s-4);
+  background: color-mix(in srgb, var(--night-2) 90%, transparent); border: 1px solid var(--line); border-top: 1px solid var(--star);
+  border-radius: var(--r); box-shadow: var(--shadow); backdrop-filter: blur(10px);
+  animation: galIn .45s var(--ease);
+}
+@keyframes galIn { from { opacity: 0; transform: translateY(-6px); } }
+.z-galaxy .galCard > .tag { justify-self: start; height: auto; min-height: 22px; padding-block: 3px; white-space: normal; margin-inline-end: 36px; }
+.z-galaxy .galCard .tag svg.i { width: 12px; height: 12px; }
+.z-galaxy .galX { position: absolute; top: 10px; inset-inline-end: 10px; width: 30px; height: 30px; display: grid; place-items: center; border-radius: var(--r); color: var(--ink-2); }
+.z-galaxy .galX:hover { background: var(--sadeem-t); color: var(--ink); }
+.z-galaxy .galX svg.i { width: 16px; height: 16px; }
+.z-galaxy .gcT { display: block; font-family: var(--f-display); font-size: var(--t-md); font-weight: 600; line-height: 1.45; color: var(--ink); padding-inline-end: 28px; }
+.z-galaxy .gcM { font-size: var(--t-sm); color: var(--ink-2); line-height: 1.7; }
+.z-galaxy .gcKv { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 7px var(--s-4); margin: 0; padding-block: var(--s-3); border-block: 1px solid var(--line-2); font-size: var(--t-xs); }
+.z-galaxy .gcKv dt { color: var(--mute); }
+.z-galaxy .gcKv dd { margin: 0; color: var(--ink); text-align: end; font-weight: 500; }
+.z-galaxy .galCard .bar { height: 2px; background: var(--line); }
+.z-galaxy .gcB { padding-top: var(--s-1); }
+
+/* hover label */
+.z-galaxy .galTip {
+  position: absolute; z-index: 4; transform: translate(-50%, calc(-100% - 14px)); pointer-events: none; white-space: nowrap; max-width: 360px; overflow: hidden; text-overflow: ellipsis;
+  padding: 5px 10px; font-size: var(--t-xs); color: var(--ink); background: color-mix(in srgb, var(--night) 92%, transparent); border: 1px solid var(--line); border-radius: 2px;
+}
+
+/* footer: legend, scale, note */
+.z-galaxy .galFoot {
+  position: absolute; z-index: 3; inset-inline: 0; bottom: 0; padding: 0 var(--gutter) var(--s-6);
+  display: flex; align-items: flex-end; justify-content: space-between; gap: var(--s-4) var(--s-8); flex-wrap: wrap; pointer-events: none;
+}
+.z-galaxy .galLegend { list-style: none; display: flex; flex-wrap: wrap; gap: 8px var(--s-5); font-size: var(--t-xs); color: var(--ink-2); max-width: 640px; }
+.z-galaxy .galLegend li { display: flex; align-items: center; gap: 8px; }
+.z-galaxy .galLegend i { width: 8px; height: 8px; border-radius: 50%; background: var(--c); box-shadow: 0 0 8px var(--c); }
+.z-galaxy .galLegend i.ct { width: 6px; height: 6px; box-shadow: none; }
+.z-galaxy .galScale { display: grid; gap: var(--s-2); justify-items: end; margin-inline-start: auto; }
+.z-galaxy .galScale ol { list-style: none; display: flex; align-items: center; gap: var(--s-2); font-size: var(--t-2xs); color: var(--ink-2); }
+.z-galaxy .galScale li { display: flex; align-items: center; gap: var(--s-2); }
+.z-galaxy .galScale li b { display: block; width: 22px; height: 1px; background: var(--star); opacity: .35; }
+.z-galaxy .galScale li:nth-child(2) b { opacity: .6; }
+.z-galaxy .galScale li:nth-child(3) b { opacity: 1; }
+.z-galaxy .galNote { flex-basis: 100%; font-size: var(--t-2xs); color: var(--mute); }
+
+/* 2D chart (intentional fallback when WebGL is unavailable) */
+.z-galaxy .galFlat { position: absolute; inset: 0; margin: auto; width: min(100%, calc(100% - 2 * var(--gutter))); height: 100%; max-height: 100%; }
+.z-galaxy .galaxyWrap.flat .galFlat { padding-block: 120px 90px; }
+.z-galaxy .galFlat .ring { fill: none; stroke: var(--star); stroke-opacity: .18; }
+.z-galaxy .galFlat .axis { stroke: var(--on-night); stroke-opacity: .12; }
+.z-galaxy .galFlat .dm { font-size: 12px; fill: var(--on-night-3); font-family: var(--f-mono); }
+html[lang="ar"] .z-galaxy .galFlat .dm { font-family: var(--f-body); }
+.z-galaxy .galFlat .core { fill: var(--star); }
+.z-galaxy .galFlat .st { cursor: pointer; outline: none; }
+.z-galaxy .galFlat .st .gl { opacity: .16; }
+.z-galaxy .galFlat .st .sel { fill: none; stroke: var(--on-night); stroke-opacity: 0; transition: stroke-opacity .2s; }
+.z-galaxy .galFlat .st:hover .sel, .z-galaxy .galFlat .st:focus-visible .sel { stroke-opacity: .5; }
+.z-galaxy .galFlat .st.on .sel { stroke: var(--star); stroke-opacity: 1; }
+.z-galaxy .galFlat .st.ct .dot { opacity: .85; }
+
+@media (max-width: 760px) {
+  .z-galaxy .galaxyWrap { height: auto; min-height: 0; overflow: visible; display: flex; flex-direction: column; }
+  .z-galaxy .galHead { position: static; width: auto; padding: var(--s-8) var(--gutter) var(--s-4); }
+  .z-galaxy .galIndex ul { width: 100%; }
+  .z-galaxy #galCv, .z-galaxy .galFlat { position: relative; inset: auto; height: 62vh; min-height: 380px; width: 100%; touch-action: pan-y; }
+  .z-galaxy .galaxyWrap.flat .galFlat { padding: 0; height: auto; aspect-ratio: 1; min-height: 0; }
+  .z-galaxy .galCard { position: fixed; top: auto; bottom: var(--s-4); inset-inline: var(--s-4); width: auto; }
+  .z-galaxy .galFoot { position: static; padding: var(--s-4) var(--gutter) var(--s-8); }
+  .z-galaxy .galScale { justify-items: start; margin-inline-start: 0; }
+  .z-galaxy .galScale ol { flex-wrap: wrap; }
+}

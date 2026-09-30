@@ -1,0 +1,156 @@
+/* SADEEM Hangar · Digital Twin Lab (L4) + Mission Engineering (L5, night zone) */
+
+/* ---------------- Digital Twin Lab ---------------- */
+.z-twins .tw { display: grid; gap: var(--s-5); grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); align-items: start; }
+.z-twins .tw-side { display: grid; gap: var(--s-5); align-content: start; min-width: 0; }
+.z-twins .tw-cool { gap: var(--s-5); }
+.z-twins .tw-fig { margin: 0; overflow-x: auto; border: 1px solid var(--line-2); border-radius: var(--r); background: var(--paper); }
+.z-twins .tw-chart { display: block; width: 100%; min-width: 520px; height: auto; direction: ltr; }
+.z-twins .tw-chart text { font-family: var(--f-mono); font-size: 11px; fill: var(--mute); }
+html[lang="ar"] .z-twins .tw-chart text.limT { font-family: var(--f-body); }
+.z-twins .tw-chart .gl { stroke: var(--line-2); }
+.z-twins .tw-chart .axis, .z-twins .tw-chart .gx { stroke: var(--steel); }
+.z-twins .tw-chart .over { fill: var(--crit-t); }
+.z-twins .tw-chart .lim { stroke: var(--crit); stroke-dasharray: 5 4; stroke-width: 1.2; }
+.z-twins .tw-chart .limT { fill: var(--crit); font-size: 11.5px; }
+.z-twins .tw-chart .area { fill: var(--sadeem-t); }
+.z-twins .tw-chart .cur { fill: none; stroke: var(--sadeem); stroke-width: 2.25; stroke-linejoin: round; }
+.z-twins .tw-chart .dv { stroke: var(--crit); stroke-width: 1; stroke-dasharray: 2 3; }
+.z-twins .tw-chart .dot { fill: var(--crit); stroke: var(--paper); stroke-width: 2; }
+
+.z-twins .tw-ctl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-5) var(--s-6); }
+.z-twins .tw-f > label, .z-twins .tw-f > span { display: flex; align-items: baseline; gap: 6px; }
+.z-twins .tw-f > label span { flex: 1; min-width: 0; }
+.z-twins .tw-f b { font-size: var(--t-sm); color: var(--ink); font-weight: 600; }
+.z-twins .tw-f small { font-family: var(--f-mono); font-size: var(--t-2xs); color: var(--mute); }
+.z-twins .tw-f .seg { justify-self: start; }
+
+.z-twins .tw-metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border: 1px solid var(--line); border-radius: var(--r); }
+.z-twins .tw-m { display: grid; gap: 6px; padding: 14px 16px; min-width: 0; border-inline-start: 1px solid var(--line-2); }
+.z-twins .tw-m:first-child { border-inline-start: 0; }
+.z-twins .tw-m span { font-size: var(--t-xs); color: var(--mute); }
+.z-twins .tw-m b { font-family: var(--f-display); font-size: clamp(20px, 2vw, 26px); font-weight: 600; line-height: 1.1; color: var(--ink); font-variant-numeric: tabular-nums; }
+.z-twins .tw-m.bad b { color: var(--crit); }
+.z-twins .tw-m.ok b { color: var(--good); }
+
+.z-twins .tw-env { display: grid; gap: 10px; }
+.z-twins .tw-er { display: grid; grid-template-columns: 112px minmax(0, 1fr) 64px; gap: 12px; align-items: center; font-size: var(--t-sm); }
+.z-twins .tw-er > span { color: var(--ink-2); min-width: 0; }
+.z-twins .tw-er > b { font-family: var(--f-mono); font-size: var(--t-xs); font-weight: 500; text-align: end; color: var(--ink); direction: ltr; unicode-bidi: isolate; }
+html[lang="ar"] .z-twins .tw-er > b { font-family: var(--f-body); }
+.z-twins .tw-eb { height: 6px; background: var(--sand); border-radius: 1px; overflow: hidden; }
+.z-twins .tw-eb i { display: block; height: 100%; background: var(--warn); }
+.z-twins .tw-axis { margin-top: -2px; }
+.z-twins .tw-ticks { position: relative; height: 16px; border-top: 1px solid var(--line); }
+.z-twins .tw-ticks i {
+  position: absolute; top: 2px; font: 400 var(--t-2xs)/1 var(--f-mono); font-style: normal; color: var(--mute);
+  transform: translateX(-50%);
+}
+[dir="rtl"] .z-twins .tw-ticks i { transform: translateX(50%); }
+.z-twins .tw-ticks i:first-child { transform: none; }
+[dir="rtl"] .z-twins .tw-arr { transform: scaleX(-1); }
+.z-twins .tw-brief { font-size: var(--t-sm); line-height: 1.75; }
+.z-twins .tw-case { display: flex; gap: var(--s-3); align-items: flex-start; padding: 12px 14px; background: var(--paper-2); border-radius: var(--r); font-size: var(--t-sm); }
+.z-twins .tw-case .tag { margin-top: 2px; }
+
+@media (max-width: 1100px) { .z-twins .tw { grid-template-columns: minmax(0, 1fr); } .z-twins .tw-side { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 720px) {
+  .z-twins .tw-side, .z-twins .tw-ctl { grid-template-columns: minmax(0, 1fr); }
+  .z-twins .tw-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .z-twins .tw-m:nth-child(3) { border-inline-start: 0; }
+  .z-twins .tw-m:nth-child(n+3) { border-top: 1px solid var(--line-2); }
+  .z-twins .tw-er { grid-template-columns: 92px minmax(0, 1fr) 58px; }
+}
+
+/* ---------------- Mission Engineering ---------------- */
+.z-missions .ms { display: grid; gap: var(--s-6); grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); align-items: start; }
+.z-missions .ms-mapcol, .z-missions .ms-side { display: grid; gap: var(--s-4); align-content: start; min-width: 0; }
+.z-missions .ms-side { gap: var(--s-5); }
+.z-missions .ms-fig { margin: 0; border: 1px solid var(--line); border-radius: var(--r); background: var(--paper-2); overflow: hidden; }
+.z-missions .ms-map { display: block; width: 100%; height: auto; direction: ltr; }
+.z-missions .ms-map text { font-family: var(--f-mono); font-size: 10.5px; fill: var(--ink); }
+html[lang="ar"] .z-missions .ms-map text { font-family: var(--f-body); font-size: 11.5px; }
+.z-missions .ms-map .storm { fill: var(--warn); fill-opacity: .15; }
+.z-missions .ms-map .front { stroke: var(--warn); stroke-width: 1.5; stroke-dasharray: 6 4; }
+.z-missions .ms-map .route { fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; opacity: .85; }
+.z-missions .ms-map .route.hwy { stroke: var(--ink-2); }
+.z-missions .ms-map .route.trk { stroke: var(--star-ink); stroke-dasharray: 8 5; }
+.z-missions .ms-map .route.wad { stroke: var(--good); }
+.z-missions .ms-map .route.zon { stroke: var(--sadeem); stroke-dasharray: 2 5; }
+.z-missions .ms-map .route.sel { stroke-width: 5; opacity: 1; }
+.z-missions .ms-map .site { fill: var(--paper-2); stroke: var(--ink); stroke-width: 1.5; }
+.z-missions .ms-map .site-t { font-weight: 600; letter-spacing: .04em; }
+.z-missions .ms-map .unit circle { stroke: var(--paper-2); stroke-width: 2; }
+.z-missions .ms-map .unit.g circle { fill: var(--sadeem); }
+.z-missions .ms-map .unit.a circle { fill: var(--star); }
+.z-missions .ms-map .unit text { fill: var(--ink-2); }
+.z-missions .ms-map .unit.lost { opacity: .4; }
+.z-missions .ms-map .hud { fill: var(--mute); letter-spacing: .08em; }
+.z-missions .ms-map .north path { fill: var(--ink-2); }
+.z-missions .ms-map .north text, .z-missions .ms-map .scale text { fill: var(--mute); font-family: var(--f-mono); font-size: 10px; }
+.z-missions .ms-map .scale line { stroke: var(--ink-2); stroke-width: 1.2; }
+
+.z-missions .ms-time { display: flex; align-items: center; gap: var(--s-4); }
+.z-missions .ms-range { display: flex; align-items: center; gap: var(--s-3); flex: 1; min-width: 0; font-size: var(--t-xs); color: var(--mute); }
+.z-missions .ms-range input { flex: 1; min-width: 0; }
+.z-missions .ms-range .n { direction: ltr; unicode-bidi: isolate; white-space: nowrap; min-width: 6ch; }
+.z-missions .ms-play { flex: none; min-width: 132px; }
+.z-missions .ms-legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: var(--t-xs); color: var(--mute); }
+.z-missions .ms-legend span { display: inline-flex; align-items: center; gap: 8px; }
+.z-missions .ms-legend .k { width: 18px; height: 0; border-top: 2.5px solid; flex: none; }
+.z-missions .ms-legend .k.hwy { border-color: var(--ink-2); }
+.z-missions .ms-legend .k.trk { border-color: var(--star-ink); border-top-style: dashed; }
+.z-missions .ms-legend .k.wad { border-color: var(--good); }
+.z-missions .ms-legend .k.zon { border-color: var(--sadeem); border-top-style: dotted; }
+.z-missions .ms-legend .k.storm { height: 10px; border: 1px dashed var(--warn); background: color-mix(in srgb, var(--warn) 15%, transparent); }
+.z-missions .ms-legend .k.ug, .z-missions .ms-legend .k.ua { width: 10px; height: 10px; border: 0; border-radius: 50%; }
+.z-missions .ms-legend .k.ug { background: var(--sadeem); }
+.z-missions .ms-legend .k.ua { background: var(--star); }
+
+.z-missions .ms-h { font-size: var(--t-xs); font-weight: 500; color: var(--mute); letter-spacing: .04em; margin-bottom: var(--s-2); }
+html[lang="en"] .z-missions .ms-h { font-family: var(--f-mono); text-transform: uppercase; letter-spacing: .14em; font-size: var(--t-2xs); }
+.z-missions .ms-log { border-top: 1px solid var(--line); padding-top: var(--s-4); }
+.z-missions .ms-evt { list-style: none; display: grid; gap: 2px; max-height: 220px; overflow: auto; font-size: var(--t-sm); }
+.z-missions .ms-evt li { display: grid; grid-template-columns: 7ch minmax(0, 1fr); gap: var(--s-3); padding: 5px 0; border-bottom: 1px solid var(--line-2); }
+.z-missions .ms-evt li:last-child { border-bottom: 0; }
+.z-missions .ms-evt .n { color: var(--mute); font-size: var(--t-xs); direction: ltr; unicode-bidi: isolate; text-align: start; }
+
+.z-missions .ms-assets { display: grid; gap: 6px; }
+.z-missions .ms-a { display: grid; grid-template-columns: 44px minmax(0, 1fr) 150px; gap: 12px; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--line-2); }
+.z-missions .ms-a:last-child { border-bottom: 0; }
+.z-missions .ms-code { font-family: var(--f-mono); font-size: var(--t-2xs); color: var(--mute); letter-spacing: .06em; }
+.z-missions .ms-an { display: grid; min-width: 0; line-height: 1.35; }
+.z-missions .ms-an b { font-family: var(--f-mono); font-size: var(--t-sm); font-weight: 500; }
+.z-missions .ms-an small { font-size: var(--t-xs); color: var(--mute); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.z-missions .ms-a select { min-height: 36px; padding: 6px 10px; font-size: var(--t-xs); }
+.z-missions .ms-route { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.z-missions .ms-route button { height: auto; min-height: 48px; padding: 6px 10px; display: grid; gap: 1px; align-content: center; line-height: 1.3; text-align: center; font-size: var(--t-xs); }
+.z-missions .ms-route button[aria-pressed="true"] { background: var(--sadeem-t); color: var(--ink); box-shadow: inset 0 0 0 1px var(--sadeem); }
+.z-missions .ms-route small { font-size: var(--t-2xs); color: var(--mute); }
+.z-missions #msRun { justify-self: stretch; }
+
+.z-missions .ms-obj { list-style: none; display: grid; }
+.z-missions .ms-obj li { display: flex; justify-content: space-between; gap: var(--s-4); padding: 9px 0; border-bottom: 1px solid var(--line-2); font-size: var(--t-sm); color: var(--ink-2); }
+.z-missions .ms-obj li b { font-family: var(--f-mono); font-size: var(--t-xs); color: var(--mute); font-weight: 500; }
+.z-missions .ms-hint { font-size: var(--t-sm); }
+.z-missions .ms-total { font-family: var(--f-display); font-size: 30px; font-weight: 600; line-height: 1; color: var(--ink); }
+.z-missions .ms-total small { font-size: var(--t-xs); color: var(--mute); font-weight: 400; margin-inline-start: 2px; }
+.z-missions .ms-dims { display: grid; gap: 10px; }
+.z-missions .ms-dim { display: grid; grid-template-columns: 76px minmax(0, 1fr) 36px; gap: 12px; align-items: center; font-size: var(--t-sm); }
+.z-missions .ms-dim b { text-align: end; font-size: var(--t-xs); font-weight: 500; }
+.z-missions .bar.good > i { background: var(--good); }
+.z-missions .bar.warn > i { background: var(--warn); }
+.z-missions .bar.crit > i { background: var(--crit); }
+.z-missions .ms-gaps { border-top: 1px solid var(--line); padding-top: var(--s-4); display: grid; gap: 8px; }
+.z-missions .ms-gap { font-size: var(--t-sm); line-height: 1.65; padding-inline-start: 12px; border-inline-start: 2px solid var(--warn); }
+
+@media (max-width: 1100px) { .z-missions .ms { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 560px) {
+  .z-missions .ms-fig { overflow-x: auto; }
+  .z-missions .ms-map { min-width: 580px; }
+  .z-missions .ms-a { grid-template-columns: 38px minmax(0, 1fr); }
+  .z-missions .ms-a select { grid-column: 1 / -1; }
+  .z-missions .ms-route { grid-template-columns: minmax(0, 1fr); }
+  .z-missions .ms-time { flex-wrap: wrap; }
+  .z-missions .ms-play { min-width: 0; }
+}
