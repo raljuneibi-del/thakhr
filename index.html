@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>THAKHR</title>
+<meta name="description" content="THAKHR (ذَخْـر): an AI-powered claims management transformation for a UAE health insurer, delivered through a hybrid Agile approach. SDT529 Agile Project Management.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Hanken+Grotesk:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Reem+Kufi:wght@400;500;600&display=swap">
+<style>
+/* Layout concept: a claim's journey read top to bottom, a sealed-vault identity (ذخر: kept safe for the day it is needed),
+   and one live instrument: the claim clock in the header falls from 50.4 h to 8 h as the reader moves through the case. */
+:root{
+  --bg:#F2F1EC;        /* cool stone */
+  --surface:#FBFAF7;   /* raised paper */
+  --inset:#E8E6DE;     /* recessed field */
+  --fg:#111814;        /* vault ink, green-biased */
+  --muted:#58625D;
+  --faint:#8A928D;
+  --line:rgba(17,24,20,.12);
+  --line-strong:rgba(17,24,20,.24);
+  --gold:#8A6A2E;      /* antique gold: the single accent */
+  --gold-soft:rgba(138,106,46,.12);
+  --jade:#2E6A55;      /* signal: automated / good */
+  --rust:#A2472F;      /* signal: delay / manual */
+  --display:'Bodoni Moda','Didot','Bodoni 72',Georgia,serif;
+  --body:'Hanken Grotesk','Helvetica Neue',Helvetica,Arial,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+  --arabic:'Reem Kufi','Noto Kufi Arabic','Geeza Pro',sans-serif;
+  --wrap:1180px;
+  --gutter:clamp(16px,4vw,48px);
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0B100E;--surface:#121916;--inset:#18211D;--fg:#ECE8DE;--muted:#A0A89F;--faint:#6E7872;
+    --line:rgba(236,232,222,.11);--line-strong:rgba(236,232,222,.22);
+    --gold:#D4B477;--gold-soft:rgba(212,180,119,.12);--jade:#79B89D;--rust:#E08A6C;color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0B100E;--surface:#121916;--inset:#18211D;--fg:#ECE8DE;--muted:#A0A89F;--faint:#6E7872;
+  --line:rgba(236,232,222,.11);--line-strong:rgba(236,232,222,.22);
+  --gold:#D4B477;--gold-soft:rgba(212,180,119,.12);--jade:#79B89D;--rust:#E08A6C;color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:88px}
+body{margin:0;background:var(--bg);color:var(--fg);font:300 17px/1.65 var(--body);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+img,svg{max-width:100%}
+a{color:inherit}
+::selection{background:var(--gold);color:var(--bg)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:2px}
+.wrap{max-width:var(--wrap);margin-inline:auto;padding-inline:var(--gutter)}
+
+/* ---------- type ---------- */
+h1,h2,h3{margin:0;font-weight:400;text-wrap:balance}
+h2{font-family:var(--display);font-size:clamp(34px,5vw,58px);line-height:1.06;letter-spacing:-.015em}
+h2 em,h1 em{font-style:italic;color:var(--gold)}
+h3{font-family:var(--body);font-weight:500;font-size:18px;line-height:1.35;letter-spacing:-.005em}
+p{margin:0}
+.lead{font-size:clamp(18px,1.8vw,21px);line-height:1.6;color:var(--muted);max-width:62ch}
+.lead b,.body b{color:var(--fg);font-weight:500}
+.body{color:var(--muted);max-width:64ch}
+.label{font:500 11px/1.4 var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--faint)}
+.label.gold{color:var(--gold)}
+.ar{font-family:var(--arabic);direction:rtl}
+.cite{font:400 12px/1 var(--mono);color:var(--faint);letter-spacing:.02em;white-space:nowrap}
+.num{font-variant-numeric:tabular-nums lining-nums}
+
+/* ---------- header ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px) saturate(1.2);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:24px;height:64px}
+.brand{display:flex;align-items:baseline;gap:10px;text-decoration:none}
+.brand .ar{font-size:22px;color:var(--gold);line-height:1}
+.brand .en{font:500 12px/1 var(--mono);letter-spacing:.34em}
+.nav{display:flex;gap:26px;margin-left:auto}
+.nav a{font:500 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:6px 0;border-bottom:1px solid transparent;transition:color .2s,border-color .2s}
+.nav a:hover,.nav a.on{color:var(--fg);border-color:var(--gold)}
+.clock{display:flex;align-items:center;gap:10px;padding:7px 12px;border:1px solid var(--line-strong);border-radius:999px;white-space:nowrap}
+.clock .label{font-size:9.5px;letter-spacing:.16em}
+.clock b{font:500 14px/1 var(--mono);color:var(--gold);min-width:4.2ch;text-align:right}
+.clock i{display:block;width:6px;height:6px;border-radius:50%;background:var(--rust);transition:background .4s}
+.clock.done i{background:var(--jade)}
+.icon-btn{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;border:1px solid var(--line-strong);background:none;color:var(--fg);cursor:pointer;flex:none}
+.icon-btn:hover{border-color:var(--gold);color:var(--gold)}
+.icon-btn svg{width:16px;height:16px}
+.progress{position:absolute;left:0;bottom:-1px;height:1px;width:100%;background:var(--gold);transform-origin:0 50%;transform:scaleX(0)}
+
+/* ---------- hero ---------- */
+.hero{position:relative;overflow:hidden;padding-block:clamp(56px,9vw,120px) clamp(48px,7vw,88px);border-bottom:1px solid var(--line)}
+.hero canvas{position:absolute;right:-14%;top:50%;width:min(820px,110vw);aspect-ratio:1;transform:translateY(-50%);pointer-events:none;opacity:.7}
+@media (max-width:760px){.hero canvas{right:-45%;top:30%;opacity:.28}}
+.hero .wrap{position:relative;display:grid;gap:clamp(36px,5vw,64px)}
+.hero-name{display:flex;align-items:flex-end;gap:clamp(18px,3vw,40px);flex-wrap:wrap}
+.hero-name .ar{font-size:clamp(84px,13vw,168px);line-height:.9;color:var(--gold);font-weight:500}
+.hero-name .latin{padding-bottom:clamp(8px,1.4vw,18px)}
+.hero-name .latin span{display:block;font:300 clamp(28px,3.6vw,44px)/1 var(--body);letter-spacing:.42em}
+.hero-name .latin small{display:block;margin-top:12px}
+.hero h1{font-family:var(--display);font-size:clamp(38px,6.2vw,82px);line-height:1.02;letter-spacing:-.02em;max-width:15ch}
+.hero .lead{max-width:52ch}
+.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--line-strong);max-width:880px}
+.fact{padding:18px 20px 4px 0}
+.fact+.fact{padding-left:20px;border-left:1px solid var(--line)}
+.fact .v{font:400 clamp(30px,4vw,46px)/1 var(--display);letter-spacing:-.01em}
+.fact .v small{font:400 13px/1 var(--mono);color:var(--faint);margin-left:6px;letter-spacing:.04em}
+.fact .k{margin-top:10px}
+.people{display:flex;flex-wrap:wrap;gap:8px 22px;align-items:center}
+.people span{font-size:14.5px;font-weight:400}
+.people span::before{content:'';display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--gold);margin-right:9px;vertical-align:middle}
+.hero-foot{display:flex;flex-wrap:wrap;gap:20px 36px;align-items:center;justify-content:space-between}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:13px 20px;border:1px solid var(--fg);border-radius:999px;font:500 12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;text-decoration:none;transition:background .2s,color .2s}
+.btn:hover{background:var(--fg);color:var(--bg)}
+.btn.ghost{border-color:var(--line-strong)}
+.btn.ghost:hover{border-color:var(--fg)}
+
+/* ---------- sections ---------- */
+section.chapter{padding-block:clamp(72px,10vw,136px);border-bottom:1px solid var(--line)}
+.head{display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr);gap:clamp(20px,4vw,64px);margin-bottom:clamp(40px,6vw,72px)}
+.head .act{display:flex;flex-direction:column;gap:8px;padding-top:12px;border-top:1px solid var(--gold)}
+.head .act .roman{font:400 italic 28px/1 var(--display);color:var(--gold)}
+.head .text{display:grid;gap:22px}
+.sub{margin-top:clamp(56px,7vw,96px)}
+.sub>.label{display:block;margin-bottom:22px}
+
+/* grids */
+.cols{display:grid;gap:clamp(20px,3vw,32px)}
+.c2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.c3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.c4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.cell{min-width:0;display:grid;align-content:start;gap:10px}
+.rule{border-top:1px solid var(--line-strong);padding-top:18px}
+.card{min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:clamp(20px,2.4vw,30px);display:grid;align-content:start;gap:12px}
+.card p,.cell p{color:var(--muted);font-size:15.5px}
+
+/* name block */
+.name-block{display:grid;grid-template-columns:auto minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:center;padding:clamp(24px,4vw,44px);background:var(--surface);border:1px solid var(--line);border-radius:4px}
+.name-block .ar{font-size:clamp(64px,9vw,110px);color:var(--gold);line-height:1}
+
+/* big number */
+.big{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(28px,5vw,72px);align-items:end}
+.big .n{font:400 clamp(96px,17vw,220px)/.85 var(--display);letter-spacing:-.04em;color:var(--rust)}
+.big .n small{font:400 clamp(16px,2vw,22px)/1 var(--mono);letter-spacing:.06em;color:var(--faint);margin-left:10px}
+
+/* journey */
+.journey{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border-top:1px solid var(--line-strong)}
+.journey li{position:relative;padding:22px 18px 6px 0;min-width:0}
+.journey li+li{padding-left:18px;border-left:1px solid var(--line)}
+.journey .step{font:500 11px/1 var(--mono);color:var(--faint);letter-spacing:.12em}
+.journey h3{margin-top:14px;font-size:16.5px}
+.journey p{font-size:14px;color:var(--muted);margin-top:4px}
+.journey .tag{display:inline-block;margin-top:14px;font:500 10px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;padding:5px 8px;border-radius:2px;background:var(--inset);color:var(--muted)}
+.journey .manual .tag{background:color-mix(in srgb,var(--rust) 14%,transparent);color:var(--rust)}
+.loop{margin-top:18px;display:flex;gap:14px;align-items:flex-start;padding:18px 20px;border:1px dashed color-mix(in srgb,var(--rust) 55%,transparent);border-radius:4px;color:var(--muted);font-size:15.5px}
+.loop svg{flex:none;width:22px;height:22px;color:var(--rust);margin-top:2px}
+.loop b{color:var(--fg);font-weight:500}
+
+.quote{font:400 italic clamp(24px,3vw,34px)/1.3 var(--display);max-width:30ch;text-wrap:balance}
+.quote b{font-style:normal;color:var(--gold);font-weight:400}
+.aside-note{border-left:2px solid var(--gold);padding-left:20px;display:grid;gap:10px}
+
+/* opportunity pairs */
+.pairs{display:grid;gap:0;border-top:1px solid var(--line-strong)}
+.pair{display:grid;grid-template-columns:minmax(0,.8fr) 48px minmax(0,1.6fr);gap:20px;align-items:center;padding-block:26px;border-bottom:1px solid var(--line)}
+.pair .from{font:400 clamp(22px,2.6vw,30px)/1.15 var(--display);color:var(--muted);text-decoration:line-through;text-decoration-color:color-mix(in srgb,var(--rust) 60%,transparent);text-decoration-thickness:1px}
+.pair .arrow{color:var(--gold);width:48px;height:12px}
+.pair p{color:var(--muted);font-size:16px}
+.pair p b{color:var(--fg);font-weight:500;display:block;margin-bottom:4px}
+
+/* comparison table */
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:4px;background:var(--surface)}
+table{width:100%;border-collapse:collapse;min-width:620px;font-size:15px}
+th,td{text-align:left;padding:16px 20px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:500 10.5px/1.3 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--faint);font-weight:500}
+td{color:var(--muted)}
+td:first-child{color:var(--fg);font-weight:500;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+tr.chosen td{background:var(--gold-soft)}
+.verdict{display:inline-flex;align-items:center;gap:7px;font:500 10.5px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;white-space:nowrap}
+.verdict::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--faint)}
+.verdict.yes{color:var(--gold)}
+.verdict.yes::before{background:var(--gold)}
+
+/* platform parts */
+.part .glyph{width:40px;height:40px;color:var(--gold)}
+.part .role{font:400 italic 15px/1 var(--display);color:var(--gold)}
+
+/* agent phases */
+.phases{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;counter-reset:ph}
+.phase{position:relative;padding:0 20px 0 0;min-width:0}
+.phase .bar{height:3px;background:var(--line);position:relative;overflow:hidden;margin-bottom:22px}
+.phase .bar::after{content:'';position:absolute;inset:0;background:var(--gold);transform:scaleX(var(--fill,1));transform-origin:0 50%;transition:transform .9s var(--ease)}
+.phase h3{font-family:var(--display);font-size:clamp(26px,3vw,34px);font-weight:400;margin-top:8px}
+.phase p{color:var(--muted);font-size:15px;margin-top:6px}
+.decide{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;border:1px solid var(--line-strong);border-radius:4px;overflow:hidden}
+.decide>div{padding:clamp(22px,3vw,34px);display:grid;gap:10px;align-content:start;min-width:0}
+.decide>div+div{border-left:1px solid var(--line-strong)}
+.decide .state{display:flex;align-items:center;gap:10px;font:500 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase}
+.decide .state i{width:8px;height:8px;border-radius:50%}
+.decide .auto .state{color:var(--jade)}.decide .auto .state i{background:var(--jade)}
+.decide .human .state{color:var(--gold)}.decide .human .state i{background:var(--gold)}
+.decide h3{font:400 clamp(22px,2.4vw,28px)/1.2 var(--display)}
+.decide p{color:var(--muted);font-size:15.5px}
+
+/* architecture */
+.arch{display:grid;grid-template-columns:minmax(0,1fr) 40px minmax(0,1.3fr) 40px minmax(0,1fr);align-items:stretch;gap:0}
+.arch .side{display:grid;align-content:center;gap:10px;padding:clamp(18px,2vw,24px);border:1px solid var(--line);border-radius:4px;background:var(--surface);min-width:0}
+.arch .side ul,.arch .core ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.arch .side li{font-size:15px;display:flex;justify-content:space-between;gap:10px}
+.arch .side li span{color:var(--faint);font-size:13px}
+.arch .core{padding:clamp(20px,2.6vw,30px);border-radius:4px;background:var(--fg);color:var(--bg);display:grid;gap:14px;min-width:0}
+.arch .core .label{color:color-mix(in srgb,var(--bg) 65%,transparent)}
+.arch .core .ttl{font:400 clamp(24px,2.6vw,30px)/1.1 var(--display)}
+.arch .core li{display:flex;gap:12px;align-items:center;font-size:15px;padding-top:8px;border-top:1px solid color-mix(in srgb,var(--bg) 16%,transparent)}
+.arch .core li b{font:500 10.5px/1 var(--mono);color:var(--gold);letter-spacing:.1em;min-width:22px}
+.arch .flow{display:grid;place-items:center;color:var(--gold)}
+.arch .flow svg{width:26px;height:12px}
+.laws{display:flex;flex-wrap:wrap;gap:10px}
+.laws span{padding:9px 14px;border:1px solid var(--line-strong);border-radius:999px;font-size:14px}
+
+/* stakeholders */
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chip{display:inline-flex;gap:8px;align-items:baseline;padding:10px 14px;border:1px solid var(--line);border-radius:4px;background:var(--surface);font-size:14.5px}
+.chip b{font-weight:500}
+.chip span{color:var(--muted)}
+.chip.gate{border-color:color-mix(in srgb,var(--gold) 55%,transparent)}
+.chip.gate span{color:var(--gold)}
+
+/* technique tabs */
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line-strong);overflow-x:auto}
+.tab{appearance:none;background:none;border:0;border-bottom:2px solid transparent;margin-bottom:-1px;padding:14px 18px;font:500 12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);cursor:pointer;white-space:nowrap}
+.tab[aria-selected="true"]{color:var(--fg);border-color:var(--gold)}
+.tab:hover{color:var(--fg)}
+.panel{padding-top:clamp(24px,3vw,36px);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:start}
+.panel .body{font-size:16.5px}
+.mscw{display:grid;gap:8px}
+.mscw div{display:grid;grid-template-columns:92px minmax(0,1fr);gap:14px;padding:12px 0;border-top:1px solid var(--line);font-size:15px;color:var(--muted)}
+.mscw div b{font:500 11px/1.6 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--fg)}
+.mscw div.wont b{color:var(--faint)}
+.bars{display:grid;gap:14px}
+.bars .b{display:grid;grid-template-columns:minmax(0,150px) minmax(0,1fr) 40px;gap:14px;align-items:center;font-size:14.5px}
+.bars .track{height:8px;background:var(--inset);border-radius:1px;overflow:hidden}
+.bars .track i{display:block;height:100%;background:var(--gold);width:0;transition:width .9s var(--ease)}
+.bars .b span:last-child{font:500 13px/1 var(--mono);text-align:right}
+.bars .b.later .track i{background:var(--faint)}
+.bars small{grid-column:1/-1;color:var(--faint);font-size:13px;margin-top:-6px}
+.matrix{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line-strong);border:1px solid var(--line-strong);border-radius:4px;overflow:hidden}
+.matrix div{background:var(--surface);padding:18px;min-height:140px;display:grid;align-content:space-between;gap:8px;font-size:14.5px}
+.matrix div.hot{background:var(--gold-soft)}
+.matrix div b{font-weight:500}
+
+/* convergence */
+.converge{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:clamp(24px,4vw,56px);align-items:center;padding:clamp(24px,4vw,44px);background:var(--surface);border:1px solid var(--line);border-radius:4px}
+.lenses{display:grid;gap:10px}
+.lens{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);font-size:15px}
+.lens span:last-child{font:500 12px/1.5 var(--mono);color:var(--gold);text-align:right}
+.converge .result{font:400 clamp(24px,3vw,34px)/1.2 var(--display)}
+
+/* backlog */
+.backlog{list-style:none;margin:0;padding:0;border-top:1px solid var(--line-strong)}
+.backlog li{display:grid;grid-template-columns:54px minmax(0,1fr) auto;gap:16px;align-items:baseline;padding:15px 0;border-bottom:1px solid var(--line)}
+.backlog .id{font:500 12px/1 var(--mono);color:var(--faint)}
+.backlog .t{font-size:16px}
+.backlog .pri{font:500 10px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;padding:5px 8px;border-radius:2px;background:var(--gold-soft);color:var(--gold);white-space:nowrap}
+.backlog .gap{color:var(--faint);font-size:14px;font-style:italic}
+.backlog .wont .t{color:var(--faint);text-decoration:line-through;text-decoration-thickness:1px}
+.backlog .wont .pri{background:var(--inset);color:var(--faint)}
+
+/* scrum loop */
+.cycle{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border:1px solid var(--line-strong);border-radius:4px;overflow:hidden}
+.cycle>div{padding:22px;display:grid;gap:6px;align-content:start;min-width:0;position:relative}
+.cycle>div+div{border-left:1px solid var(--line)}
+.cycle>div:last-child{background:var(--inset)}
+.cycle h3{font-family:var(--display);font-size:22px;font-weight:400}
+.cycle p{font-size:14px;color:var(--muted)}
+.goal{display:grid;grid-template-columns:auto minmax(0,1fr);gap:clamp(18px,3vw,40px);align-items:baseline;padding-block:28px;border-bottom:1px solid var(--line)}
+.goal p{font:400 italic clamp(22px,2.8vw,32px)/1.3 var(--display)}
+
+/* roadmap */
+.road{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));position:relative}
+.road::before{content:'';position:absolute;left:0;right:0;top:7px;height:1px;background:var(--line-strong)}
+.road li{position:relative;padding:34px 16px 0 0;min-width:0;display:grid;gap:6px;align-content:start}
+.road li::before{content:'';position:absolute;top:2px;left:0;width:11px;height:11px;border-radius:50%;background:var(--bg);border:1px solid var(--gold)}
+.road li:first-child::before{background:var(--gold)}
+.road li:last-child::before{border-style:dashed}
+.road h3{font-size:16.5px}
+.road p{font-size:14px;color:var(--muted)}
+
+/* team */
+.roles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(16px,2vw,24px)}
+.role .count{font:400 clamp(56px,7vw,84px)/.9 var(--display);color:var(--gold)}
+.role .count small{font:400 14px/1 var(--mono);color:var(--faint);margin-left:6px}
+.dots{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.dots i{width:9px;height:9px;border-radius:50%;background:var(--gold)}
+.dots i.o{background:none;border:1px solid var(--gold)}
+
+.hybrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr) minmax(0,1fr);border:1px solid var(--line-strong);border-radius:4px;overflow:hidden}
+.hybrid>div{padding:clamp(20px,2.6vw,30px);display:grid;gap:8px;align-content:start;min-width:0}
+.hybrid>div+div{border-left:1px solid var(--line-strong)}
+.hybrid .mid{background:var(--gold-soft)}
+.hybrid h3{font:400 clamp(22px,2.4vw,28px)/1.15 var(--display)}
+.hybrid p{color:var(--muted);font-size:15px}
+.sprints{display:flex;gap:4px;margin-top:6px}
+.sprints i{flex:1;height:22px;border:1px solid color-mix(in srgb,var(--gold) 60%,transparent);border-radius:2px;background:color-mix(in srgb,var(--gold) 14%,transparent)}
+
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(16px,2vw,28px)}
+.steps li{border-top:1px solid var(--line-strong);padding-top:16px;display:grid;gap:8px;align-content:start;min-width:0}
+.steps .k{font:400 italic 30px/1 var(--display);color:var(--gold)}
+.steps h3{font-size:16.5px}
+.steps p{font-size:14.5px;color:var(--muted)}
+
+/* chart */
+.chart-card{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:clamp(18px,3vw,36px)}
+.chart-top{display:flex;flex-wrap:wrap;gap:24px 48px;justify-content:space-between;align-items:flex-end;margin-bottom:24px}
+.chart-top .kpis{display:flex;gap:clamp(24px,4vw,48px)}
+.kpi .v{font:400 clamp(36px,4.6vw,56px)/1 var(--display)}
+.kpi .v small{font:400 13px/1 var(--mono);color:var(--faint);margin-left:4px}
+.kpi.before .v{color:var(--rust)}
+.kpi.after .v{color:var(--jade)}
+.kpi .label{margin-top:8px}
+.chart-scroll{overflow-x:auto}
+#chart{display:block;width:100%;min-width:560px;height:auto;overflow:visible}
+#chart text{font:500 11px var(--mono);fill:var(--faint);letter-spacing:.06em}
+#chart .grid{stroke:var(--line);stroke-width:1;fill:none}
+#chart .axis{stroke:var(--line-strong);stroke-width:1;fill:none}
+#chart .area{fill:url(#fillGrad)}
+#chart .line{fill:none;stroke:var(--gold);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round}
+#chart .launch{stroke:var(--jade);stroke-width:1.2;stroke-dasharray:3 4;fill:none}
+#chart .launch-t{fill:var(--jade)}
+#chart .pt{fill:var(--surface);stroke:var(--gold);stroke-width:1.6}
+#chart .pt.end{fill:var(--gold)}
+#chart .hit{fill:transparent;cursor:crosshair}
+#chart .cursor{stroke:var(--line-strong);stroke-width:1;fill:none}
+#chart .tip-bg{fill:var(--fg)}
+#chart .tip-t{fill:var(--bg);font-size:12px}
+#chart .stop-a{stop-color:var(--gold);stop-opacity:.26}
+#chart .stop-b{stop-color:var(--gold);stop-opacity:0}
+.chart-cap{margin-top:14px}
+
+/* findings */
+.finding .k{font:500 11px/1 var(--mono);letter-spacing:.16em;color:var(--gold);text-transform:uppercase}
+.finding h3{font:400 clamp(24px,2.6vw,30px)/1.15 var(--display)}
+.reading{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line-strong);border:1px solid var(--line-strong);border-radius:4px;overflow:hidden}
+.reading>div{background:var(--surface);padding:clamp(20px,3vw,32px);display:grid;gap:14px;align-content:start;min-width:0}
+.reading .rows{display:grid;gap:0}
+.reading .r{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-top:1px solid var(--line);font-size:15px;color:var(--muted)}
+.reading .r b{font:500 14px/1.4 var(--mono);color:var(--fg);white-space:nowrap}
+.reading .dec .r b{color:var(--jade)}
+.limits{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(16px,2vw,28px)}
+
+/* close */
+.close{padding-block:clamp(80px,12vw,160px);text-align:left;position:relative;overflow:hidden}
+.close .ar{font-size:clamp(72px,10vw,128px);color:var(--gold);line-height:1}
+.close h2{max-width:18ch;margin-top:20px}
+.shift{margin-top:clamp(40px,6vw,72px);display:grid;border-top:1px solid var(--line-strong)}
+.shift div{display:grid;grid-template-columns:minmax(0,1fr) 56px minmax(0,1fr);gap:16px;align-items:center;padding:20px 0;border-bottom:1px solid var(--line)}
+.shift .a{color:var(--faint);font-size:clamp(17px,2vw,22px);text-decoration:line-through;text-decoration-thickness:1px}
+.shift .b{font:400 clamp(22px,2.8vw,34px)/1.1 var(--display)}
+.shift svg{width:56px;height:12px;color:var(--gold)}
+.team{margin-top:clamp(48px,7vw,80px);display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
+.team div{border-top:1px solid var(--gold);padding-top:14px;display:grid;gap:6px}
+.team b{font-weight:500;font-size:16px}
+.team span{font:400 12px/1 var(--mono);color:var(--faint);letter-spacing:.06em}
+.team small{color:var(--muted);font-size:13.5px}
+
+footer{padding-block:48px 64px}
+footer .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:clamp(24px,4vw,64px)}
+.refs{columns:2;column-gap:40px;font-size:13.5px;color:var(--muted);margin:0;padding:0;list-style:none}
+.refs li{break-inside:avoid;padding:6px 0;border-bottom:1px solid var(--line)}
+.colophon{display:grid;gap:12px;align-content:start;font-size:14px;color:var(--muted)}
+
+/* reveal: visible at rest, animated only for blocks below the first frame */
+.js .pre{opacity:0;transform:translateY(18px)}
+.js .rv{transition:opacity .8s var(--ease),transform .8s var(--ease)}
+
+@media (max-width:1000px){
+  .nav{display:none}
+  .clock{margin-left:auto}
+  .c4,.phases,.steps,.team{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .phases{row-gap:36px}
+  .journey{grid-template-columns:minmax(0,1fr)}
+  .journey li,.journey li+li{padding:18px 0;border-left:0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:44px minmax(0,1fr);column-gap:12px}
+  .journey li>*{grid-column:2}.journey .step{grid-column:1;grid-row:1/4}
+  .journey h3{margin-top:0}
+  .road{grid-template-columns:minmax(0,1fr);gap:22px}
+  .road::before{left:5px;right:auto;top:0;bottom:0;width:1px;height:auto}
+  .road li{padding:0 0 0 30px}
+  .road li::before{top:5px}
+  .cycle{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .cycle>div:nth-child(3){border-left:0}
+  .cycle>div:nth-child(n+3){border-top:1px solid var(--line)}
+  .arch{grid-template-columns:minmax(0,1fr);gap:0}
+  .arch .flow{height:40px}.arch .flow svg{transform:rotate(90deg)}
+}
+@media (max-width:760px){
+  body{font-size:16px}
+  .head,.big,.c2,.c3,.panel,.converge,.decide,.hybrid,.reading,.limits,.roles,.name-block,footer .wrap{grid-template-columns:minmax(0,1fr)}
+  .decide>div+div,.hybrid>div+div{border-left:0;border-top:1px solid var(--line-strong)}
+  .facts{grid-template-columns:minmax(0,1fr)}
+  .fact,.fact+.fact{padding:16px 0;border-left:0;border-bottom:1px solid var(--line)}
+  .pair{grid-template-columns:minmax(0,1fr);gap:8px}
+  .pair .arrow{transform:rotate(90deg);width:24px}
+  .goal{grid-template-columns:minmax(0,1fr);gap:10px}
+  .shift div{grid-template-columns:minmax(0,1fr);gap:6px}
+  .shift svg{transform:rotate(90deg);width:20px}
+  .refs{columns:1}
+  .clock .label{display:none}
+  .backlog li{grid-template-columns:40px minmax(0,1fr)}
+  .backlog .pri{grid-column:2;justify-self:start}
+}
+@media (max-width:480px){
+  .c4,.phases,.steps,.team,.cycle{grid-template-columns:minmax(0,1fr)}
+  .cycle>div+div{border-left:0;border-top:1px solid var(--line)}
+  .matrix{grid-template-columns:minmax(0,1fr)}
+  .top .wrap{gap:12px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .js .pre{opacity:1;transform:none}
+  .js .rv,.phase .bar::after,.bars .track i{transition:none}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="THAKHR, back to top"><span class="ar" lang="ar">ذَخْـر</span><span class="en">THAKHR</span></a>
+    <nav class="nav" aria-label="Chapters">
+      <a href="#diagnosis">Diagnosis</a>
+      <a href="#answer">Answer</a>
+      <a href="#priorities">Priorities</a>
+      <a href="#delivery">Delivery</a>
+      <a href="#proof">Proof</a>
+    </nav>
+    <div class="clock" id="clock" title="Average settlement time per claim. It falls as the case unfolds.">
+      <i aria-hidden="true"></i><span class="label">Claim clock</span><b class="num" id="clockVal">50.4</b><span class="label" style="letter-spacing:.08em">h</span>
+    </div>
+    <button class="icon-btn" id="themeBtn" type="button" aria-label="Switch colour theme">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 0 0 16z" fill="currentColor"/></svg>
+    </button>
+  </div>
+  <div class="progress" id="progress"></div>
+</header>
+
+<main id="top">
+
+<!-- ============ HERO ============ -->
+<section class="hero" aria-labelledby="h-title">
+  <canvas id="vault" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <div class="hero-name">
+      <span class="ar" lang="ar">ذَخْـر</span>
+      <div class="latin"><span>THAKHR</span><small class="label gold">Something precious, kept safe for the day it is needed</small></div>
+    </div>
+    <div style="display:grid;gap:24px">
+      <h1 id="h-title">Health cover that <em>arrives</em> on the day it is needed.</h1>
+      <p class="lead">An AI-powered claims management transformation for a UAE health insurer, delivered through a hybrid Agile approach. We took a <b>50.4-hour</b> average settlement down to a steady state of <b>about 8 hours</b>, without taking the human out of the decisions that matter.</p>
+    </div>
+    <div class="facts">
+      <div class="fact"><div class="v num" data-count="90701" data-dec="0">90,701</div><div class="k label">Claims per year</div></div>
+      <div class="fact"><div class="v num"><span data-count="4.2" data-dec="1">4.2</span><small>/ 5</small></div><div class="k label">Member satisfaction</div></div>
+      <div class="fact"><div class="v num"><span data-count="50.4" data-dec="1">50.4</span><small>hrs</small></div><div class="k label">Average settlement, per claim</div></div>
+    </div>
+    <div class="hero-foot">
+      <div class="people"><span>Alaa Haider</span><span>Reem Aljneibi</span><span>Amal Alwahedi</span><span>Hessa Eissa</span></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <a class="btn" href="#diagnosis">Read the case
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M7 1v12M2 8l5 5 5-5"/></svg></a>
+        <a class="btn ghost" href="THAKHR%20Keynote%20Light.html" id="keynoteLink">Open keynote</a>
+      </div>
+    </div>
+    <p class="label">SDT529 · Agile Project Management · Summer 25–26 · College of Business · Submitted to Dr. Omer Aftab Qureshi</p>
+  </div>
+</section>
+
+<!-- ============ I · DIAGNOSIS ============ -->
+<section class="chapter" id="diagnosis" data-p="0.1">
+  <div class="wrap">
+    <div class="head rv">
+      <div class="act"><span class="roman">I</span><span class="label">Diagnosis</span><span class="label">Alaa Haider</span></div>
+      <div class="text">
+        <h2>A healthy company running an <em>unhealthy process</em>.</h2>
+        <p class="lead">Thakhr Health Insurance is a mid-to-large UAE insurer covering outpatient, inpatient, pharmacy and dental care. Its people are careful. The delay comes from a process where a human still has to read every single claim.</p>
+      </div>
+    </div>
+
+    <div class="name-block rv">
+      <span class="ar" lang="ar">ذَخْـر</span>
+      <div style="display:grid;gap:10px">
+        <span class="label gold">The name is the brief</span>
+        <p class="quote">Thakhr means something precious, stored and protected for the day it is needed. Health cover stops being that when a claim <b>sits in a queue for two weeks</b>.</p>
+      </div>
+    </div>
+
+    <div class="big sub rv">
+      <div>
+        <span class="label">Average settlement, per claim</span>
+        <div class="n num" style="margin-top:14px">50.4<small>hrs</small></div>
+      </div>
+      <div style="display:grid;gap:16px;padding-bottom:10px">
+        <p class="lead">In the peak manual months, the average rose <b>above 110 hours</b>. Satisfaction stands at 4.2 out of 5.</p>
+        <p class="label">Source · Thakhr Health Insurance company dataset (2026)</p>
+      </div>
+    </div>
+
+    <div class="sub rv">
+      <span class="label">Figure 2.1 · The current claims process</span>
+      <p class="lead" style="margin-bottom:28px">A chain of semi-manual steps wrapped around a digital core.</p>
+      <ol class="journey">
+        <li><span class="step">01</span><h3>Member visits</h3><p>The member arrives at a provider for care.</p><span class="tag">In person</span></li>
+        <li><span class="step">02</span><h3>Eligibility check</h3><p>Coverage is confirmed through the portal or the helpline.</p><span class="tag">Portal · helpline</span></li>
+        <li><span class="step">03</span><h3>Clinical encounter</h3><p>Care is recorded in the hospital information system.</p><span class="tag">Digital · HIS</span></li>
+        <li class="manual"><span class="step">04</span><h3>Claim assembled</h3><p>Scans, uploads and email attachments are gathered by hand.</p><span class="tag">Semi-manual</span></li>
+        <li class="manual"><span class="step">05</span><h3>Manual adjudication</h3><p>An adjuster checks each claim against the policy.</p><span class="tag">By hand</span></li>
+      </ol>
+      <div class="loop">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v5h-5"/></svg>
+        <p><b>The clarification loop.</b> Unclear claims are returned, re-submitted and re-queued. Each round trip adds days.</p>
+      </div>
+    </div>
+
+    <div class="cols c2 sub">
+      <div class="cell rule rv">
+        <span class="label gold">Three root inefficiencies</span>
+        <h3>Manual handling, data fragmentation, analytical blindness.</h3>
+        <p>The insurer holds rich data and makes almost no predictions from it. <span class="cite">Kraus et al., 2021</span></p>
+      </div>
+      <div class="cell rule rv">
+        <span class="label gold">The person missing from the diagram</span>
+        <h3>The member learns of a rejection at the pharmacy counter.</h3>
+        <p>Then she calls to ask why. She sees no status and no reason. Every design decision that follows starts from that counter.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ II · THE ANSWER ============ -->
+<section class="chapter" id="answer" data-p="0.3">
+  <div class="wrap">
+    <div class="head rv">
+      <div class="act"><span class="roman">II</span><span class="label">The answer</span><span class="label">Reem Aljneibi</span></div>
+      <div class="text">
+        <h2>Every inefficiency is an <em>opportunity</em>, read from the other side.</h2>
+        <p class="lead">Our design position is preservative. We add an intelligent layer on top of what the UAE has already built, and we replace nothing that works.</p>
+      </div>
+    </div>
+
+    <div class="pairs">
+      <div class="pair rv"><span class="from">Manual claim handling</span><svg class="arrow" viewBox="0 0 48 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M0 6h46M41 1l5 5-5 5"/></svg><p><b>Automated reading and rules</b>Modern AI reads semi-structured documents, applies rules and flags variance. <span class="cite">Davenport &amp; Kalakota, 2019 · Secinaro et al., 2021</span></p></div>
+      <div class="pair rv"><span class="from">Data fragmentation</span><svg class="arrow" viewBox="0 0 48 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M0 6h46M41 1l5 5-5 5"/></svg><p><b>One member-and-insurance layer</b>A single layer binds the existing systems. Each party sees only what its role permits.</p></div>
+      <div class="pair rv"><span class="from">Analytical blindness</span><svg class="arrow" viewBox="0 0 48 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M0 6h46M41 1l5 5-5 5"/></svg><p><b>Predictive population modelling</b>Catch diabetic, cardiac and hypertension risk early, and act before it becomes a claim.</p></div>
+    </div>
+
+    <div class="sub rv">
+      <span class="label">Justification for technology selection</span>
+      <p class="lead" style="margin-bottom:28px">We chose AI, and we can show what we chose it against.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th scope="col">Technology</th><th scope="col">What it offers here</th><th scope="col">Verdict</th></tr></thead>
+          <tbody>
+            <tr><td>Blockchain</td><td>An immutable record, but it reads and decides nothing. It brings integration weight we do not need yet.</td><td><span class="verdict">Not now</span></td></tr>
+            <tr><td>IoT &amp; wearables</td><td>A real future upgrade to Health Radar. Not needed to prove the idea.</td><td><span class="verdict">Later</span></td></tr>
+            <tr><td>Cloud</td><td>Everything runs on it. It is infrastructure, not the disruption.</td><td><span class="verdict">Foundation</span></td></tr>
+            <tr class="chosen"><td>AI agent + predictive analytics</td><td>A claim is language, context and judgement, which is where medical AI has matured. <span class="cite">Rajpurkar et al., 2022 · Topol, 2019</span></td><td><span class="verdict yes">Chosen</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="sub">
+      <span class="label rv">One platform, three parts that need each other</span>
+      <div class="cols c3">
+        <div class="card part rv">
+          <svg class="glyph" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><circle cx="20" cy="20" r="17"/><circle cx="20" cy="20" r="9"/><path d="M20 3v8M20 29v8M3 20h8M29 20h8"/></svg>
+          <span class="role">The engine</span><h3>Dakhtar</h3><p>The agent that works the claim, from intake to a written decision.</p>
+        </div>
+        <div class="card part rv">
+          <svg class="glyph" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M3 30a17 17 0 0 1 34 0"/><path d="M9 30a11 11 0 0 1 22 0"/><path d="M20 30l8-13"/><circle cx="20" cy="30" r="2" fill="currentColor"/></svg>
+          <span class="role">The foresight</span><h3>Health Radar</h3><p>Predictive risk scoring across the member population.</p>
+        </div>
+        <div class="card part rv">
+          <svg class="glyph" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="10" y="3" width="20" height="34" rx="3"/><path d="M15 12h10M15 18h10M15 24h6"/></svg>
+          <span class="role">The promise</span><h3>Member portal</h3><p>Members see every claim, follow it, and understand each decision.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub" id="dakhtar">
+      <div class="rv" style="display:grid;gap:14px;margin-bottom:40px">
+        <span class="label gold">Dakhtar · the claims agent</span>
+        <h2 style="font-size:clamp(30px,4vw,46px)">It settles claims. It does not chat.</h2>
+      </div>
+      <div class="phases">
+        <div class="phase rv"><div class="bar"></div><span class="label">Phase 01</span><h3>Receives</h3><p>Codes, amounts and scanned attachments.</p></div>
+        <div class="phase rv"><div class="bar"></div><span class="label">Phase 02</span><h3>Interprets</h3><p>Against the policy, its benefits and its exclusions.</p></div>
+        <div class="phase rv"><div class="bar"></div><span class="label">Phase 03</span><h3>Verifies</h3><p>Full history, anomalies and duplicates.</p></div>
+        <div class="phase rv"><div class="bar"></div><span class="label">Phase 04</span><h3>Decides</h3><p>Approves or escalates, always with a written reason.</p></div>
+      </div>
+
+      <div class="sub rv" style="margin-top:56px">
+        <p class="quote" style="margin-bottom:28px">The one decision we <b>refused</b> to fully automate.</p>
+        <div class="decide">
+          <div class="auto"><span class="state"><i></i>Clear &amp; low-risk</span><h3>Settled automatically, in minutes.</h3><p>The routine majority. The member watches the claim clear in the portal.</p></div>
+          <div class="human"><span class="state"><i></i>Grey area or high value</span><h3>Escalated to a person.</h3><p>The adjuster opens a prepared assessment, not an empty file, so even escalated claims move faster.</p></div>
+        </div>
+        <p class="body" style="margin-top:20px">Human-in-the-loop from day one. It answers the ethical constraint directly, and it is what makes the agent acceptable to a regulator. <span class="cite">Jiang et al., 2017 · Reddy et al., 2019</span></p>
+      </div>
+    </div>
+
+    <div class="sub">
+      <span class="label rv">Figure 3.1 · One intelligent backbone, governed by design</span>
+      <div class="arch rv" style="margin-top:22px">
+        <div class="side">
+          <span class="label">Submit</span>
+          <ul><li>Hospitals</li><li>Clinics</li><li>Pharmacies</li></ul>
+        </div>
+        <div class="flow"><svg viewBox="0 0 26 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M0 6h24M19 1l5 5-5 5"/></svg></div>
+        <div class="core">
+          <span class="label">The backbone</span>
+          <span class="ttl">THAKHR</span>
+          <ul><li><b>01</b>Electronic intake · OCR</li><li><b>02</b>Dakhtar adjudication</li><li><b>03</b>Health Radar scoring</li><li><b>04</b>Consent · role-based access · audit trail</li></ul>
+        </div>
+        <div class="flow"><svg viewBox="0 0 26 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M0 6h24M19 1l5 5-5 5"/></svg></div>
+        <div class="side">
+          <span class="label">See</span>
+          <ul><li>Member portal <span>status · reasons</span></li><li>Adjuster queue</li><li>Regulator audit view</li></ul>
+        </div>
+      </div>
+      <div class="cols c2" style="margin-top:36px;align-items:start">
+        <div class="cell rv">
+          <span class="label gold">Governance is in the architecture</span>
+          <div class="laws"><span>Federal Law No. 2 of 2019</span><span>Federal Decree-Law No. 45 of 2021</span><span>Data stored in the UAE</span></div>
+        </div>
+        <p class="body rv">Regulatory requirements are not competing backlog items. They are the licence to operate, and that changes how the backlog is ordered.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ III · PRIORITIES ============ -->
+<section class="chapter" id="priorities" data-p="0.5">
+  <div class="wrap">
+    <div class="head rv">
+      <div class="act"><span class="roman">III</span><span class="label">Priorities</span><span class="label">Amal Alwahedi</span></div>
+      <div class="text">
+        <h2>Eight groups want eight things. Three techniques make <em>one list</em>.</h2>
+      </div>
+    </div>
+
+    <div class="chips rv">
+      <span class="chip"><b>Sponsors</b><span>return</span></span>
+      <span class="chip"><b>Adjusters</b><span>changed work</span></span>
+      <span class="chip"><b>Hospitals</b><span>fast settlement</span></span>
+      <span class="chip"><b>Members</b><span>status &amp; reasons</span></span>
+      <span class="chip"><b>Employers</b><span>no complaints</span></span>
+      <span class="chip gate"><b>Government</b><span>auditability &amp; consent, entry conditions</span></span>
+    </div>
+
+    <div class="sub rv">
+      <div class="tabs" role="tablist" aria-label="Prioritisation techniques">
+        <button class="tab" role="tab" id="t-moscow" aria-controls="p-moscow" aria-selected="true">01 · MoSCoW</button>
+        <button class="tab" role="tab" id="t-wsjf" aria-controls="p-wsjf" aria-selected="false" tabindex="-1">02 · WSJF</button>
+        <button class="tab" role="tab" id="t-ve" aria-controls="p-ve" aria-selected="false" tabindex="-1">03 · Value vs effort</button>
+      </div>
+      <div class="panel" role="tabpanel" id="p-moscow" aria-labelledby="t-moscow">
+        <div style="display:grid;gap:14px">
+          <h3 style="font:400 clamp(24px,2.6vw,30px)/1.2 var(--display)">Forces a real choice about the minimum usable release.</h3>
+          <p class="body">The Won't category is the part that protects scope. <span class="cite">Cobb, 2023</span></p>
+        </div>
+        <div class="mscw">
+          <div><b>Must</b><span>Electronic intake, member visibility, auto-adjudication</span></div>
+          <div class="wont"><b>Won't</b><span>Personalised prevention, in this release</span></div>
+        </div>
+      </div>
+      <div class="panel" role="tabpanel" id="p-wsjf" aria-labelledby="t-wsjf" hidden>
+        <div style="display:grid;gap:14px">
+          <h3 style="font:400 clamp(24px,2.6vw,30px)/1.2 var(--display)">Cost of delay divided by job size.</h3>
+          <p class="body">Fraud alerts score 8.3, yet run after Dakhtar, because fraud models cannot learn without intake history. <b>Dependencies bend the economics.</b> <span class="cite">Leffingwell, 2018</span></p>
+        </div>
+        <div class="bars">
+          <div class="b"><span>Electronic intake</span><span class="track"><i data-w="90"></i></span><span class="num">9.0</span></div>
+          <div class="b later"><span>Fraud alerts</span><span class="track"><i data-w="83"></i></span><span class="num">8.3</span></div>
+          <small>Sequenced after Dakhtar despite the score</small>
+          <div class="b"><span>Member visibility</span><span class="track"><i data-w="63"></i></span><span class="num">6.3</span></div>
+        </div>
+      </div>
+      <div class="panel" role="tabpanel" id="p-ve" aria-labelledby="t-ve" hidden>
+        <div style="display:grid;gap:14px">
+          <h3 style="font:400 clamp(24px,2.6vw,30px)/1.2 var(--display)">A cross-check on the other two.</h3>
+          <p class="body">Where it disagreed with WSJF, we went back to the stakeholders instead of trusting the bigger number.</p>
+        </div>
+        <div class="matrix" aria-label="Value versus effort matrix">
+          <div class="hot"><span class="label gold">High value · low effort</span><b>Quick wins: intake &amp; visibility</b></div>
+          <div><span class="label">High value · high effort</span><b>Strategic bets: Dakhtar &amp; fraud</b></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="converge sub rv">
+      <div class="lenses">
+        <span class="label" style="margin-bottom:6px">Three lenses</span>
+        <div class="lens"><span>MoSCoW</span><span>Must have</span></div>
+        <div class="lens"><span>WSJF</span><span class="num">9.0 &amp; 6.3</span></div>
+        <div class="lens"><span>Value vs effort</span><span>Quick wins</span></div>
+      </div>
+      <div style="display:grid;gap:14px">
+        <span class="label gold">One first release</span>
+        <p class="result">Electronic claims intake and member status visibility.</p>
+        <p class="body">When three independent methods agree, the sequence is robust. It does not depend on which method we happened to like. That ordering produced a backlog of fifteen prioritised stories.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ IV · RHYTHM + V · PEOPLE ============ -->
+<section class="chapter" id="delivery" data-p="0.7">
+  <div class="wrap">
+    <div class="head rv">
+      <div class="act"><span class="roman">IV</span><span class="label">The rhythm</span><span class="label">Amal Alwahedi</span></div>
+      <div class="text">
+        <h2>Fifteen stories, in the order the analysis <em>produced</em>.</h2>
+        <p class="lead">The Product Backlog is the single source of truth for the product. Each story reads as role, want and benefit. Governance stories sit high, not last. The backlog is refined every Sprint, and monthly with hospital and regulator representatives. <span class="cite">Schwaber &amp; Sutherland, 2020 · Cohn, 2004</span></p>
+      </div>
+    </div>
+
+    <div class="cols c2" style="align-items:start">
+      <ul class="backlog rv">
+        <li><span class="id num">01</span><span class="t">Electronic claims intake</span><span class="pri">Must</span></li>
+        <li><span class="id num">02</span><span class="t">Member status visibility</span><span class="pri">Must</span></li>
+        <li><span class="id num">03</span><span class="t">Auto-adjudication by Dakhtar</span><span class="pri">Must</span></li>
+        <li><span class="id num">04</span><span class="t">Regulator audit trail</span><span class="pri">Governance</span></li>
+        <li><span class="id">···</span><span class="gap">Stories 05 to 14</span><span></span></li>
+        <li class="wont"><span class="id num">15</span><span class="t">Personalised prevention</span><span class="pri">Won't have</span></li>
+      </ul>
+      <div class="cell rv">
+        <span class="label gold">A critique of our own artifact</span>
+        <div class="rule cell"><h3>Single</h3><p>True only while it is the only list. The real risk is stakeholders keeping private spreadsheets on the side.</p></div>
+        <div class="rule cell"><h3>Prioritised</h3><p>Never better than its estimates, and our WSJF scoring is subjective and uncalibrated.</p></div>
+        <div class="rule cell"><h3>Dynamic</h3><p>Reordered too often, it becomes unstable. Responsiveness and thrash look identical from outside.</p></div>
+        <p class="body" style="margin-top:8px">The artifact does not solve these problems. It makes them visible, which is a more modest claim than the literature makes, and one we can defend.</p>
+      </div>
+    </div>
+
+    <div class="sub">
+      <span class="label rv">Three artifacts, one loop, every two weeks</span>
+      <div class="cycle rv">
+        <div><span class="label gold">Artifact</span><h3>Product Backlog</h3><p>What should be built</p></div>
+        <div><span class="label gold">Artifact</span><h3>Sprint Backlog</h3><p>What this Sprint takes on</p></div>
+        <div><span class="label gold">Artifact</span><h3>Increment</h3><p>What is delivered: done, not promised</p></div>
+        <div><span class="label">Then</span><h3>Re-order</h3><p>The backlog is re-ordered, and the loop starts again</p></div>
+      </div>
+      <div class="goal rv"><span class="label gold">Sprint 1 goal</span><p>Let hospitals send claims electronically, and let members know where their claim is.</p></div>
+    </div>
+
+    <div class="sub">
+      <span class="label rv">Roadmap</span>
+      <ol class="road rv">
+        <li><span class="label gold">Sprint 1</span><h3>Intake &amp; visibility</h3><p>A working e-claims channel with live status.</p></li>
+        <li><span class="label gold">Sprint 2</span><h3>Consolidated history</h3><p>A unified view and an audit trail, ready for the regulator.</p></li>
+        <li><span class="label gold">Sprints 3–4</span><h3>Automate the majority</h3><p>Dakhtar pilot for pharmacy and outpatient claims.</p></li>
+        <li><span class="label gold">Sprint 5</span><h3>Engagement loop</h3><p>Pre-approvals in Arabic and English.</p></li>
+        <li><span class="label gold">Sprint 6</span><h3>Prevention</h3><p>The first version of Health Radar.</p></li>
+      </ol>
+      <p class="body rv" style="margin-top:32px">Health Radar is the most exciting idea in the room, and it comes last. It cannot learn until intake has built a history. <b>Discipline over excitement.</b></p>
+    </div>
+
+    <!-- V · PEOPLE -->
+    <div class="head rv" style="margin-top:clamp(88px,12vw,160px)" id="people">
+      <div class="act"><span class="roman">V</span><span class="label">People</span><span class="label">Hessa Eissa</span></div>
+      <div class="text">
+        <h2>A nine-person Scrum Team, and a <em>hybrid</em> way to release.</h2>
+        <p class="lead">Pure Scrum cannot release freely inside an insurer. So we set Agile delivery inside the frame the industry requires.</p>
+      </div>
+    </div>
+
+    <div class="roles">
+      <div class="card role rv"><div class="count num">1<small>×</small></div><h3>Product Owner</h3><p>The Operations Director. Orders the backlog by member outcomes, not by technical interest.</p><div class="dots"><i></i></div></div>
+      <div class="card role rv"><div class="count num">1<small>×</small></div><h3>Scrum Master</h3><p>A servant leader. In an insurer, the impediments are approval lines, not code.</p><div class="dots"><i class="o"></i></div></div>
+      <div class="card role rv"><div class="count num">7<small>×</small></div><h3>Developers</h3><p>Three engineers, a data scientist, an AI specialist, a UX designer, and an embedded claims expert who turns rules into requirements.</p><div class="dots"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+    </div>
+
+    <div class="sub">
+      <span class="label rv">Figure 6.1 · The hybrid delivery model</span>
+      <div class="hybrid rv" style="margin-top:22px">
+        <div><span class="label">Predictive</span><h3>A fixed frame up front</h3><p>Approvals, governance and integration standards.</p></div>
+        <div class="mid"><span class="label gold">Empirical</span><h3>Pure Scrum inside it</h3><p>Two-week Sprints: build, learn, re-order.</p><div class="sprints" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+        <div><span class="label">Compliance gate</span><h3>Every release passes</h3><p>Audit, consent and model documentation.</p></div>
+      </div>
+      <p class="body rv" style="margin-top:20px">This is Water-Scrum-Fall, the balance of agility and discipline. <b>Agility within the constraints, not against them.</b> <span class="cite">West, 2011 · Boehm &amp; Turner, 2004</span></p>
+    </div>
+
+    <div class="cols c2 sub">
+      <div class="cell rule rv">
+        <span class="label gold">Trust and learning</span>
+        <h3>On a project that automates decisions, psychological safety is not a soft topic.</h3>
+        <p>Trust is built by practice. The Daily Scrum does most of the work, because blockers that are visible cannot fester. <span class="cite">Denning, 2018 · Layton et al., 2020</span></p>
+      </div>
+      <div class="cell rule rv">
+        <span class="label gold">The change we will not dress up</span>
+        <h3>Adjusters will fear automation.</h3>
+        <p>Leadership must say it plainly: Dakhtar removes routine work, not jobs. That promise is backed by retraining toward investigation.</p>
+      </div>
+    </div>
+
+    <div class="sub">
+      <span class="label rv">Conflict · a four-step framework</span>
+      <ol class="steps rv" style="margin-top:22px">
+        <li><span class="k">i.</span><h3>Define the problem</h3><p>Separate the problem from the people.</p></li>
+        <li><span class="k">ii.</span><h3>Hear everyone</h3><p>Listen actively before deciding.</p></li>
+        <li><span class="k">iii.</span><h3>Find common ground</h3><p>Usually a shared wish to ship this Sprint.</p></li>
+        <li><span class="k">iv.</span><h3>Solve it together</h3><p>Win–win, with the Scrum Master mediating.</p></li>
+      </ol>
+      <p class="body rv" style="margin-top:28px">When facilitation runs out, the Product Owner decides priority and the developers decide implementation. The people doing the work own the plan.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VI · PROOF ============ -->
+<section class="chapter" id="proof" data-p="0.9">
+  <div class="wrap">
+    <div class="head rv">
+      <div class="act"><span class="roman">VI</span><span class="label">The proof</span><span class="label">Hessa Eissa</span></div>
+      <div class="text">
+        <h2>Are claims getting <em>faster</em>?</h2>
+        <p class="lead">Everything is a claim until it is measured. The line falls from above 110 hours to single digits, and <b>the drop begins exactly where Dakhtar launches</b>. The bend in the curve is the intervention.</p>
+      </div>
+    </div>
+
+    <div class="chart-card rv">
+      <div class="chart-top">
+        <div class="kpis">
+          <div class="kpi before"><div class="v num">110<small>+ hrs</small></div><div class="label">Manual months</div></div>
+          <div class="kpi after"><div class="v num">≈8<small>hrs</small></div><div class="label">December steady state</div></div>
+        </div>
+        <span class="label">Appendix A · Figure A.2 · hover or tap a month</span>
+      </div>
+      <div class="chart-scroll">
+        <svg id="chart" viewBox="0 0 1000 340" role="img" aria-label="Average processing hours per month, falling from about 120 hours in January to about 8 hours in December, with the drop beginning at the Dakhtar pilot launch in March."></svg>
+      </div>
+      <p class="label chart-cap">Average processing hours per month · from the company's 90,701-claim dataset</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VII · CONCLUSIONS ============ -->
+<section class="chapter" id="findings" data-p="1">
+  <div class="wrap">
+    <div class="head rv">
+      <div class="act"><span class="roman">VII</span><span class="label">Conclusions</span><span class="label">Hessa Eissa</span></div>
+      <div class="text"><h2>What this project <em>found</em>.</h2></div>
+    </div>
+
+    <div class="cols c3">
+      <div class="cell rule finding rv"><span class="k">Finding 01</span><h3>The problem is concentrated.</h3><p>It sits at the manual interface between provider and insurer, the source of the 50.4-hour turnaround.</p></div>
+      <div class="cell rule finding rv"><span class="k">Finding 02</span><h3>AI is the right technology.</h3><p>Adjudication is language and judgement work that AI can now do under human oversight.</p></div>
+      <div class="cell rule finding rv"><span class="k">Finding 03 · least intuitive</span><h3>Delivery matters as much as technology.</h3><p>Not pure Agile, but a hybrid with compliance gates. <span class="cite">Rigby et al., 2016</span></p></div>
+    </div>
+
+    <div class="sub rv">
+      <span class="label">Reading the KPI cards correctly</span>
+      <p class="lead" style="margin:14px 0 28px">The yearly averages look like a miss because they include the manual months. December is the real steady state. The gap between the two measures the change itself.</p>
+      <div class="reading">
+        <div>
+          <span class="label">Yearly average · includes manual months</span>
+          <div class="rows">
+            <div class="r"><span>Processing time vs 24 hr target</span><b>50.4 hrs</b></div>
+            <div class="r"><span>Fraud detection vs 2.5% target</span><b>2.1%</b></div>
+          </div>
+        </div>
+        <div class="dec">
+          <span class="label gold">December · steady state</span>
+          <div class="rows">
+            <div class="r"><span>Processing time</span><b>≈ 8 hrs</b></div>
+            <div class="r"><span>Auto-approval rate</span><b>79%</b></div>
+            <div class="r"><span>Fraud detection</span><b>Above target</b></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub">
+      <span class="label rv">Limitations, stated plainly</span>
+      <div class="limits" style="margin-top:22px">
+        <div class="card rv"><h3>A working model</h3><p>The dataset is a working model, not live production data.</p></div>
+        <div class="card rv"><h3>Untested cooperation</h3><p>The design assumes cooperation from providers and regulators that we could not test.</p></div>
+        <div class="card rv"><h3>Bias &amp; accountability</h3><p>Model bias and accountability deserve deeper treatment than this project gives them.</p></div>
+      </div>
+      <p class="body rv" style="margin-top:24px">We would rather name these limits than have you find them.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CLOSE ============ -->
+<section class="close" id="close" aria-labelledby="close-t">
+  <div class="wrap">
+    <span class="ar rv" lang="ar">ذَخْـر</span>
+    <h2 id="close-t" class="rv">We made the cover arrive on the day it is <em>needed</em>.</h2>
+    <div class="shift">
+      <div class="rv"><span class="a">50.4 hours</span><svg viewBox="0 0 56 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M0 6h54M49 1l5 5-5 5"/></svg><span class="b">8 hours</span></div>
+      <div class="rv"><span class="a">A sample of claims checked</span><svg viewBox="0 0 56 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M0 6h54M49 1l5 5-5 5"/></svg><span class="b">Every claim</span></div>
+      <div class="rv"><span class="a">No visibility</span><svg viewBox="0 0 56 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M0 6h54M49 1l5 5-5 5"/></svg><span class="b">Live status, with reasons</span></div>
+    </div>
+    <div class="team">
+      <div class="rv"><b>Alaa Haider</b><span class="num">1004194</span><small>Diagnosis</small></div>
+      <div class="rv"><b>Reem Aljneibi</b><span class="num">1006453</span><small>The answer</small></div>
+      <div class="rv"><b>Amal Alwahedi</b><span class="num">1106916</span><small>Priorities &amp; rhythm</small></div>
+      <div class="rv"><b>Hessa Eissa</b><span class="num">1106917</span><small>People, proof &amp; conclusions</small></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="colophon">
+      <span class="brand"><span class="ar" lang="ar" style="font-size:26px;color:var(--gold)">ذَخْـر</span><span class="en">THAKHR</span></span>
+      <p>SDT529 Agile Project Management · Summer 25–26 · College of Business.</p>
+      <p>Submitted to Dr. Omer Aftab Qureshi.</p>
+      <a class="btn ghost" href="THAKHR%20Keynote%20Light.html" style="justify-self:start;margin-top:8px">Open the keynote</a>
+    </div>
+    <div>
+      <span class="label" style="display:block;margin-bottom:14px">References cited</span>
+      <ul class="refs">
+        <li>Boehm, B. &amp; Turner, R. (2004)</li>
+        <li>Cobb, C. G. (2023)</li>
+        <li>Cohn, M. (2004)</li>
+        <li>Davenport, T. &amp; Kalakota, R. (2019)</li>
+        <li>Denning, S. (2018)</li>
+        <li>Jiang, F. et al. (2017)</li>
+        <li>Kraus, S. et al. (2021)</li>
+        <li>Layton, M. C. et al. (2020)</li>
+        <li>Leffingwell, D. (2018)</li>
+        <li>Rajpurkar, P. et al. (2022)</li>
+        <li>Reddy, S. et al. (2019)</li>
+        <li>Rigby, D. K. et al. (2016)</li>
+        <li>Schwaber, K. &amp; Sutherland, J. (2020)</li>
+        <li>Secinaro, S. et al. (2021)</li>
+        <li>Topol, E. (2019)</li>
+        <li>West, D. (2011)</li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root=document.documentElement, reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  root.classList.add('js');
+
+  /* ---------- theme ---------- */
+  var KEY='thakhr-theme';
+  try{var saved=localStorage.getItem(KEY); if(saved) root.setAttribute('data-theme',saved);}catch(e){}
+  function isDark(){var t=root.getAttribute('data-theme'); return t? t==='dark' : matchMedia('(prefers-color-scheme: dark)').matches;}
+  document.getElementById('themeBtn').addEventListener('click',function(){
+    var next=isDark()?'light':'dark'; root.setAttribute('data-theme',next);
+    try{localStorage.setItem(KEY,next);}catch(e){}
+    drawVault();
+  });
+
+  /* ---------- reveal (only blocks below the first frame start hidden) ---------- */
+  var rv=[].slice.call(document.querySelectorAll('.rv'));
+  if(!reduce && 'IntersectionObserver' in window){
+    var vh=innerHeight;
+    rv.forEach(function(el){ if(el.getBoundingClientRect().top>vh) el.classList.add('pre'); });
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.remove('pre'); io.unobserve(e.target);} });},{rootMargin:'0px 0px -8% 0px'});
+    rv.forEach(function(el){ if(el.classList.contains('pre')) io.observe(el); });
+  }
+
+  /* ---------- counters in hero ---------- */
+  function fmt(v,d){return d? v.toFixed(d) : Math.round(v).toLocaleString('en-US');}
+  if(!reduce){
+    document.querySelectorAll('[data-count]').forEach(function(el){
+      var to=parseFloat(el.dataset.count), d=+el.dataset.dec||0, t0=null;
+      el.textContent=fmt(0,d);
+      function step(t){ if(!t0)t0=t; var p=Math.min(1,(t-t0)/1600), e=1-Math.pow(1-p,4); el.textContent=fmt(to*e,d); if(p<1) requestAnimationFrame(step); }
+      requestAnimationFrame(step);
+    });
+  }
+
+  /* ---------- claim clock + progress + nav ---------- */
+  var clock=document.getElementById('clock'), cv=document.getElementById('clockVal'), bar=document.getElementById('progress');
+  var navLinks=[].slice.call(document.querySelectorAll('.nav a'));
+  var chapters=navLinks.map(function(a){return document.querySelector(a.getAttribute('href'));});
+  function onScroll(){
+    var max=document.documentElement.scrollHeight-innerHeight, p=max>0?Math.min(1,Math.max(0,scrollY/max)):0;
+    bar.style.transform='scaleX('+p+')';
+    // the clock tracks the chart's curve: manual months first, then the drop
+    var hrs=50.4-(50.4-8)*Math.pow(p,1.4);
+    cv.textContent=hrs.toFixed(1);
+    clock.classList.toggle('done',p>.96);
+    var cur=-1; chapters.forEach(function(s,i){ if(s && s.getBoundingClientRect().top<innerHeight*.4) cur=i; });
+    navLinks.forEach(function(a,i){a.classList.toggle('on',i===cur);});
+  }
+  addEventListener('scroll',onScroll,{passive:true}); addEventListener('resize',onScroll); onScroll();
+
+  /* ---------- tabs ---------- */
+  var tabs=[].slice.call(document.querySelectorAll('.tab'));
+  function select(tab){
+    tabs.forEach(function(t){ var on=t===tab; t.setAttribute('aria-selected',on); t.tabIndex=on?0:-1; document.getElementById(t.getAttribute('aria-controls')).hidden=!on; });
+    fillBars();
+  }
+  tabs.forEach(function(t,i){
+    t.addEventListener('click',function(){select(t);});
+    t.addEventListener('keydown',function(e){
+      var d=e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:0; if(!d) return;
+      var n=tabs[(i+d+tabs.length)%tabs.length]; n.focus(); select(n);
+    });
+  });
+  function fillBars(){ requestAnimationFrame(function(){ document.querySelectorAll('.bars i').forEach(function(i){ i.style.width=(i.closest('[hidden]')?0:i.dataset.w)+'%'; }); }); }
+  fillBars();
+
+  /* ---------- the proof chart ---------- */
+  var data=[119.6,116.5,94.2,73.9,56.7,43.5,33.4,25.3,19.1,14.1,11.0,8.0];
+  var months=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  var svg=document.getElementById('chart'), NS='http://www.w3.org/2000/svg';
+  var W=1000,H=340,L=52,R=28,T=28,B=46, yMax=120;
+  var x=function(i){return L+i*(W-L-R)/(data.length-1);}, y=function(v){return T+(1-v/yMax)*(H-T-B);};
+  function el(n,a,p){var e=document.createElementNS(NS,n); for(var k in a) e.setAttribute(k,a[k]); (p||svg).appendChild(e); return e;}
+  var defs=el('defs',{}), g=el('linearGradient',{id:'fillGrad',x1:0,y1:0,x2:0,y2:1},defs);
+  el('stop',{offset:0,'class':'stop-a'},g); el('stop',{offset:1,'class':'stop-b'},g);
+  [0,30,60,90,120].forEach(function(v){
+    el('line',{x1:L,x2:W-R,y1:y(v),y2:y(v),'class':v?'grid':'axis'});
+    var t=el('text',{x:L-12,y:y(v)+4,'text-anchor':'end'}); t.textContent=v;
+  });
+  months.forEach(function(m,i){ var t=el('text',{x:x(i),y:H-B+24,'text-anchor':'middle'}); t.textContent=m; });
+  el('line',{x1:x(2),x2:x(2),y1:T-10,y2:H-B,'class':'launch'});
+  var lt=el('text',{x:x(2)+10,y:T+2,'class':'launch-t'}); lt.textContent='DAKHTAR PILOT LAUNCH';
+  var pts=data.map(function(v,i){return x(i)+','+y(v);});
+  el('path',{d:'M'+pts.join(' L')+' L'+x(11)+','+y(0)+' L'+x(0)+','+y(0)+' Z','class':'area'});
+  var line=el('path',{d:'M'+pts.join(' L'),'class':'line'});
+  data.forEach(function(v,i){ el('circle',{cx:x(i),cy:y(v),r:i===11?5:3,'class':'pt'+(i===11?' end':'')}); });
+  var cur=el('line',{x1:0,x2:0,y1:T,y2:H-B,'class':'cursor',visibility:'hidden'});
+  var tip=el('g',{visibility:'hidden'}), tb=el('rect',{rx:3,height:30,width:128,'class':'tip-bg'},tip), tt=el('text',{'class':'tip-t'},tip);
+  function show(i){
+    var cx=x(i), cy=y(data[i]); cur.setAttribute('x1',cx); cur.setAttribute('x2',cx); cur.setAttribute('visibility','visible');
+    tt.textContent=months[i]+'  ·  '+data[i].toFixed(1)+' hrs';
+    var tx=Math.min(Math.max(cx-64,L),W-R-128), ty=cy-44<T-20?cy+16:cy-44;
+    tb.setAttribute('x',tx); tb.setAttribute('y',ty); tt.setAttribute('x',tx+12); tt.setAttribute('y',ty+19);
+    tip.setAttribute('visibility','visible');
+  }
+  function hide(){cur.setAttribute('visibility','hidden'); tip.setAttribute('visibility','hidden');}
+  var step=(W-L-R)/(data.length-1);
+  data.forEach(function(v,i){
+    var r=el('rect',{x:x(i)-step/2,y:T,width:step,height:H-T-B,'class':'hit'});
+    r.addEventListener('mouseenter',function(){show(i);}); r.addEventListener('click',function(){show(i);});
+  });
+  svg.addEventListener('mouseleave',hide);
+  if(!reduce && 'IntersectionObserver' in window){
+    var len=line.getTotalLength(); line.style.strokeDasharray=len; line.style.strokeDashoffset=0;
+    var cio=new IntersectionObserver(function(es){ if(es[0].isIntersecting && svg.getBoundingClientRect().top>innerHeight*.2){
+      line.style.transition='none'; line.style.strokeDashoffset=len; line.getBoundingClientRect();
+      line.style.transition='stroke-dashoffset 1.8s cubic-bezier(.2,.7,.2,1)'; line.style.strokeDashoffset=0; cio.disconnect(); } },{threshold:.4});
+    cio.observe(svg);
+  }
+
+  /* ---------- the vault: concentric dial drawn on canvas ---------- */
+  var cvs=document.getElementById('vault'), ctx=cvs.getContext('2d'), ang=0;
+  function drawVault(){
+    var s=cvs.clientWidth, dpr=Math.min(2,devicePixelRatio||1); if(!s) return;
+    if(cvs.width!==s*dpr){cvs.width=cvs.height=s*dpr;}
+    var cs=getComputedStyle(root), gold=cs.getPropertyValue('--gold').trim(), line=cs.getPropertyValue('--line-strong').trim();
+    ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,s,s);
+    var c=s/2, rs=[.46,.39,.31,.23,.15];
+    rs.forEach(function(r,k){ ctx.beginPath(); ctx.arc(c,c,r*s,0,Math.PI*2); ctx.strokeStyle=line; ctx.lineWidth=1; ctx.stroke();
+      var n=[120,72,48,24,12][k], rot=ang*(k%2?-1:1)*(1+k*.25);
+      ctx.strokeStyle=k===0?gold:line; ctx.lineWidth=1;
+      for(var i=0;i<n;i++){ var a=rot+i*Math.PI*2/n, len=(i%(n/12)===0?14:5);
+        ctx.beginPath(); ctx.moveTo(c+Math.cos(a)*(r*s-len),c+Math.sin(a)*(r*s-len)); ctx.lineTo(c+Math.cos(a)*r*s,c+Math.sin(a)*r*s); ctx.stroke(); }
+    });
+    ctx.beginPath(); ctx.arc(c+Math.cos(ang*1.4-Math.PI/2)*.46*s,c+Math.sin(ang*1.4-Math.PI/2)*.46*s,4,0,Math.PI*2); ctx.fillStyle=gold; ctx.fill();
+  }
+  function spin(){ ang+=.0009; drawVault(); requestAnimationFrame(spin); }
+  drawVault(); addEventListener('resize',drawVault);
+  if(!reduce) requestAnimationFrame(spin);
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change',drawVault);
+})();
+</script>
+</body>
+</html>
