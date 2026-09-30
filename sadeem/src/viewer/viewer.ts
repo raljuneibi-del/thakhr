@@ -158,8 +158,8 @@ export function Viewer(host: HTMLElement): ViewerAPI {
     const k = RM ? 1 : Math.min(1, dt * 6);
     orb.th += (orb.tth - orb.th) * k; orb.ph += (orb.tph - orb.ph) * k; orb.r += (orb.tr - orb.r) * (RM ? 1 : Math.min(1, dt * 5));
     if (Math.abs(expT - exp) > .0005) { exp += (expT - exp) * (RM ? 1 : Math.min(1, dt * 8)); applyExplode(MOD); applyExplode(GHOST); }
-    const ty = (MOD?.userData.h || 3) * .4 + exp * 1.2;
-    CAM.position.set(Math.sin(orb.th) * Math.sin(orb.ph) * orb.r, ty + Math.cos(orb.ph) * orb.r, Math.cos(orb.th) * Math.sin(orb.ph) * orb.r);
+    const ty = (MOD?.userData.h || 3) * .4 + exp * 1.2, rr = orb.r * (1 + exp * .22);
+    CAM.position.set(Math.sin(orb.th) * Math.sin(orb.ph) * rr, ty + Math.cos(orb.ph) * rr, Math.cos(orb.th) * Math.sin(orb.ph) * rr);
     CAM.lookAt(0, ty, 0);
     if (MOD && !RM) MF.animate(MOD, dt);
     R.render(S, CAM);
