@@ -1,0 +1,351 @@
+/* SADEEM Hangar · 01 Entry Point + Vision Chamber.
+   Night-staged: inside #stage every token already resolves to its night value.
+   Door metal and engraving are mixed from --star and --night so they stay bronze in every theme. */
+
+/* =====================================================================
+   ENTRY POINT
+   ===================================================================== */
+.z-arrival { --dirx: 1; padding-bottom: 0; }
+[dir="rtl"] .z-arrival { --dirx: -1; }
+
+.z-arrival .apron {
+  position: relative; overflow: hidden; isolation: isolate;
+  min-height: calc(100svh - var(--dock-h) - env(safe-area-inset-top, 0px));
+  display: grid; place-items: center;
+  padding-block: clamp(18px, 3.2vh, 36px);
+  background:
+    radial-gradient(60% 46% at 50% 22%, color-mix(in srgb, var(--star) 9%, transparent), transparent 70%),
+    radial-gradient(120% 70% at 50% 110%, color-mix(in srgb, var(--star) 7%, transparent), transparent 60%),
+    linear-gradient(180deg, var(--night), var(--night-2) 70%, var(--night));
+  color: var(--ink);
+}
+.z-arrival .apron::after { /* soft vignette so the edges settle into the building */
+  content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: radial-gradient(100% 80% at 50% 40%, transparent 55%, color-mix(in srgb, var(--night) 70%, transparent));
+}
+.z-arrival .nebula { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; display: block; }
+.z-arrival .arch {
+  position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; color: var(--star);
+  opacity: .7; transition: transform .6s var(--ease), opacity .8s; will-change: transform;
+}
+.z-arrival .apron.s3d .arch { opacity: .32; }
+
+.z-arrival .apronIn {
+  --doorW: min(100%, 880px);
+  --doorH: clamp(236px, calc(100svh - var(--dock-h) - 468px), 372px);
+  position: relative; z-index: 2; width: 100%; max-width: calc(880px + 2 * var(--gutter)); padding-inline: var(--gutter);
+  display: grid; justify-items: center; gap: clamp(12px, 2.2vh, 22px); text-align: center;
+}
+
+/* crest: the star slot the nebula condenses into, then the lock-up */
+.z-arrival .crest { display: grid; justify-items: center; gap: clamp(6px, 1.2vh, 12px); }
+.z-arrival .starSlot { width: clamp(72px, 14.5vh, 132px); aspect-ratio: 1; display: grid; place-items: center; }
+.z-arrival .starSlot .star { width: 62%; height: 62%; color: var(--star); filter: drop-shadow(0 0 18px color-mix(in srgb, var(--star) 50%, transparent)); transition: opacity .6s; }
+.z-arrival .apron.scene .starSlot .star { opacity: 0; }
+.z-arrival .logoLock { display: grid; justify-items: center; gap: 4px; margin: 0; line-height: 1.2; }
+.z-arrival .logoLock span {
+  font-family: var(--f-ar-d); font-size: clamp(20px, 2.1vw, 26px); font-weight: 500; color: var(--star);
+  background: linear-gradient(90deg, var(--star), color-mix(in srgb, var(--star) 45%, var(--on-night)), var(--star));
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+.z-arrival .logoLock b { font: 600 11px/1 var(--f-en); letter-spacing: .42em; margin-inline-start: .42em; color: var(--ink-2); }
+
+/* the door */
+.z-arrival .door {
+  position: relative; margin: 0; width: var(--doorW); height: var(--doorH); overflow: hidden; cursor: pointer;
+  border-radius: 2px;
+  background: radial-gradient(55% 70% at 50% 55%, color-mix(in srgb, var(--star) 30%, var(--night)), var(--night) 72%);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--star) 30%, transparent),
+    0 40px 90px -40px color-mix(in srgb, var(--night) 90%, transparent),
+    0 0 120px -30px color-mix(in srgb, var(--star) 22%, transparent);
+}
+.z-arrival .door:hover { box-shadow: 0 0 0 1px color-mix(in srgb, var(--star) 55%, transparent), 0 40px 90px -40px color-mix(in srgb, var(--night) 90%, transparent), 0 0 120px -24px color-mix(in srgb, var(--star) 30%, transparent); }
+.z-arrival .beyond { position: absolute; inset: 0; display: grid; place-items: center; }
+.z-arrival .beyond .star { width: 64px; height: 64px; color: var(--star); filter: drop-shadow(0 0 26px var(--star)); transform: scale(.7); opacity: .6; transition: transform 2.2s var(--ease) .5s, opacity 1.2s .4s; }
+.z-arrival .door.open .beyond .star { transform: scale(1.35); opacity: 1; }
+
+.z-arrival .leaf {
+  position: absolute; inset-block: 0; width: 50%; overflow: hidden; z-index: 2;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 5px, color-mix(in srgb, var(--night) 9%, transparent) 5px 6px),
+    linear-gradient(180deg, color-mix(in srgb, var(--star) 8%, transparent), transparent 28%, transparent 78%, color-mix(in srgb, var(--night) 30%, transparent)),
+    linear-gradient(90deg, color-mix(in srgb, var(--star) 17%, var(--night)), color-mix(in srgb, var(--star) 25%, var(--night)) 45%, color-mix(in srgb, var(--star) 19%, var(--night)));
+  transition: transform 1.9s cubic-bezier(.72, 0, .24, 1);
+}
+.z-arrival .leaf.ls { inset-inline-start: 0; }
+.z-arrival .leaf.le { inset-inline-end: 0; transition-delay: .14s; } /* the door opens from the reading side */
+.z-arrival .door.open .leaf.ls { transform: translateX(calc(-101% * var(--dirx))); }
+.z-arrival .door.open .leaf.le { transform: translateX(calc(101% * var(--dirx))); }
+.z-arrival .seam {
+  position: absolute; z-index: 3; inset-block: 0; inset-inline-start: calc(50% - .5px); width: 1px; pointer-events: none;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--star) 55%, transparent), color-mix(in srgb, var(--star) 40%, transparent) 12%, transparent 24%, transparent 76%, color-mix(in srgb, var(--star) 40%, transparent) 88%, color-mix(in srgb, var(--star) 55%, transparent));
+  transition: opacity .4s;
+}
+.z-arrival .door.open .seam { opacity: 0; }
+/* frame lines engraved around the statement */
+.z-arrival .door::before {
+  content: ""; position: absolute; inset: 14px; z-index: 3; pointer-events: none;
+  border: 1px solid color-mix(in srgb, var(--star) 22%, transparent); transition: opacity .5s;
+}
+.z-arrival .door.open::before { opacity: 0; }
+
+/* the engraving is set once per leaf at full door width, so it splits exactly along the seam */
+.z-arrival .engr { position: absolute; inset-block: 0; width: 200%; display: grid; place-items: center; padding: clamp(22px, 4.4vh, 44px) clamp(28px, 7%, 72px); }
+.z-arrival .ls .engr { inset-inline-start: 0; }
+.z-arrival .le .engr { inset-inline-end: 0; }
+.z-arrival .engrIn { display: grid; gap: clamp(8px, 1.4vh, 14px); justify-items: center; max-width: 46ch; }
+.z-arrival .engr .stmt {
+  margin: 0; quotes: none; font-size: clamp(15px, 1.55vw, 22px); line-height: 1.6; font-weight: 400; text-wrap: balance;
+  color: color-mix(in srgb, var(--star) 42%, var(--on-night));
+  text-shadow: 0 1px 0 color-mix(in srgb, var(--night) 85%, transparent), 0 -1px 0 color-mix(in srgb, var(--on-night) 10%, transparent);
+}
+.z-arrival .engr .stmt[lang="en"] { font-family: var(--f-en); letter-spacing: .015em; }
+.z-arrival .engr .stmt[lang="ar"] { font-family: var(--f-ar-d); line-height: 1.85; }
+.z-arrival .engr .by { font-size: var(--t-xs); color: var(--star); font-weight: 500; }
+html[lang="en"] .z-arrival .engr .by { font: 500 10.5px/1.4 var(--f-mono); letter-spacing: .18em; text-transform: uppercase; }
+.z-arrival .engr .when { font-size: var(--t-2xs); color: var(--mute); line-height: 1.5; max-width: 60ch; }
+.z-arrival .engr .by, .z-arrival .engr .when { text-shadow: 0 1px 0 color-mix(in srgb, var(--night) 85%, transparent); }
+
+/* provenance plaque under the door */
+.z-arrival .plaque {
+  width: var(--doorW); display: grid; justify-items: center; gap: 2px;
+  font-size: var(--t-2xs); line-height: 1.55; color: var(--mute); margin-top: calc(-1 * clamp(4px, 1vh, 10px));
+}
+.z-arrival .plaque .prov { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 8px; }
+.z-arrival .plaque i { font-style: normal; opacity: .6; }
+.z-arrival .plaque a { color: var(--ink-2); text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--star) 50%, transparent); text-underline-offset: 3px; }
+.z-arrival .plaque a:hover { color: var(--ink); }
+.z-arrival .plaque .orig { color: var(--star-ink); }
+
+/* three thresholds, crossed in the order of the principles */
+.z-arrival .thresholds {
+  list-style: none; width: var(--doorW); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-block: 1px solid var(--line); position: relative;
+}
+.z-arrival .thresholds li {
+  position: relative; display: grid; gap: 2px; justify-items: center; padding: 10px 10px 11px;
+  font-size: var(--t-sm); color: var(--ink-2); line-height: 1.4; min-width: 0;
+  transition: background .6s var(--ease), color .6s;
+}
+.z-arrival .thresholds li + li { border-inline-start: 1px solid var(--line-2); }
+.z-arrival .thresholds li b { font-size: 10px; font-weight: 500; letter-spacing: .2em; color: var(--mute); transition: color .6s; }
+.z-arrival .thresholds li::after {
+  content: ""; position: absolute; inset-inline: 0; bottom: -1px; height: 2px; background: var(--star);
+  transform: scaleX(0); transform-origin: var(--from, left); transition: transform .5s var(--ease);
+}
+[dir="rtl"] .z-arrival .thresholds li::after { --from: right; }
+.z-arrival .thresholds li.lit { background: linear-gradient(0deg, var(--star-t), transparent); color: var(--ink); }
+.z-arrival .thresholds li.lit b { color: var(--star); }
+.z-arrival .thresholds li.lit::after { transform: scaleX(1); }
+
+/* the choice */
+.z-arrival .acts { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; align-items: center; }
+.z-arrival .acts .enter { min-width: 200px; }
+.z-arrival .acts .enter svg { transition: transform .3s var(--ease); }
+.z-arrival .acts .enter:hover svg { transform: translateX(calc(3px * var(--dirx))); }
+[dir="rtl"] .z-arrival .acts .enter svg { scale: -1 1; }
+.z-arrival .acts .ghost { min-width: 200px; border-color: var(--steel); }
+.z-arrival .acts .lgSw { font-size: var(--t-sm); }
+html[lang="ar"] .z-arrival .acts .lgSw { font-family: var(--f-en); }
+html[lang="en"] .z-arrival .acts .lgSw { font-family: var(--f-ar); }
+
+/* entering: everything that is not the door recedes */
+.z-arrival .plaque, .z-arrival .acts, .z-arrival .crest, .z-arrival .arrIntro, .z-arrival .arrZones { transition: opacity .6s var(--ease); }
+.z-arrival.entering .plaque, .z-arrival.entering .acts, .z-arrival.entering .arrIntro, .z-arrival.entering .arrZones { opacity: .12; pointer-events: none; }
+.z-arrival.entering .door { cursor: default; }
+
+/* ---------- below the door ---------- */
+.z-arrival .arrIntro {
+  display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: clamp(32px, 6vw, 88px); align-items: start;
+  padding-block: clamp(48px, 7vw, 96px) clamp(40px, 5vw, 64px);
+}
+.z-arrival .arrHead { display: grid; gap: var(--s-4); align-content: start; }
+.z-arrival .arrHead h1 { font-family: var(--f-display); font-size: var(--t-3xl); line-height: 1.12; font-weight: 600; color: var(--ink); max-width: 16ch; }
+html[lang="ar"] .z-arrival .arrHead h1 { line-height: 1.35; }
+.z-arrival .arrVals { display: grid; gap: var(--s-4); align-content: start; }
+.z-arrival .valueRow { list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid var(--line); }
+.z-arrival .valueRow li {
+  display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 10px; align-items: baseline;
+  padding: 16px 4px 16px 0; border-bottom: 1px solid var(--line-2); font-size: var(--t-sm); line-height: 1.55; color: var(--ink);
+}
+.z-arrival .valueRow li:nth-child(odd) { padding-inline-end: 20px; }
+.z-arrival .valueRow li:nth-child(even) { padding-inline-start: 20px; border-inline-start: 1px solid var(--line-2); }
+.z-arrival .valueRow li i { font-style: normal; font-size: 10.5px; letter-spacing: .14em; color: var(--star-ink); }
+
+.z-arrival .arrZones { padding-bottom: var(--s-16); }
+.z-arrival .arrZones .sec-h { margin-bottom: var(--s-4); }
+.z-arrival .zoneList { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr)); gap: 10px; }
+.z-arrival .zoneList a {
+  position: relative; display: grid; gap: 4px; align-content: start; padding: 18px 18px 20px; background: var(--paper); border: 1px solid var(--line-2); min-width: 0; overflow: hidden;
+  transition: background .25s;
+}
+.z-arrival .zoneList a::before { content: ""; position: absolute; inset-block: 0; inset-inline-start: 0; width: 2px; background: var(--star); transform: scaleY(0); transform-origin: top; transition: transform .3s var(--ease); }
+.z-arrival .zoneList a:hover { background: var(--paper-2); border-color: var(--line); }
+.z-arrival .zoneList a:hover::before, .z-arrival .zoneList a:focus-visible::before { transform: scaleY(1); }
+.z-arrival .zoneList a i { font-style: normal; font-size: 10.5px; letter-spacing: .14em; color: var(--star-ink); }
+.z-arrival .zoneList a b { font-size: var(--t-base); font-weight: 500; color: var(--ink); }
+.z-arrival .zoneList a span { font-size: var(--t-xs); color: var(--ink-2); line-height: 1.5; }
+.z-arrival .disc { margin-top: var(--s-8); padding-top: var(--s-4); border-top: 1px solid var(--line-2); font-size: var(--t-xs); color: var(--mute); max-width: 90ch; }
+
+/* ---------- responsive ---------- */
+@media (max-width: 900px) {
+  .z-arrival .arrIntro { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 640px) {
+  .z-arrival .apronIn { --doorH: clamp(270px, calc(100svh - var(--dock-h) - 420px), 380px); gap: 14px; }
+  .z-arrival .starSlot { width: clamp(60px, 9svh, 84px); }
+  .z-arrival .logoLock span { font-size: 19px; }
+  .z-arrival .logoLock b { font-size: 10px; }
+  .z-arrival .engr { padding: 24px 22px; }
+  .z-arrival .engr .stmt { font-size: 15.5px; line-height: 1.6; }
+  .z-arrival .door::before { inset: 10px; }
+  .z-arrival .thresholds li { padding: 9px 4px 10px; font-size: var(--t-xs); }
+  .z-arrival .acts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; gap: 10px; }
+  .z-arrival .acts .enter, .z-arrival .acts .ghost { min-width: 0; padding-inline: 12px; }
+  .z-arrival .acts .lgSw { display: none; }
+  .z-arrival .valueRow { grid-template-columns: minmax(0, 1fr); }
+  .z-arrival .valueRow li:nth-child(n) { padding-inline: 0; border-inline-start: 0; }
+}
+@media (max-height: 700px) and (min-width: 641px) {
+  .z-arrival .apronIn { --doorH: 240px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .z-arrival .arch { transition: none; }
+}
+
+/* =====================================================================
+   VISION CHAMBER
+   ===================================================================== */
+.z-vision {
+  position: relative; overflow: hidden; isolation: isolate;
+  background:
+    radial-gradient(70% 50% at 50% 30%, color-mix(in srgb, var(--star) 7%, transparent), transparent 70%),
+    linear-gradient(180deg, var(--night), var(--night-2) 60%, var(--night));
+}
+.z-vision::before { /* the chamber's vault: faint ribs overhead */
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: .5;
+  background:
+    radial-gradient(120% 90% at 50% 100%, transparent 58%, color-mix(in srgb, var(--star) 10%, transparent) 58.2%, transparent 58.6%),
+    radial-gradient(100% 76% at 50% 100%, transparent 58%, color-mix(in srgb, var(--star) 8%, transparent) 58.2%, transparent 58.6%);
+}
+.z-vision .vcHall { display: grid; min-height: calc(100svh - var(--dock-h)); grid-template-rows: auto minmax(0, 1fr) auto; grid-template-columns: minmax(0, 1fr); }
+.z-vision .vcHall > *, .z-vision .vcFloor > * { min-width: 0; }
+.z-vision .vcTop { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 24px; padding-top: clamp(20px, 3.4vh, 36px); }
+.z-vision .vcArc { font: 500 11px/1.6 var(--f-mono); letter-spacing: .14em; color: var(--star); text-transform: uppercase; }
+html[lang="ar"] .z-vision .vcArc { font-family: var(--f-ar-d); letter-spacing: 0; font-size: var(--t-sm); text-transform: none; }
+
+.z-vision .vcStage { position: relative; display: grid; align-items: center; padding-block: clamp(20px, 4vh, 48px); }
+.z-vision .vcStage::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(46% 50% at 50% 50%, color-mix(in srgb, var(--star) 9%, transparent), transparent 70%); }
+.z-vision .vcBeam {
+  position: absolute; z-index: -1; top: -20%; inset-inline-start: 50%; width: min(520px, 60%); height: 140%; translate: calc(-50% * var(--dirx, 1)) 0; pointer-events: none;
+  background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--star) 7%, transparent) 50%, transparent);
+  clip-path: polygon(38% 0, 62% 0, 100% 100%, 0 100%); opacity: .8;
+  animation: vcBreathe 7s ease-in-out infinite;
+}
+[dir="rtl"] .z-vision .vcBeam { --dirx: -1; }
+@keyframes vcBreathe { 50% { opacity: .45; } }
+
+.z-vision .vcStmt { margin: 0 auto; display: grid; gap: clamp(14px, 2.2vh, 22px); justify-items: center; text-align: center; max-width: 980px; }
+.z-vision .vcStmt blockquote { margin: 0; }
+.z-vision .vcStmt blockquote p {
+  font-size: clamp(22px, 2.7vw, 38px); line-height: 1.38; font-weight: 400; color: var(--ink); max-width: 30ch; margin-inline: auto; text-wrap: balance;
+}
+.z-vision .vcStmt blockquote[lang="en"] p { font-family: var(--f-en); letter-spacing: -.005em; }
+.z-vision .vcStmt blockquote[lang="ar"] p { font-family: var(--f-ar-d); line-height: 1.7; font-weight: 500; }
+.z-vision .vcStmt blockquote span {
+  background: linear-gradient(180deg, var(--ink), color-mix(in srgb, var(--ink) 62%, var(--star)));
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+.z-vision .vcStmt blockquote.rev span { display: inline-block; animation: vcWord .7s var(--ease) both; animation-delay: calc(var(--i) * 28ms); }
+@keyframes vcWord { from { opacity: .08; transform: translateY(6px); filter: blur(3px); } to { opacity: 1; transform: none; filter: none; } }
+.z-vision .vcStmt figcaption { display: grid; gap: 6px; justify-items: center; }
+.z-vision .vcStmt .by { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 10px; font-size: var(--t-sm); color: var(--star); font-weight: 500; }
+html[lang="en"] .z-vision .vcStmt .by { font: 500 11px/1.6 var(--f-mono); letter-spacing: .16em; text-transform: uppercase; }
+.z-vision .vcStmt .by i, .z-vision .vcStmt .src i { font-style: normal; opacity: .55; }
+.z-vision .vcStmt .orig { font-size: var(--t-xs); color: var(--star-ink); }
+.z-vision .vcStmt .src { display: flex; flex-wrap: wrap; justify-content: center; gap: 2px 8px; font-size: var(--t-xs); color: var(--mute); max-width: 90ch; line-height: 1.6; }
+.z-vision .vcStmt .src a { color: var(--ink-2); text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--star) 50%, transparent); text-underline-offset: 3px; }
+.z-vision .vcStmt .src a:hover { color: var(--ink); }
+
+/* the seven pillars */
+.z-vision .vcFloor { padding-bottom: clamp(24px, 4vh, 48px); }
+.z-vision .vcScroll { scrollbar-width: none; }
+.z-vision .vcScroll::-webkit-scrollbar { display: none; }
+.z-vision .vc { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: clamp(8px, 1.2vw, 16px); align-items: end; min-width: 0; }
+.z-vision .pillar {
+  position: relative; height: clamp(104px, 15vh, 148px); display: grid; align-content: end; justify-items: center; gap: 6px;
+  padding: 12px 8px 14px; text-align: center; border: 1px solid var(--line); border-bottom-color: var(--steel); border-radius: 2px 2px 0 0;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--star) 7%, var(--night-2)), var(--night));
+  transition: transform .45s var(--ease), border-color .4s, box-shadow .5s; overflow: visible;
+}
+.z-vision .pillar::before {
+  content: ""; position: absolute; inset: auto 0 0 0; height: 0; z-index: 0;
+  background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--star) 36%, transparent)); transition: height .6s var(--ease);
+}
+.z-vision .pillar:hover { transform: translateY(-4px); border-color: color-mix(in srgb, var(--star) 45%, transparent); }
+.z-vision .pillar:hover::before { height: 45%; }
+.z-vision .pillar[aria-pressed="true"] { transform: translateY(-10px); border-color: var(--star); box-shadow: 0 -24px 50px -26px var(--star); }
+.z-vision .pillar[aria-pressed="true"]::before { height: 100%; }
+.z-vision .pillar i { position: relative; z-index: 2; font-style: normal; font-size: 10px; letter-spacing: .16em; color: var(--mute); }
+.z-vision .pillar b { position: relative; z-index: 2; font: 600 11.5px/1.35 var(--f-en); letter-spacing: .12em; color: var(--ink-2); }
+html[lang="ar"] .z-vision .pillar b { font-family: var(--f-ar-d); letter-spacing: 0; font-size: var(--t-sm); font-weight: 500; }
+.z-vision .pillar[aria-pressed="true"] b { color: var(--ink); }
+.z-vision .pillar[aria-pressed="true"] i { color: var(--star); }
+/* a shaft of light rising from the lit pillar toward the statement */
+.z-vision .pShaft {
+  position: absolute; inset-inline-start: 20%; width: 60%; bottom: 100%; height: 0; pointer-events: none;
+  background: linear-gradient(0deg, color-mix(in srgb, var(--star) 42%, transparent), transparent); filter: blur(3px);
+  transition: height .7s var(--ease);
+}
+.z-vision .pillar[aria-pressed="true"] .pShaft { height: min(30vh, 260px); }
+.z-vision .pBeam { position: absolute; inset: 0; background: radial-gradient(60% 40% at 50% 0%, color-mix(in srgb, var(--star) 26%, transparent), transparent 70%); opacity: 0; transition: opacity .5s; }
+.z-vision .pillar[aria-pressed="true"] .pBeam { opacity: 1; }
+
+.z-vision .vcHint { font-size: var(--t-xs); color: var(--mute); margin-top: var(--s-4); max-width: 60ch; }
+
+/* the light follows the pillar to the zones it drives */
+.z-vision .chain { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin-top: var(--s-4); padding-top: var(--s-4); border-top: 1px solid var(--line-2); position: relative; }
+.z-vision .chain::before {
+  content: ""; position: absolute; top: -1px; inset-inline-start: 0; height: 1px; width: 100%; background: linear-gradient(90deg, var(--star), transparent);
+  transform: scaleX(0); transform-origin: var(--from, left);
+}
+[dir="rtl"] .z-vision .chain::before { --from: right; background: linear-gradient(-90deg, var(--star), transparent); }
+.z-vision .chain.flow::before { animation: vcLine 1.2s var(--ease) forwards; }
+.z-vision .chain:not(.flow)::before { transform: scaleX(1); }
+@keyframes vcLine { to { transform: scaleX(1); } }
+.z-vision .chain .src0, .z-vision .chain a {
+  display: inline-flex; align-items: center; min-height: 38px; padding: 8px 14px; font-size: var(--t-sm); line-height: 1.35;
+  border: 1px solid var(--line); background: var(--night-2); border-radius: 2px;
+}
+.z-vision .chain .src0 { border-color: var(--star); background: var(--star-t); color: var(--ink); }
+.z-vision .chain .src0 b { font-weight: 600; }
+.z-vision .chain a { color: var(--ink-2); transition: border-color .25s, color .25s, transform .25s var(--ease); }
+.z-vision .chain a:hover { border-color: var(--star); color: var(--ink); transform: translateY(-2px); }
+.z-vision .chain .lk { display: inline-flex; align-items: center; gap: 10px; }
+.z-vision .chain .arw { display: inline-grid; place-items: center; color: var(--star); font-style: normal; }
+.z-vision .chain .arw svg { width: 16px; height: 16px; }
+[dir="rtl"] .z-vision .chain .arw svg { scale: -1 1; }
+.z-vision .chain.flow a, .z-vision .chain.flow .arw { animation: vcLight .6s var(--ease) both; animation-delay: calc(120ms + var(--k) * 140ms); }
+.z-vision .chain.flow a { animation-name: vcLightA; }
+@keyframes vcLight { from { opacity: 0; } to { opacity: 1; } }
+@keyframes vcLightA { 0% { opacity: .25; border-color: var(--line); } 50% { opacity: 1; border-color: var(--star); box-shadow: 0 0 22px -6px var(--star); } 100% { opacity: 1; } }
+
+@media (max-width: 860px) {
+  .z-vision .vcScroll { overflow-x: auto; padding-top: 16px; margin-top: -16px; margin-inline: calc(-1 * var(--gutter)); padding-inline: var(--gutter); scroll-snap-type: x proximity;
+    mask-image: linear-gradient(90deg, transparent, #000 var(--gutter), #000 calc(100% - var(--gutter)), transparent); }
+  .z-vision .vc { grid-template-columns: repeat(7, 104px); width: max-content; }
+  .z-vision .pillar { scroll-snap-align: center; }
+}
+@media (max-width: 640px) {
+  .z-vision .vcTop { display: grid; gap: 6px; }
+  .z-vision .vcStmt blockquote p { font-size: clamp(20px, 5.6vw, 24px); }
+  .z-vision .pillar { height: 96px; }
+  .z-vision .vcStmt .src { display: grid; justify-items: center; gap: 2px; }
+  .z-vision .vcStmt .src > i, .z-arrival .plaque .prov > i { display: none; }
+  .z-vision .pillar[aria-pressed="true"] .pShaft { height: 120px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .z-vision .vcBeam { animation: none; }
+  .z-vision .chain::before { transform: scaleX(1); }
+}
