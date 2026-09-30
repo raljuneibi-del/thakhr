@@ -1,0 +1,23 @@
+{
+  "name": "sadeem-hangar",
+  "private": true,
+  "version": "2.0.0",
+  "description": "SADEEM Hangar · the sovereign virtual innovation hangar and SADEEM OS",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "three": "0.186.1"
+  },
+  "devDependencies": {
+    "@types/three": "^0.186.0",
+    "typescript": "^5.9.3",
+    "vite": "^8.3.1",
+    "vitest": "^5.0.3"
+  }
+}

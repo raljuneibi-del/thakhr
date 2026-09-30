@@ -1,0 +1,28 @@
+{
+  "themes": [
+    {"k": "research", "ar": "أبحاث", "en": "Research"},
+    {"k": "report", "ar": "تقارير تقنية", "en": "Technical reports"},
+    {"k": "bulletin", "ar": "نشرات الابتكار", "en": "Innovation bulletins"},
+    {"k": "video", "ar": "فيديو", "en": "Videos"},
+    {"k": "case", "ar": "دراسات حالة", "en": "Case studies"},
+    {"k": "briefing", "ar": "إحاطات تقنية", "en": "Technology briefings"},
+    {"k": "lesson", "ar": "دروس مستفادة", "en": "Lessons learned"},
+    {"k": "intel", "ar": "استخبارات الصناعة", "en": "Industry intelligence"},
+    {"k": "reference", "ar": "مراجع هندسية", "en": "Engineering references"},
+    {"k": "academic", "ar": "شراكات أكاديمية", "en": "Academic partnerships"}
+  ],
+  "items": [
+    {"id": "L01", "k": "case", "ar": "التبريد ذاتي التنظيف: من ملاحظة فني إلى قطعة معتمدة", "en": "Self-cleaning cooling: from a technician's note to an approved part", "sum": {"ar": "كيف تحولت ملاحظة انسداد المشعاع في الميدان إلى مروحة عكسية وحساس، خلال 14 أسبوعاً.", "en": "How a field note about radiator clogging became a reverse-flow fan and sensor in 14 weeks."}, "tags": ["cooling","dust","land"], "year": 2026},
+    {"id": "L02", "k": "report", "ar": "تقرير حراري: أداء منظومة التبريد عند 50°م", "en": "Thermal report: cooling performance at 50 °C", "sum": {"ar": "قياسات ميدانية لدرجة حرارة السائل تحت أحمال مختلفة مع فلتر نظيف ومسدود.", "en": "Field measurements of coolant temperature under load with clean and clogged filters."}, "tags": ["cooling","test"], "year": 2026},
+    {"id": "L03", "k": "briefing", "ar": "إحاطة: خلايا الوقود الهيدروجينية للدرونات", "en": "Briefing: hydrogen fuel cells for drones", "sum": {"ar": "الوزن مقابل زمن التحليق، وسلامة التخزين، وجاهزية الموردين.", "en": "Mass versus endurance, storage safety, and supplier readiness."}, "tags": ["energy","drone"], "year": 2026},
+    {"id": "L04", "k": "lesson", "ar": "درس مستفاد: لماذا تعثّرت تجربة القافلة الذاتية الأولى", "en": "Lesson learned: why the first autonomous-convoy trial stalled", "sum": {"ar": "فقدان إشارة الموقع في الوادي، وما تغير في التجربة الثانية.", "en": "Positioning loss in the wadi, and what changed for the second trial."}, "tags": ["autonomy","land"], "year": 2025},
+    {"id": "L05", "k": "research", "ar": "بحث: الكشف البصري عن عيوب اللحام بالتعلم العميق", "en": "Research: deep-learning detection of weld defects", "sum": {"ar": "دقة 96% على عينة 1,200 صورة؛ الخطوة التالية خلية تجريبية.", "en": "96% accuracy on 1,200 images; next step a pilot cell."}, "tags": ["ai","quality","mfg"], "year": 2026},
+    {"id": "L06", "k": "bulletin", "ar": "نشرة سديم · الربع الثالث 2026", "en": "SADEEM bulletin · Q3 2026", "sum": {"ar": "34 فكرة جديدة عبر نقطة الدخول، 3 أُحيلت إلى جهات مختصة، احتياج وطني جديد.", "en": "34 new ideas through the entry point, 3 referred to competent entities, one new national need."}, "tags": ["pipeline"], "year": 2026},
+    {"id": "L07", "k": "video", "ar": "جولة: خلية اللحام التعاونية", "en": "Walkthrough: the collaborative welding cell", "sum": {"ar": "أربع دقائق داخل التجربة الجارية مع المشغّل.", "en": "Four minutes inside the running trial with its operator."}, "tags": ["robotics","mfg"], "year": 2026},
+    {"id": "L08", "k": "reference", "ar": "مرجع: ميزانية الكتلة والطاقة للدرونات الصغيرة", "en": "Reference: mass and power budgets for small UAS", "sum": {"ar": "العلاقات الأولية المستخدمة في مختبر الدرونات مع حدودها.", "en": "The first-order relations used in the Drone Lab and their limits."}, "tags": ["drone","engineering"], "year": 2026},
+    {"id": "L09", "k": "intel", "ar": "استخبارات: اتجاهات الدرونات طويلة التحمل في المنطقة", "en": "Intelligence: long-endurance drone trends in the region", "sum": {"ar": "ثلاث منصات، ثلاثة خيارات طاقة، وما يعنيه ذلك للتحدي C-02.", "en": "Three platforms, three energy choices, and what it means for national need N-02."}, "tags": ["drone","market"], "year": 2026},
+    {"id": "L10", "k": "academic", "ar": "شراكة: جامعة وطنية · مواد التبريد", "en": "Partnership: National university · cooling materials", "sum": {"ar": "برنامج بحثي مشترك حول زعانف الجرافين، سنتان، طالبان إماراتيان.", "en": "Joint research on graphene fins, two years, two Emirati graduate students."}, "tags": ["materials","academy"], "year": 2026},
+    {"id": "L11", "k": "case", "ar": "التوأم الرقمي لخط الإنتاج: الشهر الأول", "en": "The production-line twin: month one", "sum": {"ar": "ما كشفه التوأم عن التوقفات غير المخطط لها.", "en": "What the twin revealed about unplanned stops."}, "tags": ["twins","mfg"], "year": 2026},
+    {"id": "L12", "k": "briefing", "ar": "إحاطة: الحوسبة الطرفية على منصات الاستطلاع", "en": "Briefing: edge computing aboard ISR platforms", "sum": {"ar": "كاشف أهداف على المتن، الحرارة والطاقة والوزن.", "en": "An on-board detector: heat, power and mass."}, "tags": ["edge","aero"], "year": 2026}
+  ]
+}

@@ -1,0 +1,106 @@
+/* SADEEM Hangar · design tokens
+   Identity from the SADEEM concept sheet: bronze-olive #534B31 and deep umber #463A1E on ivory, a brushed-gold four-point star.
+   Layout concept: a hangar at ten in the morning. Daylight ivory for work surfaces; night only where the building is staged
+   (the entry, the vault, the bays, the sky). One gold highlight per screen. */
+:root {
+  /* daylight */
+  --paper: #F5F2EA;
+  --paper-2: #EFEADE;
+  --sand: #E9E3D3;
+  --surface: #FBFAF6;
+  --line: #DCD5C4;
+  --line-2: #E7E1D3;
+  --steel: #C9C6BC;
+  --ink: #2A2414;
+  --ink-2: #5A5240;
+  --mute: #857D6A;
+
+  /* brand */
+  --sadeem: #534B31;
+  --sadeem-2: #6E6444;
+  --sadeem-t: rgba(83, 75, 49, .09);
+  --umber: #463A1E;
+  --star: #C8A45C;
+  --star-ink: #9A7632;          /* gold that passes contrast on ivory */
+  --star-t: rgba(200, 164, 92, .16);
+  --on-sadeem: #F5F2EA;
+
+  /* state only */
+  --good: #3E7A4F; --good-t: rgba(62, 122, 79, .12);
+  --warn: #B8832A; --warn-t: rgba(184, 131, 42, .14);
+  --crit: #A4332A; --crit-t: rgba(164, 51, 42, .12);
+
+  /* night staging (used by .night surfaces) */
+  --night: #12100B;
+  --night-2: #1A1711;
+  --night-3: #221E16;
+  --night-line: rgba(241, 236, 223, .12);
+  --on-night: #F1ECDF;
+  --on-night-2: rgba(241, 236, 223, .68);
+  --on-night-3: rgba(241, 236, 223, .44);
+
+  /* type */
+  --f-ar: "Readex Pro", "Noto Kufi Arabic", "Geeza Pro", system-ui, sans-serif;
+  --f-ar-d: "Noto Kufi Arabic", "Readex Pro", "Geeza Pro", sans-serif;
+  --f-en: "Archivo", "Helvetica Neue", Arial, system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --f-body: var(--f-ar);
+  --f-display: var(--f-ar-d);
+
+  --t-2xs: 11px;
+  --t-xs: 12px;
+  --t-sm: 13.5px;
+  --t-base: 15px;
+  --t-md: 17px;
+  --t-lg: 20px;
+  --t-xl: 26px;
+  --t-2xl: clamp(28px, 3vw, 36px);
+  --t-3xl: clamp(34px, 4.6vw, 62px);
+
+  /* space, shape, depth */
+  --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px; --s-5: 20px; --s-6: 24px; --s-8: 32px; --s-10: 40px; --s-12: 48px; --s-16: 64px;
+  --r: 4px;
+  --r-lg: 8px;
+  --shadow: 0 1px 0 rgba(42, 36, 20, .04), 0 12px 32px -12px rgba(42, 36, 20, .14);
+  --shadow-lg: 0 24px 60px -20px rgba(42, 36, 20, .28);
+  --ease: cubic-bezier(.2, .7, .2, 1);
+  --dock-h: 64px;
+  --ai-w: 380px;
+  --gutter: clamp(16px, 3vw, 40px);
+  --maxw: 1320px;
+  color-scheme: light;
+}
+html[lang="en"] { --f-body: var(--f-en); --f-display: var(--f-en); }
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #16140F; --paper-2: #1D1A14; --sand: #25211A; --surface: #1B1813; --line: #34301F; --line-2: #2A2619; --steel: #3D3829;
+    --ink: #EFEADD; --ink-2: #C9C1AC; --mute: #948C77;
+    --sadeem: #CDBE8E; --sadeem-2: #E0D3A8; --sadeem-t: rgba(205, 190, 142, .13); --umber: #E6DCC0; --on-sadeem: #16140F;
+    --star: #D8B76E; --star-ink: #D8B76E; --star-t: rgba(216, 183, 110, .16);
+    --good: #6DB283; --good-t: rgba(109, 178, 131, .14); --warn: #D9A24D; --warn-t: rgba(217, 162, 77, .16); --crit: #DB6E62; --crit-t: rgba(219, 110, 98, .14);
+    --shadow: 0 1px 0 rgba(0, 0, 0, .3), 0 12px 32px -12px rgba(0, 0, 0, .6); --shadow-lg: 0 24px 60px -20px rgba(0, 0, 0, .7);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #16140F; --paper-2: #1D1A14; --sand: #25211A; --surface: #1B1813; --line: #34301F; --line-2: #2A2619; --steel: #3D3829;
+  --ink: #EFEADD; --ink-2: #C9C1AC; --mute: #948C77;
+  --sadeem: #CDBE8E; --sadeem-2: #E0D3A8; --sadeem-t: rgba(205, 190, 142, .13); --umber: #E6DCC0; --on-sadeem: #16140F;
+  --star: #D8B76E; --star-ink: #D8B76E; --star-t: rgba(216, 183, 110, .16);
+  --good: #6DB283; --good-t: rgba(109, 178, 131, .14); --warn: #D9A24D; --warn-t: rgba(217, 162, 77, .16); --crit: #DB6E62; --crit-t: rgba(219, 110, 98, .14);
+  --shadow: 0 1px 0 rgba(0, 0, 0, .3), 0 12px 32px -12px rgba(0, 0, 0, .6); --shadow-lg: 0 24px 60px -20px rgba(0, 0, 0, .7);
+  color-scheme: dark;
+}
+
+/* Night staging: inside a .night surface every daylight token resolves to its night value,
+   so all components (panels, chips, buttons) work unchanged on dark zones. */
+.night-surface, body.night #stage {
+  --paper: var(--night); --paper-2: var(--night-2); --sand: var(--night-3); --surface: var(--night-2);
+  --line: rgba(241, 236, 223, .14); --line-2: rgba(241, 236, 223, .08); --steel: rgba(241, 236, 223, .22);
+  --ink: var(--on-night); --ink-2: var(--on-night-2); --mute: var(--on-night-3);
+  --sadeem: #D9C58E; --sadeem-2: #E8D8A8; --sadeem-t: rgba(217, 197, 142, .12); --on-sadeem: #12100B;
+  --star-ink: #D8B76E;
+  --shadow: 0 1px 0 rgba(0, 0, 0, .4), 0 16px 40px -16px rgba(0, 0, 0, .8);
+  color-scheme: dark;
+}

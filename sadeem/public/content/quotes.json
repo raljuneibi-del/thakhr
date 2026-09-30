@@ -1,0 +1,157 @@
+{
+ "schema": [
+  "id",
+  "leader",
+  "ar",
+  "en",
+  "date",
+  "context",
+  "source",
+  "sourceUrl",
+  "sourceUrlAr",
+  "theme",
+  "zone",
+  "osFeature",
+  "pillar",
+  "verification",
+  "note"
+ ],
+ "items": [
+  {
+   "id": "Q1",
+   "leader": {
+    "ar": "صاحب السمو الشيخ محمد بن زايد آل نهيان",
+    "en": "H.H. Sheikh Mohamed bin Zayed Al Nahyan"
+   },
+   "en": "While we want our youth to be fully engaged in the global march of scientific and technological progress, we also want them to remain firmly grounded in their values, ethics, and national identity.",
+   "ar": "",
+   "date": "2025-12-01",
+   "context": {
+    "ar": "كلمة رئيس الدولة بمناسبة عيد الاتحاد الـ54",
+    "en": "Statement marking the 54th Eid Al Etihad"
+   },
+   "source": "mohamedbinzayed.ae (official)",
+   "sourceUrl": "https://www.mohamedbinzayed.ae/en/latest-news-listing/2025/12/We-encourage-our-youth-to-remain-at-forefront-of-scientific-technological-progress",
+   "sourceUrlAr": "https://www.mohamedbinzayed.ae/ar/latest-news-listing/2025/12/We-encourage-our-youth-to-remain-at-forefront-of-scientific-technological-progress",
+   "theme": [
+    "science",
+    "technology",
+    "youth",
+    "identity"
+   ],
+   "zone": "vision",
+   "osFeature": "radar",
+   "pillar": "FUTURE",
+   "verification": "verified-en",
+   "note": "English verified on the official site. Arabic must be pasted verbatim from the Arabic page before the Arabic surface publishes it."
+  },
+  {
+   "id": "Q2",
+   "leader": {
+    "ar": "صاحب السمو الشيخ محمد بن زايد آل نهيان",
+    "en": "H.H. Sheikh Mohamed bin Zayed Al Nahyan"
+   },
+   "en": "The Emirati citizen is the foundation of development, its driving force, and who it ultimately seeks to serve.",
+   "ar": "«الإنسان أولاً» كونه أساس التنمية وصانعها وهدفها في الوقت نفسه",
+   "date": "2025-12-01",
+   "context": {
+    "ar": "كلمة رئيس الدولة بمناسبة عيد الاتحاد الـ54",
+    "en": "Statement marking the 54th Eid Al Etihad"
+   },
+   "source": "mohamedbinzayed.ae (official)",
+   "sourceUrl": "https://www.mohamedbinzayed.ae/en/latest-news-listing/2025/12/We-encourage-our-youth-to-remain-at-forefront-of-scientific-technological-progress",
+   "sourceUrlAr": "https://www.mohamedbinzayed.ae/ar/latest-news-listing/2025/12/We-encourage-our-youth-to-remain-at-forefront-of-scientific-technological-progress",
+   "theme": [
+    "human capital",
+    "development"
+   ],
+   "zone": "vision",
+   "osFeature": "teams",
+   "pillar": "HUMAN CAPITAL",
+   "verification": "verified",
+   "note": "Both languages read from the official pages."
+  },
+  {
+   "id": "Q3",
+   "leader": {
+    "ar": "صاحب السمو الشيخ محمد بن زايد آل نهيان",
+    "en": "H.H. Sheikh Mohamed bin Zayed Al Nahyan"
+   },
+   "en": "Investing in the people of this nation – particularly our youth – will remain our highest priority.",
+   "ar": "",
+   "date": "2025-12-01",
+   "context": {
+    "ar": "كلمة رئيس الدولة بمناسبة عيد الاتحاد الـ54",
+    "en": "Statement marking the 54th Eid Al Etihad"
+   },
+   "source": "mohamedbinzayed.ae (official)",
+   "sourceUrl": "https://www.mohamedbinzayed.ae/en/latest-news-listing/2025/12/We-encourage-our-youth-to-remain-at-forefront-of-scientific-technological-progress",
+   "sourceUrlAr": "https://www.mohamedbinzayed.ae/ar/latest-news-listing/2025/12/We-encourage-our-youth-to-remain-at-forefront-of-scientific-technological-progress",
+   "theme": [
+    "knowledge",
+    "youth",
+    "investment in people"
+   ],
+   "zone": "vision",
+   "osFeature": "library",
+   "pillar": "KNOWLEDGE",
+   "verification": "verified-en",
+   "note": "English verified. Arabic to be pasted verbatim from the Arabic page."
+  },
+  {
+   "id": "Q4",
+   "leader": {
+    "ar": "سمو الشيخ منصور بن زايد آل نهيان",
+    "en": "H.H. Sheikh Mansour bin Zayed Al Nahyan"
+   },
+   "en": "Our goal is to turn knowledge into national capabilities, research into solutions, and ambition into achievement that shapes the future of the UAE.",
+   "ar": "",
+   "date": "2026-08-30",
+   "context": {
+    "ar": "إطلاق البرنامج الوطني للعلوم والتقنيات المتقدمة، منشور على حساب سموه في منصة إكس",
+    "en": "Launch of the National Programme for Advanced Sciences and Technology, posted on H.H.'s X account"
+   },
+   "source": "The National (reporting the X post); WAM link to be attached",
+   "sourceUrl": "https://www.thenationalnews.com/news/uae/2026/08/30/uae-to-develop-emirati-experts-in-science-and-technology-under-national-drive/",
+   "sourceUrlAr": "",
+   "theme": [
+    "knowledge",
+    "capability",
+    "research",
+    "innovation"
+   ],
+   "zone": "arrival",
+   "osFeature": "pipeline",
+   "pillar": "INNOVATION",
+   "verification": "verified-en-secondary",
+   "note": "English as reported. Arabic original to be pasted from the official post; WAM report to be linked."
+  },
+  {
+   "id": "Q5",
+   "leader": {
+    "ar": "سمو الشيخ منصور بن زايد آل نهيان",
+    "en": "H.H. Sheikh Mansour bin Zayed Al Nahyan"
+   },
+   "en": "",
+   "ar": "الاستثمار في الكفاءات الوطنية هو الأساس لبناء قدرات وطنية، تقود الابتكار، وتدعم طموح الدولة في ترسيخ ريادتها في مجال الذكاء الاصطناعي",
+   "date": "2026-06-11",
+   "context": {
+    "ar": "انطلاق الدفعة الأولى من برنامج خبراء الإمارات المتخصصة في الذكاء الاصطناعي، منشور على حساب سموه في منصة إكس",
+    "en": "First cohort of the UAE Experts Programme in AI, posted on H.H.'s X account"
+   },
+   "source": "Al Bayan (reporting the X post)",
+   "sourceUrl": "https://www.albayan.ae/news/uae/1382752",
+   "sourceUrlAr": "https://www.albayan.ae/news/uae/1382752",
+   "theme": [
+    "national talent",
+    "AI",
+    "innovation"
+   ],
+   "zone": "ai",
+   "osFeature": "radar",
+   "pillar": "AMBITION",
+   "verification": "verified-ar-secondary",
+   "note": "Arabic as reported. No official English translation located; English surface shows the Arabic original with a caption."
+  }
+ ]
+}

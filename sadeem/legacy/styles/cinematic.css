@@ -1,0 +1,275 @@
+/* SADEEM HANGAR · cinematic layer — elevates the base app.css: depth, light, motion, richer surfaces.
+   Loaded after app.css so it overrides. All colour still flows from the app tokens. */
+
+/* ---- refined tokens: warmer ivory, deeper sovereign night, a glow ---- */
+:root{
+  --glow:rgba(200,164,92,.55);
+  --hair:color-mix(in srgb,var(--sov) 22%,transparent);
+  --panelGrad:linear-gradient(180deg,color-mix(in srgb,var(--paper) 92%,var(--sov)) 0%,var(--paper2) 100%);
+  --nightGrad:radial-gradient(120% 90% at 50% 0%,#2A2416 0%,#1A1710 45%,#100E0A 100%);
+  --filmH:78vh;
+}
+
+/* ================= DOCK ================= */
+#dock{background:color-mix(in srgb,var(--paper) 82%,transparent);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px) saturate(1.2)}
+.dockIn{height:60px}
+.wm b{background:linear-gradient(90deg,var(--sov),var(--brass));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.dz a{position:relative;transition:color .25s}
+.dz a[aria-current="page"]{background:linear-gradient(180deg,transparent,var(--sovT))}
+.dz a[aria-current="page"]::after{content:"";position:absolute;inset-inline:9px;bottom:-1px;height:2px;background:linear-gradient(90deg,var(--sov),var(--brass));border-radius:2px}
+.ic{width:36px;height:36px;border:1px solid var(--line);border-radius:6px;display:grid;place-items:center;color:var(--ink2);transition:.2s}
+.ic:hover{border-color:var(--sov);color:var(--sov);transform:translateY(-1px)}
+.ic svg{width:18px;height:18px}
+.osBtn{box-shadow:0 6px 18px -8px var(--sov);transition:.25s}
+.osBtn:hover{transform:translateY(-1px);box-shadow:0 10px 24px -8px var(--sov)}
+
+/* ================= wipe transition ================= */
+.fxwipe{position:fixed;inset:0;z-index:200;pointer-events:none;background:
+  linear-gradient(90deg,transparent,color-mix(in srgb,var(--sov) 40%,var(--graphite)) 40%,var(--graphite) 50%,color-mix(in srgb,var(--sov) 40%,var(--graphite)) 60%,transparent);
+  background-size:250% 100%;background-position:0% 0;opacity:0}
+html[dir="rtl"] .fxwipe{transform:scaleX(-1)}
+.fxwipe.in{opacity:1;animation:fxw .45s cubic-bezier(.7,0,.3,1) forwards}
+.fxwipe.out{opacity:0;transition:opacity .55s}
+@keyframes fxw{from{background-position:120% 0}to{background-position:-40% 0}}
+.fxwipe::after{content:"";position:absolute;top:0;bottom:0;width:2px;background:var(--brass);box-shadow:0 0 30px 6px var(--glow);left:50%;opacity:.9;animation:fxline .45s cubic-bezier(.7,0,.3,1) forwards}
+@keyframes fxline{from{left:110%}to{left:-10%}}
+
+/* ================= pointer spotlight ================= */
+.fxspot{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0;transition:opacity .5s;mix-blend-mode:screen;
+  background:radial-gradient(340px 340px at var(--mx,50%) var(--my,50%),rgba(200,164,92,.10),transparent 70%)}
+
+/* ================= reveal on mount/scroll ================= */
+@media (prefers-reduced-motion:no-preference){
+  .rv{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.2,.7,.2,1) var(--d,0ms),transform .7s cubic-bezier(.2,.7,.2,1) var(--d,0ms)}
+  .rv.in{opacity:1;transform:none}
+}
+
+/* ================= panels: richer, layered ================= */
+.panel{background:var(--panelGrad);box-shadow:0 1px 0 color-mix(in srgb,var(--paper) 70%,#fff) inset,0 12px 30px -22px rgba(46,40,24,.6);transition:box-shadow .3s,transform .3s,border-color .3s}
+.panel:hover{border-color:var(--hair)}
+.panel h3{letter-spacing:-.01em}
+.stat{background:var(--panelGrad);position:relative;overflow:hidden}
+.stat::before{content:"";position:absolute;inset-inline-start:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--sov),var(--brass));opacity:.55}
+.stat b{background:linear-gradient(180deg,var(--ink),color-mix(in srgb,var(--ink) 55%,var(--sov)));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.stat.warn b,.stat.crit b,.stat.good b{-webkit-text-fill-color:initial}
+
+.btn{box-shadow:0 8px 22px -12px var(--sov)}
+.btn:hover{box-shadow:0 12px 28px -12px var(--sov)}
+.btn.brass{box-shadow:0 8px 22px -12px var(--brass)}
+.kk{position:relative}
+
+/* ================= ENTRY POINT — deeper cinema ================= */
+.apron{min-height:var(--filmH);background:var(--nightGrad);position:relative}
+.apron::after{content:"";position:absolute;inset:0;pointer-events:none;background:
+  radial-gradient(80% 60% at 50% 44%,transparent 40%,rgba(16,14,10,.55) 100%);z-index:1}
+#nebula{z-index:0}
+.entryCore{z-index:3}
+.logoLock span{background:linear-gradient(90deg,var(--brass2),#F0DFB0,var(--brass2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 2px 14px rgba(200,164,92,.3))}
+.logoLock b{color:var(--onDark2)}
+.door{box-shadow:0 30px 80px -30px #000,0 0 0 1px rgba(200,164,92,.25),inset 0 0 60px rgba(0,0,0,.5);border-radius:3px}
+.door .beyond svg{filter:drop-shadow(0 0 22px var(--glow));animation:starPulse 4s ease-in-out infinite}
+@keyframes starPulse{0%,100%{filter:drop-shadow(0 0 16px var(--glow));transform:scale(1)}50%{filter:drop-shadow(0 0 30px var(--glow));transform:scale(1.06)}}
+.leaf{background:
+  linear-gradient(90deg,#332E1F 0%,#48412C 22%,#3C3626 46%,#4A432F 62%,#352F20 100%)}
+.leaf::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(200,164,92,.06),transparent 30%);}
+.leaf.a::after,.leaf.b::after{background:repeating-linear-gradient(90deg,transparent 0 5px,rgba(0,0,0,.14) 5px 6px)}
+.thresholds{background:rgba(16,14,10,.4);backdrop-filter:blur(4px)}
+.thresholds div.lit{box-shadow:inset 0 -2px 0 var(--brass2)}
+.arrBar h1{background:linear-gradient(180deg,var(--ink),color-mix(in srgb,var(--ink) 60%,var(--sov)));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.valueRow{border-radius:6px;overflow:hidden;box-shadow:0 12px 30px -24px rgba(46,40,24,.6)}
+.valueRow div{transition:background .25s}
+.valueRow div:hover{background:var(--sovT)}
+.zoneList a{position:relative;overflow:hidden;transition:transform .25s,border-color .25s,box-shadow .25s}
+.zoneList a::before{content:"";position:absolute;inset-inline-start:0;top:0;bottom:0;width:0;background:linear-gradient(180deg,var(--sov),var(--brass));transition:width .25s}
+.zoneList a:hover{transform:translateY(-2px);box-shadow:0 14px 30px -20px var(--sov)}
+.zoneList a:hover::before{width:3px}
+
+/* ================= VISION CHAMBER — light beams ================= */
+.z-vision{background:var(--nightGrad);position:relative}
+.z-vision::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:0;background:
+  conic-gradient(from 180deg at 50% 120%,transparent 0deg,rgba(200,164,92,.05) 20deg,transparent 40deg,rgba(200,164,92,.05) 60deg,transparent 80deg)}
+.z-vision .wrap{position:relative;z-index:1}
+.pillar{transition:transform .4s cubic-bezier(.2,.8,.2,1),border-color .4s}
+.pillar:hover{transform:translateY(-6px)}
+.pillar[aria-pressed="true"]{box-shadow:0 -20px 40px -20px var(--glow)}
+.vcStmt q{color:var(--onDark)}
+.vcStmt q span{background:linear-gradient(180deg,var(--onDark),color-mix(in srgb,var(--onDark) 62%,var(--brass2)));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+.chain a{transition:transform .2s,border-color .2s}
+.chain a:hover{transform:translateY(-2px)}
+
+/* ================= dark labs / bay / gate / radar depth ================= */
+.z-bay,.z-vision{--panelGrad:linear-gradient(180deg,#221F17,#1A1812)}
+.v3,.bench{box-shadow:0 24px 60px -30px #000,inset 0 0 0 1px rgba(200,164,92,.14)}
+.radar{box-shadow:0 24px 60px -30px #000}
+.vault{box-shadow:0 24px 60px -30px #000,inset 0 0 40px rgba(0,0,0,.5)}
+.vault .lock{box-shadow:0 0 24px -4px var(--glow)}
+
+/* ================= pipeline / journey glow ================= */
+.journey .st.on circle{filter:drop-shadow(0 0 8px var(--glow))}
+.journey .idea rect{transition:opacity .3s}
+/* a pulse of light travelling along the rail, in the reading direction */
+.journey .rail{stroke-dasharray:2 10;animation:railFlow 2.4s linear infinite}
+@keyframes railFlow{to{stroke-dashoffset:-24}}
+html[dir="rtl"] .journey .rail{animation-direction:reverse}
+.journey .idea.mine rect{filter:drop-shadow(0 0 5px var(--sov))}
+.journey .idea.c rect{filter:drop-shadow(0 0 5px var(--warn))}
+.journey .st circle{transition:r .3s,fill .3s}
+.journey .st.on circle{r:11}
+@media (prefers-reduced-motion:reduce){.journey .rail{animation:none}}
+.pipe div{background:linear-gradient(180deg,var(--sov2),var(--sov));box-shadow:0 -2px 12px -4px var(--sov)}
+.pipe div.bottle{background:linear-gradient(180deg,#D9A24D,var(--warn));box-shadow:0 -2px 12px -4px var(--warn)}
+.bar i{background:linear-gradient(90deg,var(--sov),var(--brass))}
+.bar.good i{background:linear-gradient(90deg,var(--good),#7FCB9B)}
+.bar.warn i{background:linear-gradient(90deg,var(--warn),#E7BE72)}
+.bar.crit i{background:linear-gradient(90deg,var(--crit),#E58A82)}
+
+/* ================= AI dock refinement ================= */
+#aiDock{background:var(--panelGrad)}
+#aiHead i{animation:aiPulse 2.4s ease-in-out infinite}
+@keyframes aiPulse{0%,100%{box-shadow:0 0 0 3px var(--brassT)}50%{box-shadow:0 0 0 5px var(--brassT),0 0 12px var(--glow)}}
+#aiBody p{animation:aiIn .5s both}
+@keyframes aiIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ================= FACILITY MAP overlay ================= */
+.fxmap{position:fixed;inset:0;z-index:150;background:rgba(16,14,10,.6);backdrop-filter:blur(8px);display:grid;place-items:center;padding:24px 16px;animation:fade .3s}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.fxmapBox{width:min(760px,100%);background:var(--panelGrad);border:1px solid var(--line);border-radius:10px;box-shadow:0 40px 100px -30px #000;overflow:hidden}
+.fxmapHead{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--line)}
+.fxmapHead b{font-size:15px}
+.fxmapX{width:32px;height:32px;border:1px solid var(--line);border-radius:6px;color:var(--ink2)}
+.fxmapPlan{position:relative;margin:18px;aspect-ratio:16/10;background:
+  repeating-linear-gradient(0deg,transparent 0 24px,var(--line2) 24px 25px),
+  repeating-linear-gradient(90deg,transparent 0 24px,var(--line2) 24px 25px),var(--graphite);
+  border:1px solid var(--hair);border-radius:8px;overflow:hidden}
+.fxmapZone{position:absolute;border:1px solid var(--hair);border-radius:5px;background:color-mix(in srgb,var(--sov) 16%,transparent);color:var(--onDark);font-size:12px;display:grid;place-items:center;text-align:center;padding:4px;transition:.2s}
+.fxmapZone span{pointer-events:none}
+.fxmapZone:hover{background:var(--sov);transform:scale(1.02);z-index:2;box-shadow:0 0 24px -4px var(--glow)}
+.fxmapZone.main{background:color-mix(in srgb,var(--brass) 26%,transparent);border-color:var(--brass)}
+.fxmapZone.vault{background:color-mix(in srgb,var(--warn) 22%,transparent);border-color:var(--warn)}
+.fxmapZone[aria-current="page"]{outline:2px solid var(--brass2);outline-offset:-2px}
+.fxmapAxis{position:absolute;inset-inline-start:6px;font:500 9px var(--mono);letter-spacing:.14em;color:var(--onDark2)}
+.fxmapMezz{top:6px}.fxmapGround{top:30%}
+.fxmapNote{padding:0 20px 18px;font:400 12px var(--mono);color:var(--mute)}
+html[lang="ar"] .fxmapNote{font-family:var(--ar)}
+
+/* ================= GUIDED TOUR bar ================= */
+.fxtour{position:fixed;inset-inline:0;bottom:0;z-index:150;padding:0 16px calc(18px + env(safe-area-inset-bottom,0px));display:grid;justify-items:center;transform:translateY(140%);transition:transform .45s cubic-bezier(.2,.8,.2,1);pointer-events:none}
+.fxtour.in{transform:none}
+.fxtourIn{pointer-events:auto;width:min(720px,100%);background:var(--graphite);color:var(--onDark);border:1px solid rgba(200,164,92,.3);border-radius:10px;box-shadow:0 30px 80px -20px #000;padding:16px 18px;display:grid;gap:10px}
+.fxtourIn p{font-size:14.5px;line-height:1.6}
+html[lang="ar"] .fxtourIn p{font-family:var(--arD)}
+.fxtourN{font:600 11px var(--mono);letter-spacing:.1em;color:var(--brass2)}
+.fxtourB{display:flex;gap:8px;justify-content:flex-end}
+.fxtourX{padding:8px 14px;border:1px solid rgba(200,164,92,.3);border-radius:6px;color:var(--onDark2);font-size:13px}
+.fxtourNext{padding:8px 18px;border-radius:6px;background:var(--brass);color:#1A1812;font-weight:600;font-size:13px}
+
+/* ================= scrollbar ================= */
+*{scrollbar-width:thin;scrollbar-color:var(--steel2) transparent}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-thumb{background:var(--steel2);border-radius:6px;border:2px solid transparent;background-clip:content-box}
+
+@media (prefers-reduced-motion:reduce){
+  .door .beyond svg,#aiHead i,#aiBody p{animation:none!important}
+  .fxwipe,.fxspot{display:none!important}
+}
+
+/* ---- Entry Point hangar architecture ---- */
+.hangarArch{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;transition:transform .5s cubic-bezier(.2,.8,.2,1);will-change:transform}
+.archGate{animation:gatePulse 5s ease-in-out infinite}
+@keyframes gatePulse{0%,100%{opacity:.55}50%{opacity:.9}}
+.entryCore{transition:transform .5s cubic-bezier(.2,.8,.2,1);will-change:transform}
+@media (prefers-reduced-motion:reduce){.archGate{animation:none}.hangarArch,.entryCore{transition:none}}
+
+/* ================= CINEMATIC INTRO ================= */
+.cineIntro .entryCore{opacity:0;transform:translateY(16px)}
+.cineIntro.cineReady .entryCore{opacity:1;transform:none;transition:opacity 1.1s .5s ease,transform 1.1s .5s cubic-bezier(.2,.8,.2,1)}
+.cineIntro.cineReady .logoLock{animation:cineRise 1.2s .3s both}
+@keyframes cineRise{from{opacity:0;letter-spacing:.6em;filter:blur(6px)}to{opacity:1;filter:blur(0)}}
+.z-arrival.entering .arrBar,.z-arrival.entering .valueRow,.z-arrival.entering .zoneList,.z-arrival.entering .disc{transition:opacity .5s;opacity:.15}
+.z-arrival.entering .thresholds div{transition:background .5s,color .5s}
+
+/* film grain on the dark cinematic zones */
+.z-arrival .apron::after,.z-vision::after,.z-bay::after,.z-gate .vault::after{}
+.grainLayer{position:fixed;inset:0;z-index:38;pointer-events:none;opacity:.05;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");animation:grainShift .6s steps(3) infinite}
+@keyframes grainShift{0%{transform:translate(0,0)}33%{transform:translate(-4%,3%)}66%{transform:translate(3%,-2%)}}
+body:not([data-zone="arrival"]):not([data-zone="vision"]):not([data-zone="bay"]):not([data-zone="gate"]):not([data-zone="radar"]) .grainLayer{opacity:0}
+@media (prefers-reduced-motion:reduce){.grainLayer{display:none}.cineIntro .entryCore{opacity:1;transform:none}}
+
+/* ================= VISION CHAMBER — ceiling light cone behind the statement ================= */
+.vcStage .vcBeam{position:absolute;top:-10%;left:50%;transform:translateX(-50%);width:60%;height:120%;
+  background:conic-gradient(from 90deg at 50% 0%,transparent 38%,rgba(200,164,92,.10) 50%,transparent 62%);
+  filter:blur(6px);pointer-events:none;z-index:1;animation:beamSway 9s ease-in-out infinite}
+@keyframes beamSway{0%,100%{opacity:.7;transform:translateX(-50%) rotate(-1.5deg)}50%{opacity:1;transform:translateX(-50%) rotate(1.5deg)}}
+.vcStage::after{content:"";position:absolute;inset:0;background:radial-gradient(50% 40% at 50% 40%,rgba(200,164,92,.08),transparent 70%);pointer-events:none;z-index:0}
+@media (prefers-reduced-motion:reduce){.vcStage .vcBeam{animation:none}.pShaft{transition:none}}
+
+/* ================= THE NATIONAL CONSTELLATION ================= */
+.z-galaxy{background:var(--graphite);color:var(--onDark);--line:#3A3526;--mute:#8F8772}
+.galaxyWrap{position:relative;height:calc(100vh - 56px);min-height:520px;overflow:hidden}
+#galCv{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
+.galHead{position:absolute;inset-inline-start:0;top:0;max-width:min(520px,86vw);padding:28px 24px;z-index:3;pointer-events:none}
+.galHead .kk{color:var(--brass2)}
+.galHead h1{font-size:clamp(22px,2.6vw,34px);margin:10px 0 8px;color:var(--onDark)}
+html[lang="ar"] .galHead h1{font-family:var(--arD)}
+.galHead p{font-size:13.5px;line-height:1.7;color:var(--onDark2)}
+html[lang="ar"] .galHead p{font-family:var(--arD)}
+.galLegend{position:absolute;inset-block-end:16px;inset-inline-start:24px;z-index:3;display:flex;flex-wrap:wrap;gap:12px;font:500 11.5px var(--mono);color:var(--onDark2);pointer-events:none}
+html[lang="ar"] .galLegend{font-family:var(--arD)}
+.glg{display:flex;align-items:center;gap:6px}.glg i{width:9px;height:9px;border-radius:50%;box-shadow:0 0 8px currentColor}
+.galRings{position:absolute;inset-block-end:52px;inset-inline-end:24px;z-index:3;display:grid;gap:6px;text-align:end;font:500 10.5px var(--mono);color:var(--mute);pointer-events:none}
+html[lang="ar"] .galRings{font-family:var(--arD)}
+.galRings span::before{content:"";display:inline-block;width:22px;height:1px;background:var(--brass2);vertical-align:middle;margin-inline-end:6px;opacity:.6}
+.galNote{position:absolute;inset-block-end:16px;inset-inline-end:24px;z-index:2;font:400 10.5px var(--mono);color:var(--mute);pointer-events:none;display:none}
+@media (min-width:900px){.galNote{display:block;inset-block-end:82px}}
+.galCard{position:absolute;inset-block-end:20px;inset-inline:50%;transform:translateX(50%);width:min(360px,90vw);z-index:5;background:rgba(20,17,12,.92);border:1px solid var(--brass2);border-radius:8px;padding:16px 18px;box-shadow:0 20px 50px -20px #000;backdrop-filter:blur(8px)}
+html[dir="ltr"] .galCard{transform:translateX(-50%)}
+.galCard .galX{position:absolute;inset-inline-end:10px;top:8px;width:26px;height:26px;border:1px solid var(--line);border-radius:6px;color:var(--onDark2);font-size:12px}
+.galCard .gcT{display:block;font-size:16px;margin:8px 0;color:var(--onDark)}
+html[lang="ar"] .galCard .gcT{font-family:var(--arD)}
+.galCard .gcM{font-size:13px;color:var(--onDark2);line-height:1.6}
+.galCard .gcKv{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:12.5px;margin:10px 0}
+.galCard .gcKv span{color:var(--mute)}.galCard .gcKv b{color:var(--onDark);font-family:var(--mono);font-weight:500;text-align:end}
+html[lang="ar"] .galCard .gcKv b{font-family:var(--arD)}
+.galCard .gcB{margin-top:10px}
+.galFallback{position:absolute;inset:80px 24px 24px;overflow:auto;z-index:2;display:grid;gap:10px;align-content:start}
+.galRow{display:grid;grid-template-columns:160px 1fr;gap:12px;align-items:center;border-bottom:1px solid var(--line);padding-bottom:8px}
+.galRow b{font:500 12px var(--mono);color:var(--onDark2)}html[lang="ar"] .galRow b{font-family:var(--arD)}
+.galRow div{display:flex;flex-wrap:wrap;gap:6px}
+.galDot{width:14px;height:14px;border-radius:50%;cursor:pointer;box-shadow:0 0 8px rgba(200,164,92,.4)}
+@media (max-width:640px){.galHead{position:static;max-width:none;padding:20px 16px 8px;background:var(--graphite)}.galaxyWrap{height:auto;min-height:auto}#galCv{position:relative;height:60vh}.galLegend{position:static;padding:12px 16px}.galRings{display:none}}
+
+/* ================= THE FORESIGHT TELESCOPE ================= */
+.z-foresight{background:var(--graphite);color:var(--onDark);--line:#3A3526;--mute:#8F8772}
+.fsWrap{display:grid;grid-template-rows:auto 1fr auto auto;height:calc(100vh - 56px);min-height:560px;padding:20px 24px 16px;gap:12px}
+.fsHead .kk{color:var(--brass2)}
+.fsHead h1{font-size:clamp(20px,2.4vw,30px);margin:8px 0 6px;color:var(--onDark)}
+html[lang="ar"] .fsHead h1{font-family:var(--arD)}
+.fsHead p{font-size:13px;line-height:1.65;color:var(--onDark2);max-width:70ch}
+html[lang="ar"] .fsHead p{font-family:var(--arD)}
+.fsStage{position:relative;min-height:0}
+#fsCv{position:absolute;inset:0;width:100%;height:100%;display:block}
+.fsReadout{position:absolute;inset-inline-start:0;top:0;display:grid;gap:10px;pointer-events:none}
+.fsRnum{background:rgba(20,17,12,.6);border:1px solid var(--line);border-radius:8px;padding:10px 14px;min-width:120px}
+.fsRnum b{display:block;font:600 26px 'IBM Plex Mono',monospace;color:var(--onDark)}
+.fsRnum span{font-size:11px;color:var(--onDark2)}
+html[lang="ar"] .fsRnum span{font-family:var(--arD)}
+.fsRnum.bad b{color:var(--crit)}.fsRnum.good b{color:var(--good)}
+.fsControls{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.fsSlider{flex:1;display:flex;align-items:center;gap:12px;min-width:220px}
+.fsSlider input{flex:1;accent-color:var(--brass2)}
+#fsYear{font:600 13px 'IBM Plex Mono',monospace;color:var(--brass2);min-width:80px}
+html[lang="ar"] #fsYear{font-family:var(--arD)}
+.fsLegend{display:flex;flex-wrap:wrap;gap:14px;font:500 11.5px var(--mono);color:var(--onDark2)}
+html[lang="ar"] .fsLegend{font-family:var(--arD)}
+@media (max-width:640px){.fsWrap{height:auto}.fsStage{height:62vh}.fsReadout{position:static;display:flex;flex-wrap:wrap;margin-bottom:8px}.fsRnum{min-width:0;flex:1 1 40%}.fsWi{font-size:11.5px}}
+
+/* what-if bar in the Foresight Telescope */
+.fsWhatif{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.fsWiLabel{font:500 12px var(--mono);color:var(--onDark2)}
+html[lang="ar"] .fsWiLabel{font-family:var(--arD)}
+.fsWi{padding:6px 12px;border-radius:999px;border:1px solid var(--line);font-size:12.5px;color:var(--onDark2);background:rgba(20,17,12,.5)}
+html[lang="ar"] .fsWi{font-family:var(--arD)}
+.fsWi.void{border-color:var(--crit);color:#E58A82;cursor:pointer}
+.fsWi.void:hover{background:rgba(179,38,30,.14)}
+.fsWi.ok{opacity:.5}
+.fsWi.reset{border-color:var(--brass2);color:var(--brass2);cursor:pointer}
