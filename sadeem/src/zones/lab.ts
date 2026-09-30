@@ -438,7 +438,7 @@ function submit(w: Walk) {
   if (cls.level !== "open") { DB.gate.unshift({ idea: it.id, level: cls.level, ref: "SV-" + uid(), at: Date.now(), rule: cls.rule, by: "keyword-screen" } satisfies GateRec); save(); }
   sel = it.id; walk = null; receipt = { id: it.id, level: cls.level };
   FX.sound("move");
-  toast(cls.level === "high" ? B(`استُلمت ${it.id} واحتُويت في القبو`, `${it.id} received and contained in the vault`) : B(`استُلمت الفكرة برقم ${it.id}`, `Received as ${it.id}`));
+  toast(cls.level === "high" ? B(`استُلمت \u2068${it.id}\u2069 واحتُويت في القبو`, `${it.id} received and contained in the vault`) : B(`استُلمت الفكرة برقم \u2068${it.id}\u2069`, `Received as ${it.id}`));
   render();
   const o = $(`#lnBox .obj[data-i="${CSS.escape(it.id)}"]`); if (o && !RM) o.classList.add("arrive");
 }
@@ -556,7 +556,7 @@ register("gate", {
       save();
       setSeal(res.level, ref, i);
       FX.sound("seal");
-      toast(B(`سُجّل التصنيف ${ref}`, `Classification ${ref} recorded`));
+      toast(B(`سُجّل التصنيف \u2068${ref}\u2069`, `Classification ${ref} recorded`));
       $("#gConfirm").hidden = true;
       renderLog();
       ai.refresh();

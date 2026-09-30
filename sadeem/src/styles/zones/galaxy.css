@@ -106,7 +106,7 @@ html[lang="ar"] .z-galaxy .galFlat .dm { font-family: var(--f-body); }
 
 @media (max-width: 760px) {
   .z-galaxy .galaxyWrap { height: auto; min-height: 0; overflow: visible; display: flex; flex-direction: column; }
-  .z-galaxy .galHead { position: static; width: auto; padding: var(--s-8) var(--gutter) var(--s-4); }
+  .z-galaxy .galHead { order: -1; position: static; width: auto; padding: var(--s-8) var(--gutter) var(--s-4); }
   .z-galaxy .galIndex ul { width: 100%; }
   .z-galaxy #galCv, .z-galaxy .galFlat { position: relative; inset: auto; height: 62vh; min-height: 380px; width: 100%; touch-action: pan-y; }
   .z-galaxy .galaxyWrap.flat .galFlat { padding: 0; height: auto; aspect-ratio: 1; min-height: 0; }

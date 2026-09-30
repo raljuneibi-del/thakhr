@@ -3,6 +3,7 @@
    (a diffuse outer nebula of new ideas drawn inward to the SADEEM core), brightness = national score, contained
    records are dark red motes whose content is withheld. On entry the stars fly in from the rim and the galaxy forms.
    WebGL (three.js); where WebGL is unavailable the zone draws an intentional 2D chart of the same geometry. */
+import { EVAL } from "@/engines/evaluate";
 import {
   $, $$, esc, t, tx, num, go, register, ai, ctx, current, allIdeas, DB, DOMAINS, SOURCES, RM, loadThree, hasWebGL, icon, svgEl,
   type Idea, type Ctx, type Insight,
@@ -16,7 +17,8 @@ const DOM_ANG: Record<string, number> = { land: 0, air: Math.PI / 2, cyber: Math
 const rgb = (c: number[]) => `rgb(${c.map(v => Math.round(v * 255)).join(",")})`;
 
 const contained = (i: Idea) => i.sens === "high" || DB.gate.some((g: any) => g.idea === i.id && g.level === "high");
-const scoreOf = (i: Idea) => i.score || (i.st >= 6 ? 70 : 50);
+/* one national score across the Hangar: the Pipeline Hall six-criteria total */
+const scoreOf = (i: Idea) => EVAL.national(i).total;
 const stOf = (i: Idea) => Math.max(0, Math.min(10, i.st));
 const seedOf = (i: Idea) => [...String(i.id)].reduce((a, c) => a + c.charCodeAt(0), 0);
 /** Galactic placement shared by 3D and 2D: angle from domain (±35° jitter), radius from station (outer = new). */

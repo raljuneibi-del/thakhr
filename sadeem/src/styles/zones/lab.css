@@ -28,7 +28,7 @@
 }
 .z-lab .line::before {
   content: ""; position: absolute; top: calc(6px + var(--top) + var(--objs) + var(--node) / 2 - 1px);
-  inset-inline: 30px 50px; height: 2px; background: var(--steel);
+  inset-inline: 30px 84px; height: 2px; background: var(--steel);
 }
 .z-lab .line::after {
   content: ""; position: absolute; top: calc(6px + var(--top) + var(--objs) + var(--node) / 2 - 1px);
@@ -36,7 +36,7 @@
   background: linear-gradient(to right, transparent, var(--sadeem-2), transparent); opacity: .7;
   animation: lnFlow 7s linear infinite;
 }
-@keyframes lnFlow { from { inset-inline-start: 30px; } to { inset-inline-start: calc(100% - 140px); } }
+@keyframes lnFlow { from { inset-inline-start: 30px; } to { inset-inline-start: calc(100% - 174px); } }
 
 .z-lab .stn {
   position: relative; display: grid; grid-template-rows: var(--objs) var(--node) auto; padding-top: var(--top); min-width: 0;

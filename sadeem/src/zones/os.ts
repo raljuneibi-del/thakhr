@@ -272,7 +272,7 @@ const VIEWS: Record<View, (ideas: Idea[]) => string> = {
   gate() {
     return H(L("سجل الاحتواء", "Vault log"), `${num(DB.gate.length)} ${esc(tx(L("قيد", "entries")))}`, `<button type="button" class="btn ghost sm" data-go="gate">${esc(t("z_gate"))}${icon("arrow", "i dir")}</button>`)
       + `<p class="note osNote">${esc(tx(L("المحتوى محجوب؛ يظهر المرجع والمستوى والحالة فقط.", "Content withheld; only reference, level and status are shown.")))}</p>`
-      + (DB.gate.length ? table(["Ref", tx(L("الفكرة", "Idea")), tx(L("المستوى", "Level")), tx(L("بواسطة", "By")), tx(L("التاريخ", "Date"))],
+      + (DB.gate.length ? table([tx(L("المرجع", "Ref")), tx(L("الفكرة", "Idea")), tx(L("المستوى", "Level")), tx(L("بواسطة", "By")), tx(L("التاريخ", "Date"))],
         DB.gate.map(g => `<tr><td class="mono">${esc(g.ref)}</td><td class="mono">${esc(g.idea)}</td><td><span class="tag ${g.level === "high" ? "warn" : g.level === "controlled" ? "sov" : "good"}">${esc(LEVEL[g.level] ? tx(LEVEL[g.level]) : g.level)}</span></td><td>${esc(g.by === "human-confirmed" ? tx(L("تأكيد بشري", "Human-confirmed")) : tx(L("فحص آلي", "Automatic screen")))}</td><td class="mono">${esc(new Date(g.at).toISOString().slice(0, 10))}</td></tr>`).join(""))
         : emptyState(icon("lock"), L("السجل فارغ", "The log is empty"), L("كل تصنيف يُؤكَّد في قبو الاحتواء يُسجَّل هنا بمرجعه ومستواه.", "Every classification confirmed in the Containment Vault is logged here with its reference and level.")));
   },

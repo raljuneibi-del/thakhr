@@ -2,6 +2,7 @@
    Anticipation, not reaction (a stated SADEEM × State value), made literal: scrub the portfolio forward in time
    and watch which ideas ignite into national capabilities and WHEN — and, crucially, which national needs stay
    dark voids with nothing heading toward them. A deterministic, illustrative projection; not a forecast of record. */
+import { EVAL } from "@/engines/evaluate";
 import {
   $, $$, esc, t, tx, num, go, register, ai, ctx, lang, head, allIdeas, DB, DOMAINS, CHALLENGES, RM, icon,
   type Idea, type Ctx, type Insight, type Bi,
@@ -16,7 +17,8 @@ interface Proj { it: Star; ps: number; ignited: boolean; r: number; ang: number;
 interface NeedState { reaching: number; heading: number; void: boolean }
 
 const contained = (i: Idea) => i.sens === "high" || DB.gate.some((g: any) => g.idea === i.id && g.level === "high");
-const scoreOf = (i: Idea) => i.score || (i.st >= 6 ? 70 : 50);
+/* one national score across the Hangar: the Pipeline Hall six-criteria total */
+const scoreOf = (i: Idea) => EVAL.national(i).total;
 /** Stations advanced per projected year: momentum from score; contained records move slower (extra scrutiny). */
 const velOf = (i: Idea) => (0.75 + scoreOf(i) / 100 * 1.5) * (contained(i) ? 0.55 : 1);
 

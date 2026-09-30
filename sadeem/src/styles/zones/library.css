@@ -179,7 +179,10 @@ html[lang="en"] .z-radar .hzCol h3 { font-family: var(--f-mono); text-transform:
   .z-radar .techIndex { grid-template-columns: minmax(0, 1fr); }
   .z-radar .scopeBar .seg { width: 100%; }
   .z-radar .scopeBar .seg button { flex: 1 1 auto; }
-  .z-radar .radar .dm { font-size: 15px; }
-  .z-radar .radar .node .lab { font-size: 17px; }
-  .z-radar .radar .hz { font-size: 13px; }
+  .z-radar .radar .dm { font-size: 22px; }
+  .z-radar .radar .node .lab { font-size: 26px; stroke-width: 8px; }
+  .z-radar .radar .hz { font-size: 17px; }
+  .z-radar .radar .node .dot { r: 17px; }
+  .z-radar .radar .node .halo { r: 26px; }
+  .z-radar .radar .node .num { font-size: 14px; }
 }
