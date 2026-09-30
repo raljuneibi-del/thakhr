@@ -300,7 +300,7 @@ export function CALMOD(T: Three): ModelFactory {
     const eng = cfg.engine || "tp"; const blades = eng === "hp" ? 5 : 4; const PR = new T.Group(); PR.position.set(3.78, 1.6, 0);
     const sp = new T.Mesh(new T.ConeGeometry(.2, .45, 24), m.metal); sp.rotation.z = -Math.PI / 2; sp.position.x = .18; PR.add(sp);
     for (let i = 0; i < blades; i++) { const b = box(.05, 1.5, .14, m.gun); b.position.y = .78; const p = new T.Group(); p.add(b); p.rotation.x = i / blades * Math.PI * 2; PR.add(p); }
-    const blur = new T.Mesh(new T.CircleGeometry(1.55, 40), new T.MeshBasicMaterial({ color: 0xb8c4cf, transparent: true, opacity: .06, side: T.DoubleSide, depthWrite: false }));
+    const blur = new T.Mesh(new T.CircleGeometry(1.55, 40), new T.MeshBasicMaterial({ color: 0xb8c4cf, transparent: true, opacity: .025, side: T.DoubleSide, depthWrite: false }));
     blur.rotation.y = Math.PI / 2; PR.add(blur);
     PR.userData.spinX = 22; G.add(tag(PR, "engine"));
     [-1, 1].forEach(sd => { const ex = cyl(.07, .09, .3, m.gun, 10); ex.rotation.x = Math.PI / 2; ex.position.set(2.7, 1.7, sd * .46); G.add(tag(ex, "engine")); });

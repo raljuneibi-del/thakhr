@@ -108,7 +108,7 @@ export function Viewer(host: HTMLElement): ViewerAPI {
       else if (k === "ArrowUp") orb.tph = Math.max(.5, orb.tph - .08); else if (k === "ArrowDown") orb.tph = Math.min(1.5, orb.tph + .08);
       else if (k === "+" || k === "=") api.zoom(-1); else if (k === "-" || k === "_") api.zoom(1);
       else if (k === "0" || k === "Home") api.reset(); else hit = false;
-      if (hit) { e.preventDefault(); orb.user = performance.now(); }
+      if (hit) { e.preventDefault(); e.stopPropagation(); orb.user = performance.now(); }
     });
     ro = new ResizeObserver(size);
     io = new IntersectionObserver(es => { onScreen = es.some(x => x.isIntersecting); if (onScreen) loop(); });

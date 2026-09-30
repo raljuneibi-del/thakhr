@@ -179,11 +179,9 @@ html[dir="rtl"] .z-bay .flip { transform: scaleX(-1); }
 
 /* ---------- phones ---------- */
 @media (max-width: 720px) {
-  .z-bay .bay-plats { grid-template-columns: minmax(0, 1fr); }
-  .z-bay .plat + .plat { border-inline-start: 0; border-top: 1px solid var(--line); }
-  .z-bay .plat { padding: var(--s-3) var(--s-4); }
-  .z-bay .plat::before { inset-block: 0; inset-inline-end: auto; inset-inline-start: 0; width: 2px; height: auto; transform: scaleY(0); }
-  .z-bay .plat[aria-pressed="true"]::before { transform: scaleY(1); }
+  .z-bay .plat { padding: var(--s-3); grid-template-columns: minmax(0, 1fr); justify-items: center; text-align: center; }
+  .z-bay .plat-n { font-size: var(--t-sm); }
+  .z-bay .plat-s, .z-bay .plat-i { display: none; }
   .z-bay .v3 { aspect-ratio: 4 / 3.4; min-height: 300px; }
   .z-bay .hud-c { display: none; }
   .z-bay .studio { gap: var(--s-3); }
