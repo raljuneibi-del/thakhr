@@ -179,14 +179,18 @@ function renderAI(r: Insight | null) {
       ((r.actions || []).length ? `<div class="aiActs">${r.actions!.map((a, i) => `<button class="chip" data-ai="${i}">${esc(tx(a.label))}${icon("arrow")}</button>`).join("")}</div>` : "");
     $$<HTMLButtonElement>("[data-ai]", box).forEach(b => (b.onclick = () => r.actions![+b.dataset.ai!].run?.()));
   }
-  // whisper: a one-line hint when the drawer is closed
+  // whisper: a one-line hint when the drawer is closed, shown once per zone visit, then it steps aside
   const w = $<HTMLButtonElement>("#aiWhisper");
   const open = document.body.classList.contains("aiOpen");
-  if (r && r.lines?.length && !open) {
+  const key = `${current()}|${lang()}`;
+  if (r && r.lines?.length && !open && key !== whisperKey) {
+    whisperKey = key;
     w.innerHTML = `<i class="pulse"></i><span><b>${esc(tx(r.role))}</b><small>${esc(tx(r.lines[0]))}</small></span>`;
     w.hidden = false; w.onclick = () => toggleAI(true);
-  } else w.hidden = true;
+    clearTimeout(whisperT); whisperT = window.setTimeout(() => (w.hidden = true), 6500);
+  } else if (open) w.hidden = true;
 }
+let whisperKey = "", whisperT = 0;
 function toggleAI(force?: boolean) {
   const open = force ?? !document.body.classList.contains("aiOpen");
   document.body.classList.toggle("aiOpen", open);

@@ -1,0 +1,211 @@
+/* SADEEM Hangar · Zone L2 · Drone Lab — a precision design table.
+   The airframe bench is the hero (a night instrument surface in both themes); decisions are grouped segmented controls;
+   readouts are a hairline table of mono numbers that morph. Colours come only from tokens. */
+
+/* ---------- mission profile ---------- */
+.z-drones .dMission { display: grid; gap: var(--s-4); margin-bottom: var(--s-6); }
+.z-drones .dmHead { display: flex; align-items: baseline; gap: var(--s-3) var(--s-6); flex-wrap: wrap; }
+.z-drones .dmHead .kk { flex: none; }
+.z-drones .dmDesc { color: var(--ink-2); font-size: var(--t-sm); min-width: 0; }
+.z-drones .dmSet {
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; background: var(--line);
+  border: 1px solid var(--line); border-radius: var(--r); overflow: hidden;
+}
+.z-drones .dmSet button {
+  display: flex; gap: 12px; align-items: baseline; min-width: 0; padding: 14px 18px 16px; text-align: start;
+  background: var(--surface); color: var(--ink-2); font-size: var(--t-sm); line-height: 1.45; position: relative;
+  transition: background .25s, color .25s;
+}
+.z-drones .dmSet button i { font-style: normal; font-size: var(--t-2xs); color: var(--mute); letter-spacing: .08em; flex: none; }
+.z-drones .dmSet button span { min-width: 0; }
+.z-drones .dmSet button::after {
+  content: ""; position: absolute; inset-inline: 0; bottom: 0; height: 2px; background: var(--sadeem);
+  transform: scaleX(0); transition: transform .45s var(--ease);
+}
+.z-drones .dmSet button:hover { color: var(--ink); background: var(--paper-2); }
+.z-drones .dmSet button[aria-pressed="true"] { color: var(--ink); background: var(--paper-2); font-weight: 500; }
+.z-drones .dmSet button[aria-pressed="true"] i { color: var(--ink-2); }
+.z-drones .dmSet button[aria-pressed="true"]::after { transform: scaleX(1); }
+.z-drones .dmSet button:focus-visible { outline-offset: -3px; }
+
+/* ---------- design table grid ---------- */
+.z-drones .droneGrid {
+  display: grid; gap: var(--s-5); align-items: start;
+  grid-template-columns: 300px minmax(0, 1fr) 300px;
+  grid-template-areas: "params bench read" "params ana ana"; grid-template-rows: auto 1fr;
+}
+.z-drones .droneGrid > * { min-width: 0; }
+.z-drones .bench { grid-area: bench; }
+.z-drones .params { grid-area: params; }
+.z-drones .read { grid-area: read; }
+.z-drones .ana { grid-area: ana; display: grid; gap: var(--s-5); grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); align-items: start; }
+.z-drones .ana > * { min-width: 0; }
+.z-drones .dStrip { display: none; }
+
+@media (max-width: 1240px) {
+  .z-drones .droneGrid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "bench bench" "params read" "params ana"; grid-template-rows: auto auto 1fr; }
+  .z-drones .ana { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 760px) {
+  .z-drones .droneGrid { grid-template-columns: minmax(0, 1fr); grid-template-areas: none; grid-template-rows: none; gap: var(--s-4); }
+  .z-drones .droneGrid > * { grid-area: auto; }
+  .z-drones .dmSet { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .z-drones .dmSet button { padding: 12px 14px 14px; font-size: var(--t-xs); gap: 8px; }
+  /* a slim readout that stays under the dock while the decisions scroll beneath the airframe */
+  .z-drones .dStrip {
+    display: flex; justify-content: space-between; gap: 8px; position: sticky; top: calc(var(--dock-h) + env(safe-area-inset-top, 0px) + 8px); z-index: 6;
+    padding: 9px 14px; border-radius: var(--r); background: color-mix(in srgb, var(--night) 92%, transparent); color: var(--on-night-2);
+    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); box-shadow: var(--shadow); font: 500 11.5px/1.3 var(--f-mono); white-space: nowrap;
+  }
+  .z-drones .dStrip b { color: var(--on-night); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .z-drones .dStrip .bad b { color: color-mix(in oklab, var(--crit) 55%, var(--on-night)); }
+}
+
+/* ---------- the bench (hero instrument) ---------- */
+.z-drones .bench {
+  position: relative; display: grid; gap: var(--s-3); padding: var(--s-4) var(--s-5) var(--s-5); overflow: hidden;
+  border-radius: var(--r-lg); border: 1px solid var(--line); color: var(--ink); box-shadow: var(--shadow-lg);
+  background:
+    radial-gradient(120% 90% at 50% 45%, transparent 40%, color-mix(in srgb, var(--night) 70%, transparent) 100%),
+    linear-gradient(var(--line-2) 1px, transparent 1px) 0 0 / 24px 24px,
+    linear-gradient(90deg, var(--line-2) 1px, transparent 1px) 0 0 / 24px 24px,
+    var(--night-2);
+}
+body:not(.night) .z-drones .bench { border-color: color-mix(in srgb, var(--star) 22%, var(--night)); }
+.z-drones .hud { display: flex; justify-content: space-between; gap: var(--s-3); flex-wrap: wrap; font: 500 10.5px/1.5 var(--f-mono); letter-spacing: .14em; color: var(--mute); text-transform: uppercase; }
+.z-drones .hud b { color: var(--ink); font-weight: 600; }
+.z-drones .hudR { color: var(--ink-2); letter-spacing: .08em; font-variant-numeric: tabular-nums; }
+html[lang="ar"] .z-drones .hud > span:first-child { font-family: var(--f-body); letter-spacing: 0; font-size: var(--t-xs); }
+.z-drones #drone { display: block; width: 100%; height: auto; margin-block: -6px -4px; overflow: visible; }
+
+/* scene parts */
+.z-drones #drone .cross path { stroke: var(--line); stroke-dasharray: 2 5; fill: none; }
+.z-drones #drone .g0 { stop-color: var(--star); stop-opacity: .26; }
+.z-drones #drone .g1 { stop-color: var(--star); stop-opacity: 0; }
+.z-drones #drone .glow { fill: url(#dGlow); }
+.z-drones #drone .ring { fill: none; stroke: var(--star); stroke-width: 1.3; stroke-dasharray: 2 5; transform-box: fill-box; transform-origin: center; animation: dSpin 60s linear infinite; }
+.z-drones #drone .reqRing { fill: none; stroke: var(--ink-2); stroke-opacity: .55; stroke-width: 1; stroke-dasharray: 8 6; }
+.z-drones #drone .rlab { font: 500 10px var(--f-mono); letter-spacing: .14em; fill: var(--star); }
+.z-drones #drone .rlab.req { fill: var(--mute); }
+html[lang="ar"] .z-drones #drone .rlab { font-family: var(--f-body); letter-spacing: 0; font-size: 11px; }
+
+.z-drones #drone { --dShell: color-mix(in oklab, var(--on-night) 36%, var(--night-3)); }
+.z-drones #drone.m-cf { --dShell: color-mix(in oklab, var(--on-night) 17%, var(--night-3)); }
+.z-drones #drone.m-sealed { --dShell: color-mix(in oklab, var(--on-night) 22%, var(--night-3)); }
+.z-drones #drone .shell { fill: var(--dShell); stroke: var(--ink-2); stroke-width: 1; stroke-opacity: .6; }
+.z-drones #drone .arm { stroke: none; }
+.z-drones #drone .body { stroke-width: 1.5; stroke-opacity: .9; }
+.z-drones #drone .seal { fill: none; stroke: var(--star); stroke-width: 1; stroke-dasharray: 2 3; }
+.z-drones #drone .cell { fill: color-mix(in oklab, var(--on-night) 48%, var(--night-3)); stroke: var(--ink-2); stroke-width: .8; }
+.z-drones #drone .cell.h2 { fill: color-mix(in oklab, var(--good) 60%, var(--night-3)); }
+.z-drones #drone .cellT { font: 500 8px var(--f-mono); fill: var(--night); }
+.z-drones #drone .cellT.h2 { fill: var(--on-night); font-size: 10px; }
+.z-drones #drone .disc { fill: color-mix(in srgb, var(--on-night) 5%, transparent); stroke: var(--ink-2); stroke-width: 1.2; stroke-dasharray: 3 4; transform-box: fill-box; transform-origin: center; animation: dSpin var(--spin, 1.4s) linear infinite; }
+.z-drones #drone .blade { transform-box: fill-box; transform-origin: center; animation: dSpin var(--blade, .5s) linear infinite; }
+.z-drones #drone .bl { stroke: var(--ink); stroke-width: 2; stroke-linecap: round; fill: none; }
+.z-drones #drone .hub { fill: var(--mute); }
+.z-drones #drone .lens { fill: var(--night); stroke: var(--ink-2); stroke-width: 1.5; }
+.z-drones #drone .ir { fill: var(--crit); }
+.z-drones #drone .sensorBox { fill: var(--night); stroke: var(--ink); stroke-width: 1; }
+.z-drones #drone .emit { fill: var(--ink); }
+.z-drones #drone .emitLine { stroke: var(--ink); stroke-width: 1.5; fill: none; }
+.z-drones #drone .satBox { fill: var(--dShell); stroke: var(--ink-2); }
+.z-drones #drone .wire { stroke: var(--ink-2); stroke-width: 1.5; fill: none; }
+.z-drones #drone .pod { fill: color-mix(in oklab, var(--sadeem) 45%, var(--night-3)); stroke: var(--sadeem); stroke-width: 1; }
+.z-drones #drone .relayBox { fill: var(--night-3); stroke: var(--ink); stroke-width: 1; }
+
+/* every change morphs: geometry is written as CSS properties by the reconciler */
+.z-drones #drone [data-k] {
+  transition: transform .62s var(--ease), r .62s var(--ease), x .62s var(--ease), y .62s var(--ease),
+    width .62s var(--ease), height .62s var(--ease), rx .62s var(--ease), d .62s var(--ease), fill .4s, stroke .4s;
+}
+.z-drones #dScene > [data-k] { animation: dIn .5s var(--ease) both; }
+.z-drones #dScene > .rotor .blade, .z-drones #dScene > .rotor .disc { transition: none; }
+@keyframes dIn { from { opacity: 0; } }
+@keyframes dSpin { to { transform: rotate(360deg); } }
+
+/* mass gauge */
+.z-drones .gauge { display: grid; gap: 6px; }
+.z-drones .gLab { display: flex; justify-content: space-between; font-size: 10.5px; letter-spacing: .14em; color: var(--mute); font-variant-numeric: tabular-nums; }
+.z-drones .gLab span:last-child { color: var(--ink-2); letter-spacing: .04em; }
+.z-drones .gBar { height: 3px; background: var(--line); border-radius: 1px; overflow: hidden; }
+.z-drones .gBar i { display: block; height: 100%; width: 0; background: var(--ink-2); transition: width .62s var(--ease), background .3s; }
+.z-drones .gBar i.over { background: var(--crit); }
+
+/* binding constraint */
+.z-drones .bind { display: grid; gap: 4px; padding-top: var(--s-4); border-top: 1px solid var(--line); }
+.z-drones .bLab { font: 500 10.5px var(--f-mono); letter-spacing: .16em; text-transform: uppercase; color: var(--star); }
+.z-drones .bind.met .bLab { color: var(--good); }
+html[lang="ar"] .z-drones .bLab { font-family: var(--f-body); letter-spacing: 0; font-size: var(--t-xs); }
+.z-drones .bC { font-size: var(--t-md); line-height: 1.5; color: var(--ink); font-weight: 500; }
+.z-drones .bL { font-size: var(--t-sm); color: var(--ink-2); line-height: 1.6; }
+.z-drones .bL span { display: inline-block; margin-inline-end: 10px; font: 500 10.5px var(--f-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--mute); }
+html[lang="ar"] .z-drones .bL span { font-family: var(--f-body); letter-spacing: 0; font-size: var(--t-xs); }
+
+/* ---------- decisions ---------- */
+.z-drones .params { gap: 0; }
+.z-drones .params > .ph { padding-bottom: var(--s-3); }
+.z-drones .pgroup { display: grid; gap: 8px; padding-block: 13px; border-top: 1px solid var(--line-2); }
+.z-drones .pgroup:last-child { padding-bottom: 0; }
+.z-drones .pgH { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s-3); min-width: 0; }
+.z-drones .pgH h4 { font: 500 10.5px var(--f-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--mute); flex: none; }
+html[lang="ar"] .z-drones .pgH h4 { font-family: var(--f-body); letter-spacing: 0; font-size: var(--t-xs); font-weight: 600; color: var(--ink-2); }
+.z-drones .pgD { font-size: var(--t-xs); color: var(--mute); text-align: end; min-width: 0; line-height: 1.4; }
+.z-drones .params .opts {
+  display: flex; flex-wrap: wrap; gap: 2px; padding: 2px; background: var(--paper-2);
+  border: 1px solid var(--line); border-radius: calc(var(--r) + 2px);
+}
+.z-drones .params .opts button {
+  flex: 1 1 auto; min-height: 32px; padding: 5px 10px; border-radius: var(--r); font-size: 12.5px; line-height: 1.3; color: var(--ink-2);
+  transition: background .2s, color .2s, box-shadow .2s;
+}
+.z-drones .params .opts button:hover { color: var(--ink); background: var(--sadeem-t); }
+.z-drones .params .opts button[aria-pressed="true"] { background: var(--surface); color: var(--ink); font-weight: 500; box-shadow: 0 1px 3px rgba(0, 0, 0, .12), inset 0 -2px 0 var(--sadeem); }
+.z-drones .params .opts button:focus-visible { outline-offset: 0; }
+.z-drones .pgroup:not([hidden]) { animation: dIn .4s var(--ease); }
+
+/* ---------- readouts ---------- */
+.z-drones .read .ph small { color: var(--star-ink); }
+.z-drones .metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--line-2); border: 1px solid var(--line-2); border-radius: var(--r); overflow: hidden; }
+.z-drones .metric { background: var(--surface); padding: 11px 12px 12px; display: grid; gap: 2px; min-width: 0; }
+.z-drones .metric > span { font: 500 10px var(--f-mono); letter-spacing: .04em; text-transform: uppercase; color: var(--mute); line-height: 1.35; overflow-wrap: break-word; }
+html[lang="ar"] .z-drones .metric > span { font-family: var(--f-body); letter-spacing: 0; font-size: var(--t-xs); }
+.z-drones .metric b { display: flex; align-items: baseline; gap: 5px; font-weight: 500; font-size: 21px; line-height: 1.2; color: var(--ink); transition: color .3s; direction: ltr; justify-content: flex-end; }
+html[dir="ltr"] .z-drones .metric b { justify-content: flex-start; }
+.z-drones .metric output { font-variant-numeric: tabular-nums; }
+.z-drones .metric b small { font: 400 11px var(--f-mono); color: var(--mute); }
+html[lang="ar"] .z-drones .metric b small { font-family: var(--f-body); }
+.z-drones .metric.bad b { color: var(--crit); }
+.z-drones .metric.ok b { color: var(--good); }
+.z-drones .acts { display: flex; gap: 8px; flex-wrap: wrap; }
+.z-drones .acts .btn { flex: 1 1 auto; }
+[dir="rtl"] .z-drones svg.dir { transform: scaleX(-1); }
+
+/* ---------- mission fit ---------- */
+.z-drones .score { display: inline-flex; align-items: baseline; gap: 2px; direction: ltr; }
+.z-drones .score b { font: 600 26px/1 var(--f-mono); color: var(--ink); font-variant-numeric: tabular-nums; }
+.z-drones .score small { font-size: var(--t-xs); color: var(--mute); }
+.z-drones .fitBar { height: 3px; }
+.z-drones .fitL { list-style: none; display: grid; gap: 2px; }
+.z-drones .fitL li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 10px; align-items: center; padding: 7px 8px; border-radius: var(--r); font-size: var(--t-sm); color: var(--ink-2); animation: dIn .35s var(--ease) both; }
+.z-drones .fitL li .tag { width: 22px; justify-content: center; padding: 0; }
+.z-drones .fitL li.pass .fT { color: var(--ink); }
+.z-drones .fitL li.binding { background: var(--crit-t); color: var(--ink); font-weight: 500; }
+
+/* ---------- trade-off wheel ---------- */
+.z-drones .wheel { display: block; width: 100%; max-width: 380px; height: auto; margin-inline: auto; overflow: visible; }
+.z-drones .wheel .ax { stroke: var(--line); fill: none; }
+.z-drones .wheel .req { fill: none; stroke: var(--mute); stroke-width: 1.2; stroke-dasharray: 3 3; }
+.z-drones .wheel .cur { fill: var(--sadeem-t); stroke: var(--sadeem); stroke-width: 1.6; stroke-linejoin: round; }
+.z-drones .wheel text { font: 11px var(--f-mono); fill: var(--ink-2); }
+html[lang="ar"] .z-drones .wheel text { font-family: var(--f-body); font-size: 11.5px; }
+.z-drones .wheel .wFit { font-weight: 600; fill: var(--ink); }
+
+@media (max-width: 760px) {
+  .z-drones .bench { padding: var(--s-3) var(--s-4) var(--s-4); border-radius: var(--r); }
+  .z-drones #drone { margin-inline: -8px; width: calc(100% + 16px); }
+  .z-drones .bC { font-size: var(--t-base); }
+  html[lang] .z-drones #drone .rlab { font-size: 17px; letter-spacing: .04em; }
+  .z-drones #drone .cellT { font-size: 12px; }
+  .z-drones .metric b { font-size: 19px; }
+}
